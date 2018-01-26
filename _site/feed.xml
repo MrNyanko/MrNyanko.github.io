@@ -1,1 +1,481 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-01-23T21:35:09+08:00</updated><id>http://localhost:4000/</id><title type="html">Mr.Nyanko</title><subtitle>Hao Qiang's Bolg</subtitle><author><name>Hao Qiang</name></author></feed>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-01-26T23:20:52+08:00</updated><id>http://localhost:4000/</id><title type="html">Mr.Nyanko</title><subtitle>Hao Qiang's Bolg</subtitle><author><name>Hao Qiang</name></author><entry><title type="html">搭建属于自己的博客——Markdown篇</title><link href="http://localhost:4000/documentation/build-blog-markdown.html" rel="alternate" type="text/html" title="搭建属于自己的博客——Markdown篇" /><published>2018-01-12T00:00:00+08:00</published><updated>2018-01-12T00:00:00+08:00</updated><id>http://localhost:4000/documentation/build-blog-markdown</id><content type="html" xml:base="http://localhost:4000/documentation/build-blog-markdown.html">&lt;p&gt;这次我们依旧先review一下我们搭建自己的个人博客要做的三件事。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-pages.html&quot;&gt;搭建属于自己的博客——GitHub Pages篇&lt;/a&gt;」&lt;/li&gt;
+  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-jekyll.html&quot;&gt;搭建属于自己的博客——Jekyll篇&lt;/a&gt;」&lt;/li&gt;
+  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-markdown.html&quot;&gt;搭建属于自己的博客——Markdown篇&lt;/a&gt;」&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;我们在「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-pages.html&quot;&gt;搭建属于自己的博客——GitHub Pages篇&lt;/a&gt;」中已经在GitHub Pages上创建了属于自己主页。在「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-jekyll.html&quot;&gt;搭建属于自己的博客——Jekyll篇&lt;/a&gt;」中快速搭建了自己的个人博客，并且也将搭建好的博客发布到了之前的https://&lt;em&gt;username&lt;/em&gt;.github.io域名下接下来写第一篇自己的博文。&lt;/p&gt;
+
+&lt;p&gt;我们可以在&lt;code class=&quot;highlighter-rouge&quot;&gt;_post&lt;/code&gt;文件夹下创建一个名为&lt;code class=&quot;highlighter-rouge&quot;&gt;YEAR-MONTH-DAY-title.md&lt;/code&gt;的文件。我们将使用Markdown标记语言来写我们的第一遍博文。&lt;/p&gt;
+
+&lt;h2 id=&quot;什么是markdown&quot;&gt;什么是Markdown&lt;/h2&gt;
+
+&lt;p&gt;「&lt;a href=&quot;https://daringfireball.net/projects/markdown/&quot;&gt;Markdown&lt;/a&gt;」是一个针对web写手的文本到html转换工具。Markdown允许您使用易于阅读、易于编写的纯文本格式编写，然后将其转换为结构有效的XHTML(或HTML)。&lt;/p&gt;
+
+&lt;h2 id=&quot;为什么选择markdown&quot;&gt;为什么选择Markdown&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;纯文本：兼容性强，所有的编辑器都能打开&lt;/li&gt;
+  &lt;li&gt;内容与格式完全分离：写好的内容可以用不同的方式渲染，因此所展现给读者的只是渲染方式不同，而与内容无关。&lt;/li&gt;
+  &lt;li&gt;可以轻松转换格式：即便对方看不懂原始的Markdown文件，我们可以轻松的将其转换成PDF或者HTML发布。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;因为目前的国内一些比较流行的论坛大多数都不支持Markdown，这也是我选择搭建自己的博客的原因之一。&lt;/p&gt;
+
+&lt;h2 id=&quot;markdown语法&quot;&gt;Markdown语法&lt;/h2&gt;
+
+&lt;p&gt;Markdown的语法其实非常简单，即便没有编程基础的萌新，花上30分钟也能轻松掌握。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;标题&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;#(空格)一级标题 
+##(空格)二级标题
+###(空格)三级标题
+####(空格)四级标题
+#####(空格)五级标题
+######(空格)六级标题&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;h1 id=&quot;一级标题&quot;&gt;一级标题&lt;/h1&gt;
+  &lt;h2 id=&quot;二级标题&quot;&gt;二级标题&lt;/h2&gt;
+  &lt;h3 id=&quot;三级标题&quot;&gt;三级标题&lt;/h3&gt;
+  &lt;h4 id=&quot;四级标题&quot;&gt;四级标题&lt;/h4&gt;
+  &lt;h5 id=&quot;五级标题&quot;&gt;五级标题&lt;/h5&gt;
+  &lt;h6 id=&quot;六级标题&quot;&gt;六级标题&lt;/h6&gt;
+&lt;/blockquote&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;列表&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;1.(空格)内容1
+2.(空格)内容2
+3.(空格)内容3
+或者
+-(空格)内容1
+-(空格)内容2
+-(空格)内容3&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;ol&gt;
+    &lt;li&gt;内容1&lt;/li&gt;
+    &lt;li&gt;内容2&lt;/li&gt;
+    &lt;li&gt;内容3
+  或者
+      &lt;ul&gt;
+        &lt;li&gt;内容1&lt;/li&gt;
+        &lt;li&gt;内容2&lt;/li&gt;
+        &lt;li&gt;内容3&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;粗体和斜体&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;**粗体**
+*斜体*&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;粗体&lt;/strong&gt;&lt;/p&gt;
+
+  &lt;p&gt;&lt;em&gt;斜体&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;普通引用&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&amp;gt;(空格)引用内容&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;引用内容&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;代码引用&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;`&lt;code class=&quot;highlighter-rouge&quot;&gt;代码引用&lt;/code&gt;`&lt;/p&gt;
+
+  &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;​```&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;多段代码引用&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;多段代码引用&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;多段代码引用&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;​```&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;代码引用&lt;/code&gt;&lt;/p&gt;
+
+  &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;err&quot;&gt;多段代码引用&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;多段代码引用&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;多段代码引用&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
+&lt;/blockquote&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;表格&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;| 标题1   | 标题2   | 标题3   |
+| —– | —– | —– |
+| 内容1.1 | 内容1.2 | 内容1.3 |
+| 内容2.1 | 内容2.2 | 内容2.3 |&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;table&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th&gt;标题1&lt;/th&gt;
+        &lt;th&gt;标题2&lt;/th&gt;
+        &lt;th&gt;标题3&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;td&gt;内容1.1&lt;/td&gt;
+        &lt;td&gt;内容1.2&lt;/td&gt;
+        &lt;td&gt;内容1.3&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;td&gt;内容2.1&lt;/td&gt;
+        &lt;td&gt;内容2.2&lt;/td&gt;
+        &lt;td&gt;内容2.3&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/blockquote&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;链接&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;[Markdown](https://daringfireball.net/projects/markdown/)&lt;/p&gt;
+
+  &lt;p&gt;![build-blog-markdown-1](../assets/img/build-blog-markdown-1.jpg)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;https://daringfireball.net/projects/markdown/&quot;&gt;Markdown&lt;/a&gt;&lt;/p&gt;
+
+  &lt;p&gt;&lt;img src=&quot;../assets/img/build-blog-markdown-1.jpg&quot; alt=&quot;build-blog-markdown-1&quot; /&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;发布我们的第一篇博文&quot;&gt;发布我们的第一篇博文&lt;/h2&gt;
+
+&lt;p&gt;熟悉完Markdown的语法，写下第一篇博文，然后执行&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;jekyll serve
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;就可以在本地查看我们发布的博文啦。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;../assets/img/build-blog-markdown-2.png&quot; alt=&quot;build-blog-markdown-2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;可以review一下我们文章有没有其他问题，检查完毕后，就可以将code push到remote的repository中。这样在我们的https://&lt;em&gt;username&lt;/em&gt;.github.io域名下就可以看到我们的第一篇博文了。&lt;/p&gt;
+
+&lt;h2 id=&quot;结尾&quot;&gt;结尾&lt;/h2&gt;
+
+&lt;p&gt;通过这三篇文章，我们可以快速搭建起一个我们自己的博客，原始的主题比较简单，我们可以去&lt;a href=&quot;http://jekyllthemes.org/&quot;&gt;Jekyll Themes&lt;/a&gt;挑选我们比较中意的主题，之后再做一些个性化的改造就可以了。另外推荐一下mac上超好用的Markdown编辑器&lt;a href=&quot;https://typora.io&quot;&gt;Typora&lt;/a&gt;。我平时都是用这款编辑器来写文章的。&lt;/p&gt;
+
+&lt;p&gt;最后再回顾一次：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-pages.html&quot;&gt;搭建属于自己的博客——GitHub Pages篇&lt;/a&gt;」快速搭建了自己的个人站点。&lt;/li&gt;
+  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-jekyll.html&quot;&gt;搭建属于自己的博客——Jekyll篇&lt;/a&gt;」将简单的个人站带你快速改造成一个个人博客。&lt;/li&gt;
+  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-markdown.html&quot;&gt;搭建属于自己的博客——Markdown篇&lt;/a&gt;」非常便捷的发布我们的第一篇博文。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;以上！&lt;/p&gt;</content><author><name>郝强</name></author><category term="documentation" /><category term="blog" /><summary type="html">这次我们依旧先review一下我们搭建自己的个人博客要做的三件事。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/build-blog-markdown-0.jpeg" /></entry><entry><title type="html">搭建属于自己的博客——Jekyll篇</title><link href="http://localhost:4000/documentation/build-blog-jekyll.html" rel="alternate" type="text/html" title="搭建属于自己的博客——Jekyll篇" /><published>2018-01-08T00:00:00+08:00</published><updated>2018-01-08T00:00:00+08:00</updated><id>http://localhost:4000/documentation/build-blog-jekyll</id><content type="html" xml:base="http://localhost:4000/documentation/build-blog-jekyll.html">&lt;p&gt;我们在上一篇「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-pages.html&quot;&gt;搭建属于自己的博客——GitHub Pages篇&lt;/a&gt;」中
+已经在GitHub Pages上创建了属于自己主页，当然了内容非常简单，只有一个简单的”Hello World”。
+接下来我们打算用10分钟的时间将这个简单的”Hello World”页面快速的搭建好一套可以用来发布博文的博客空间。&lt;/p&gt;
+
+&lt;p&gt;首先我们先review一遍我们要做的三件事：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-pages.html&quot;&gt;搭建属于自己的博客——GitHub Pages篇&lt;/a&gt;」&lt;/li&gt;
+  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-jekyll.html&quot;&gt;搭建属于自己的博客——Jekyll篇&lt;/a&gt;」&lt;/li&gt;
+  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-markdown.html&quot;&gt;搭建属于自己的博客——Markdown篇&lt;/a&gt;」&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;本篇是搭建属于自己的博客系列的第二篇：Jekyll篇。那么就先介绍一下Jekyll。&lt;/p&gt;
+
+&lt;h2 id=&quot;什么是jekyll&quot;&gt;什么是Jekyll？&lt;/h2&gt;
+&lt;p&gt;「&lt;a href=&quot;https://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt;」是一个简单的博客形态的静态站点生产机器。它有一个模版目录，其中包含原始文本格式的文档，通过 Markdown （或者 Textile） 以及 Liquid 转化成一个完整的可发布的静态网站，我们可以发布在任何你喜爱的服务器上。Jekyll 也可以运行在 GitHub Page 上，也就是说，我们可以使用 GitHub 的服务来搭建你的项目页面、博客或者网站，而且是完全免费的。&lt;/p&gt;
+
+&lt;h2 id=&quot;快速创建一个属于自己的博客&quot;&gt;快速创建一个属于自己的博客&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;安装Jekyll&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;在Jekyll的官网中的Quick-start instructions介绍还是很简单的。&lt;img src=&quot;../assets/img/build-blog-jekyll-1.png&quot; alt=&quot;build-blog-jekyll-1&quot; /&gt;
+但是由于我自己用的是mac所以还是遇到了一些特殊的问题。不过在Jekyll的官方网站上都已经给出了解决方案。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;On macOS, you may need to update RubyGems (using sudo only if necessary):&lt;/p&gt;
+  &lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem update --system
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;If you still have issues, you can download and install new Command Line
+Tools (such as &lt;code class=&quot;highlighter-rouge&quot;&gt;gcc&lt;/code&gt;) using the following command:&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;xcode-select --install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;###&lt;a href=&quot;https://jekyllrb.com/docs/troubleshooting/#jekyll--mac-os-x-1011&quot;&gt; Jekyll &amp;amp; Mac OS X 10.11&lt;/a&gt;&lt;/p&gt;
+
+  &lt;p&gt;With the introduction of System Integrity Protection, several directoriesthat were previously writable are now considered system locations and are nolonger available. Given these changes, there are a couple of simple ways to getup and running. One option is to change the location where the gem will beinstalled (again, using &lt;code class=&quot;highlighter-rouge&quot;&gt;sudo&lt;/code&gt; only if necessary):&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem install -n /usr/local/bin jekyll
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;这样我们就完成了Jekyll的安装。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;创建一个初始模版的博客&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jekyll new my-awesome-site
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;启动服务&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;my-awesome-site
+bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;jekyll serve
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;../assets/img/build-blog-jekyll-2.png&quot; alt=&quot;build-blog-jekyll-2&quot; /&gt;
+这样我们的博客就建好啦！&lt;/p&gt;
+
+&lt;h2 id=&quot;基本用法&quot;&gt;基本用法&lt;/h2&gt;
+
+&lt;p&gt;安装了 Jekyll 的 Gem 包之后，就可以在命令行中使用 Jekyll 命令了。有以下这些用法：&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jekyll build
+&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 当前文件夹中的内容将会生成到 ./site 文件夹中。&lt;/span&gt;
+
+jekyll build --destination &amp;lt;destination&amp;gt;
+&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 当前文件夹中的内容将会生成到目标文件夹&amp;lt;destination&amp;gt;中。&lt;/span&gt;
+
+jekyll build --source &amp;lt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; --destination &amp;lt;destination&amp;gt;
+&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 指定源文件夹&amp;lt;source&amp;gt;中的内容将会生成到目标文件夹&amp;lt;destination&amp;gt;中。&lt;/span&gt;
+
+jekyll build --watch
+&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 当前文件夹中的内容将会生成到 ./site 文件夹中，&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#    查看改变，并且自动再生成。&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Jekyll 同时也集成了一个开发用的服务器，可以让你使用浏览器在本地进行预览。&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jekyll serve
+&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 一个开发服务器将会运行在 http://localhost:4000/&lt;/span&gt;
+
+jekyll serve --detach
+&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 功能和`jekyll serve`命令相同，但是会脱离终端在后台运行。&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#    如果你想关闭服务器，可以使用`kill -9 1234`命令，&quot;1234&quot; 是进程号（PID）。&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#    如果你找不到进程号，那么就用`ps aux | grep jekyll`命令来查看，然后关闭服务器。&lt;/span&gt;
+
+jekyll serve --watch
+&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 和`jekyll serve`相同，但是会查看变更并且自动再生成。&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;目录结构&quot;&gt;目录结构&lt;/h2&gt;
+
+&lt;p&gt;Jekyll 的核心其实是一个文本转换引擎。它的概念其实就是： 你用你最喜欢的标记语言来写文章，可以是 Markdown，也可以是 Textile,或者就是简单的 HTML, 然后 Jekyll 就会帮你套入一个或一系列的布局中。在整个过程中你可以设置URL路径, 你的文本在布局中的显示样式等等。这些都可以通过纯文本编辑来实现，最终生成的静态页面就是你的成品了。&lt;/p&gt;
+
+&lt;p&gt;一个基本的 Jekyll 网站的目录结构一般是像这样的：&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+├── _config.yml
+├── _data
+|   └── members.yml
+├── _drafts
+|   ├── &lt;span class=&quot;k&quot;&gt;begin&lt;/span&gt;-with-the-crazy-ideas.md
+|   └── on-simplicity-in-technology.md
+├── _includes
+|   ├── footer.html
+|   └── header.html
+├── _layouts
+|   ├── default.html
+|   └── post.html
+├── _posts
+|   ├── 2007-10-29-why-every-programmer-should-play-nethack.md
+|   └── 2009-04-26-barcamp-boston-4-roundup.md
+├── _sass
+|   ├── _base.scss
+|   └── _layout.scss
+├── _site
+├── .jekyll-metadata
+└── index.html
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;来看看这些都有什么用：&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;文件 / 目录&lt;/th&gt;
+      &lt;th&gt;描述&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_config.yml&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;保存配置数据。很多配置选项都会直接从命令行中进行设置，但是如果你把那些配置写在这儿，你就不用非要去记住那些命令了。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_drafts&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;drafts 是未发布的文章。这些文件的格式中都没有 &lt;code class=&quot;highlighter-rouge&quot;&gt;title.MARKUP&lt;/code&gt; 数据。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_includes&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;你可以加载这些包含部分到你的布局或者文章中以方便重用。可以用这个标签&lt;code class=&quot;highlighter-rouge&quot;&gt;include file.ext &lt;/code&gt;来把文件 &lt;code class=&quot;highlighter-rouge&quot;&gt;_includes/file.ext&lt;/code&gt; 包含进来。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_layouts&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;layouts 是包裹在文章外部的模板。布局可以在YAML头信息中根据不同文章进行选择。这将在下一个部分进行介绍。标签  &lt;code class=&quot;highlighter-rouge&quot;&gt;content&lt;/code&gt; 可以将content插入页面中。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;这里放的就是你的文章了。文件格式很重要，必须要符合:&lt;code class=&quot;highlighter-rouge&quot;&gt;YEAR-MONTH-DAY-title.MARKUP&lt;/code&gt;。The permalinks可以在文章中自己定制，但是数据和标记语言都是根据文件名来确定的。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_data&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;一般都会存放&lt;code class=&quot;highlighter-rouge&quot;&gt;settings.yml&lt;/code&gt;文件，其中会又一些对于网站的配置。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_site&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;一旦 Jekyll 完成转换，就会将生成的页面放在这里（默认）。最好将这个目录放进你的 &lt;code class=&quot;highlighter-rouge&quot;&gt;.gitignore&lt;/code&gt; 文件中。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;index.html&lt;/code&gt; and other HTML, Markdown, Textile files&lt;/td&gt;
+      &lt;td&gt;如果这些文件中包含YAML头信息部分，Jekyll 就会自动将它们进行转换。当然，其他的如 &lt;code class=&quot;highlighter-rouge&quot;&gt;.html&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;.markdown&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;.md&lt;/code&gt;或者 &lt;code class=&quot;highlighter-rouge&quot;&gt;.textile&lt;/code&gt; 等在你的站点根目录下或者不是以上提到的目录中的文件也会被转换。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Other Files/Folders&lt;/td&gt;
+      &lt;td&gt;其他一些未被提及的目录和文件如&lt;code class=&quot;highlighter-rouge&quot;&gt;css&lt;/code&gt; 还有 &lt;code class=&quot;highlighter-rouge&quot;&gt;images&lt;/code&gt; 文件夹，&lt;code class=&quot;highlighter-rouge&quot;&gt;favicon.ico&lt;/code&gt; 等文件都将被完全拷贝到生成的 site 中。&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;将内容发布到自己的usernamegithubio域名下&quot;&gt;将内容发布到自己的&lt;em&gt;username&lt;/em&gt;.github.io域名下&lt;/h2&gt;
+
+&lt;p&gt;好啦，关于Jekyll的详细介绍就不再本文中赘述了，有什么问题都可以去看&lt;a href=&quot;https://jekyllrb.com/docs/home/&quot;&gt;Jekyll的官方文档&lt;/a&gt;。
+我们只要简单的会用Jekyll来搭建我们的博客网站，并且发布我们的博文就好了。
+接下来我们只要将生成好的文件push到自己的&lt;em&gt;username&lt;/em&gt;.github.io的repository中，我们的网站就会自动发布到&lt;em&gt;username&lt;/em&gt;.github.io域名下。
+值得注意的是：通常情况下我们会把&lt;code class=&quot;highlighter-rouge&quot;&gt;_site&lt;/code&gt;目录下的内容加入到&lt;code class=&quot;highlighter-rouge&quot;&gt;.gitignore&lt;/code&gt;文件中，因为在&lt;code class=&quot;highlighter-rouge&quot;&gt;_post&lt;/code&gt;中的markdown文件会在远程自动生成到&lt;code class=&quot;highlighter-rouge&quot;&gt;_site&lt;/code&gt;的HTML页面。&lt;/p&gt;
+
+&lt;p&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-pages.html&quot;&gt;搭建属于自己的博客——GitHub Pages篇&lt;/a&gt;」介绍了在使用GitHub Pages来创建自己的主页。「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-jekyll.html&quot;&gt;搭建属于自己的博客——Jekyll篇&lt;/a&gt;」介绍了如何在本地快速生成自己的博客并快速上传到自己的&lt;em&gt;username&lt;/em&gt;.github.io域名下。接下来我们要通过「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-markdown.html&quot;&gt;搭建属于自己的博客——Markdown篇&lt;/a&gt;」来学习Markdown语法，来编写我们的博文。敬请期待吧！&lt;/p&gt;</content><author><name>郝强</name></author><category term="documentation" /><category term="blog" /><summary type="html">我们在上一篇「搭建属于自己的博客——GitHub Pages篇」中 已经在GitHub Pages上创建了属于自己主页，当然了内容非常简单，只有一个简单的”Hello World”。 接下来我们打算用10分钟的时间将这个简单的”Hello World”页面快速的搭建好一套可以用来发布博文的博客空间。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/build-blog-jekyll-0.jpeg" /></entry><entry><title type="html">搭建属于自己的博客——GitHub Pages篇</title><link href="http://localhost:4000/documentation/build-blog-pages.html" rel="alternate" type="text/html" title="搭建属于自己的博客——GitHub Pages篇" /><published>2018-01-04T00:00:00+08:00</published><updated>2018-01-04T00:00:00+08:00</updated><id>http://localhost:4000/documentation/build-blog-pages</id><content type="html" xml:base="http://localhost:4000/documentation/build-blog-pages.html">&lt;p&gt;作为第一篇分享的技术类文章，打算从如何搭建这个个人博客说起。想必每一名程序员都想拥有自己的博客，大致上无外乎以下三种：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;在某个技术论坛扎根&lt;/li&gt;
+  &lt;li&gt;自己买空间&lt;/li&gt;
+  &lt;li&gt;在GitHub Pages上搭建自己的个人主页&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;从我个人的考虑还是倾向于第三种，第一种不太适合我是因为目前支持markdown的论坛比较少，还没找到合适的。
+第二种需要自己买空间，花钱倒不是主要问题，问题是维护成本有点高，而且买了空间，只用搭建自己的博客感觉有点浪费……
+所以最后决定是用GitHub Pages+Jekyll+Markdown来搭建自己的个人博客。&lt;/p&gt;
+
+&lt;p&gt;因此，打算分别用三个篇章来介绍如何搭建自己的个人博客。&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-pages.html&quot;&gt;搭建属于自己的博客——GitHub Pages篇&lt;/a&gt;」&lt;/li&gt;
+  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-jekyll.html&quot;&gt;搭建属于自己的博客——Jekyll篇&lt;/a&gt;」&lt;/li&gt;
+  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-markdown.html&quot;&gt;搭建属于自己的博客——Markdown篇&lt;/a&gt;」&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;什么是github-pages&quot;&gt;什么是GitHub Pages?&lt;/h2&gt;
+
+&lt;p&gt;「&lt;a href=&quot;https://pages.github.com/&quot;&gt;GitHub Pages&lt;/a&gt;」是一个静态站点托管服务。&lt;/p&gt;
+
+&lt;p&gt;GitHub Pages的设计目的是直接从GitHub库中托管我们的个人、组织或项目页面。
+我们可以使用Jekyll主题选择器在网上创建和发布GitHub页面。如果喜欢在本地工作，可以使用GitHub桌面或命令行。&lt;/p&gt;
+
+&lt;p&gt;其实最重要的是GitHub Pages支持了我们可以直接在自己的GitHub上的repository上创建一个project，这个project就是我们的个人主页的项目。
+只要我们去把记得写的博文push到这个project，就可以直接发布到对应的自己的个人主页或者项目主页上。这是一个非常方便的操作。比方说我们有一些自己写过的project
+必然要有一个汇总的介绍，除了每个project中要有自己的页面做介绍外，还应该有一个个人主页。那么我只需要建立一个以我的GitHub的username.github.io的repository
+那么这个代码仓库中的pages就会自动发布到我们的个人主页上。&lt;/p&gt;
+
+&lt;h2 id=&quot;快速创建一个属于自己的站点&quot;&gt;快速创建一个属于自己的站点&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;首先要有一个自己的GitHub账号。作为一个程序员，大家应该都有自己的GitHub账号吧。如果还没有快去注册一个吧。「&lt;a href=&quot;https://github.com/&quot;&gt;GitHub&lt;/a&gt;」&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;接下来我们在自己的账号下要创建一个repository。这个repository名称是有要求的，需要以&lt;em&gt;username&lt;/em&gt;.github.io来命名，其中username是我们的GitHub账号名称。&lt;img src=&quot;../assets/img/build-blog-pages-1.png&quot; alt=&quot;build-blog-pages-1&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;创建完成后，GitHub会生成我们刚刚创建的repository的连接。接下来需要复制这个连接，大概terminal，将项目clone下来。&lt;/p&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;git clone https://github.com/&lt;em&gt;username&lt;/em&gt;/&lt;em&gt;username&lt;/em&gt;.github.io&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;继续进入到local的项目中，创建一个带有”Hello World“内容的index.html&lt;/p&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;cd &lt;em&gt;username&lt;/em&gt;.github.io&lt;/p&gt;
+
+      &lt;p&gt;echo “Hello World” &amp;gt; index.html&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;最后将我们的个人首页push到remote的repository中。&lt;/p&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;git add –all&lt;/p&gt;
+
+      &lt;p&gt;git commit -m “Initial commit”&lt;/p&gt;
+
+      &lt;p&gt;git push -u origin master&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;搞定！接下来在浏览器就可以直接访问我们的个人主页啦！&lt;strong&gt;https://username.github.io&lt;/strong&gt;.&lt;img src=&quot;../assets/img/build-blog-pages-2.png&quot; alt=&quot;build-blog-pages-2&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;本编我们花了10分钟就快速搭建完了自己的个人主页，不过我们可以看到，还是一个很简单的首页。离我们想要的属于自己的博客还有一段距离，不过没关系，接下来的「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-jekyll.html&quot;&gt;搭建属于自己的博客——Jekyll篇&lt;/a&gt;」
+中我们将会花10分钟快速生成我们的博客，敬请期待吧！&lt;/p&gt;</content><author><name>郝强</name></author><category term="documentation" /><category term="blog" /><summary type="html">作为第一篇分享的技术类文章，打算从如何搭建这个个人博客说起。想必每一名程序员都想拥有自己的博客，大致上无外乎以下三种：</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/build-blog-pages-0.jpeg" /></entry><entry><title type="html">写给2018年的自己</title><link href="http://localhost:4000/life/welcome-to-nyanko.html" rel="alternate" type="text/html" title="写给2018年的自己" /><published>2018-01-01T00:00:00+08:00</published><updated>2018-01-01T00:00:00+08:00</updated><id>http://localhost:4000/life/welcome-to-nyanko</id><content type="html" xml:base="http://localhost:4000/life/welcome-to-nyanko.html">&lt;p&gt;想来想去打算用这个标题作为我的博客的开篇。感觉程序员都想有一个自己的博客，我也不例外。尤其是两年前开始，这个想法更为强烈。之前也调研过，最后还是选择了在GitHub上驻留。本来这个博客其实可以更早开始，标题也可以更早，比如写给2016年的我，或者写给2017年的我。最后却还是拖到了2018年……&lt;/p&gt;
+
+&lt;p&gt;主要是因为这两年经历了太多人生大事，从买房到装修再到结婚。整整跨越了两年时间。期间穿插着各种紧急的项目，仿佛工作和生活在跟我开玩笑，生活上能喘口气，结果重要的工作紧接着开始，刚刚把重要的工作做完，生活中又开始忙活起来。结果导致这两年间几乎没有休息的时间。整个人也异常疲惫。本以为到一个节点能停下来休息一会，结果工作和生活就开始推着我不得不继续前行。因此，我的博客直到现在才开始弄的有些模样。&lt;/p&gt;
+
+&lt;p&gt;搭建自己的博客呢主要是有以下几个目的：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;我会在这里介绍一些我写过的小demo「&lt;a href=&quot;http://localhost:4000/pages/project.html&quot;&gt;My Projects&lt;/a&gt;」。&lt;/li&gt;
+  &lt;li&gt;我会在这里记录一些我总结的经验「&lt;a href=&quot;http://localhost:4000/pages/documentation.html&quot;&gt;Documentation&lt;/a&gt;」。&lt;/li&gt;
+  &lt;li&gt;我会在这里分享一些我认为有用的资料「&lt;a href=&quot;http://localhost:4000/pages/resources.html&quot;&gt;Learning Resources&lt;/a&gt;」。&lt;/li&gt;
+  &lt;li&gt;我会在这里留下一些我的生活感悟「&lt;a href=&quot;/pages/life.html&quot;&gt;My Life&lt;/a&gt;」。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;以上这四点也是在「&lt;a href=&quot;http://localhost:4000/pages/about.html&quot;&gt;About&lt;/a&gt;」中有了介绍。
+关于这个网站的整体风格也是我花了一些时间仔细挑选的。比较喜欢这种简单文艺的风格，这也是我自己搭建博客的原因之一吧。同时，也希望这个地方能给我带来一片宁静……&lt;/p&gt;</content><author><name>郝强</name></author><category term="life" /><summary type="html">想来想去打算用这个标题作为我的博客的开篇。感觉程序员都想有一个自己的博客，我也不例外。尤其是两年前开始，这个想法更为强烈。之前也调研过，最后还是选择了在GitHub上驻留。本来这个博客其实可以更早开始，标题也可以更早，比如写给2016年的我，或者写给2017年的我。最后却还是拖到了2018年……</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/welcome-to-nyanko-0.jpeg" /></entry></feed>

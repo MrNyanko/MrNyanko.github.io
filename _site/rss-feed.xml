@@ -6,5 +6,67 @@
 		<link></link>
 		<atom:link href="/rss-feed.xml" rel="self" type="application/rss+xml" />
 		
+			<item>
+				<title>搭建属于自己的博客——Markdown篇</title>
+				
+					<dc:creator>郝强</dc:creator>
+				
+				
+					<description>&lt;p&gt;这次我们依旧先review一下我们搭建自己的个人博客要做的三件事。&lt;/p&gt;
+
+</description>
+				
+				<pubDate>Fri, 12 Jan 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/documentation/build-blog-markdown.html</link>
+				<guid isPermaLink="true">http://localhost:4000/documentation/build-blog-markdown.html</guid>
+			</item>
+		
+			<item>
+				<title>搭建属于自己的博客——Jekyll篇</title>
+				
+					<dc:creator>郝强</dc:creator>
+				
+				
+					<description>&lt;p&gt;我们在上一篇「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-pages.html&quot;&gt;搭建属于自己的博客——GitHub Pages篇&lt;/a&gt;」中
+已经在GitHub Pages上创建了属于自己主页，当然了内容非常简单，只有一个简单的”Hello World”。
+接下来我们打算用10分钟的时间将这个简单的”Hello World”页面快速的搭建好一套可以用来发布博文的博客空间。&lt;/p&gt;
+
+</description>
+				
+				<pubDate>Mon, 08 Jan 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/documentation/build-blog-jekyll.html</link>
+				<guid isPermaLink="true">http://localhost:4000/documentation/build-blog-jekyll.html</guid>
+			</item>
+		
+			<item>
+				<title>搭建属于自己的博客——GitHub Pages篇</title>
+				
+					<dc:creator>郝强</dc:creator>
+				
+				
+					<description>&lt;p&gt;作为第一篇分享的技术类文章，打算从如何搭建这个个人博客说起。想必每一名程序员都想拥有自己的博客，大致上无外乎以下三种：&lt;/p&gt;
+
+</description>
+				
+				<pubDate>Thu, 04 Jan 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/documentation/build-blog-pages.html</link>
+				<guid isPermaLink="true">http://localhost:4000/documentation/build-blog-pages.html</guid>
+			</item>
+		
+			<item>
+				<title>写给2018年的自己</title>
+				
+					<dc:creator>郝强</dc:creator>
+				
+				
+					<description>&lt;p&gt;想来想去打算用这个标题作为我的博客的开篇。感觉程序员都想有一个自己的博客，我也不例外。尤其是两年前开始，这个想法更为强烈。之前也调研过，最后还是选择了在GitHub上驻留。本来这个博客其实可以更早开始，标题也可以更早，比如写给2016年的我，或者写给2017年的我。最后却还是拖到了2018年……&lt;/p&gt;
+
+</description>
+				
+				<pubDate>Mon, 01 Jan 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/life/welcome-to-nyanko.html</link>
+				<guid isPermaLink="true">http://localhost:4000/life/welcome-to-nyanko.html</guid>
+			</item>
+		
 	</channel>
 </rss>
