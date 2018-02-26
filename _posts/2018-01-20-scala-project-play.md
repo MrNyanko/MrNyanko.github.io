@@ -80,4 +80,4 @@ test                     → source folder for unit or functional tests
 
 ## 结尾
 
-这一篇主要是对**「[Play Framework](https://www.playframework.com)」**有个简单的了解，更多的还是需要去看官方文档，再次**「赞」**一下官方文档，写的真的很清晰。后续打算从SBT构建项目开始一步一步的写出一个可以使用的Web应用。
+这一篇主要是对**「[Play Framework](https://www.playframework.com)」**有个简单的了解，更多的还是需要去看官方文档，再次**「赞」**一下官方文档，写的真的很清晰。后续打算从SBT构建项目开始一步一步的写出一个可以使用的web应用。
