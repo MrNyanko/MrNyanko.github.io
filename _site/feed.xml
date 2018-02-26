@@ -1,4 +1,95 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-01-26T23:20:52+08:00</updated><id>http://localhost:4000/</id><title type="html">Mr.Nyanko</title><subtitle>Hao Qiang's Bolg</subtitle><author><name>Hao Qiang</name></author><entry><title type="html">搭建属于自己的博客——Markdown篇</title><link href="http://localhost:4000/documentation/build-blog-markdown.html" rel="alternate" type="text/html" title="搭建属于自己的博客——Markdown篇" /><published>2018-01-12T00:00:00+08:00</published><updated>2018-01-12T00:00:00+08:00</updated><id>http://localhost:4000/documentation/build-blog-markdown</id><content type="html" xml:base="http://localhost:4000/documentation/build-blog-markdown.html">&lt;p&gt;这次我们依旧先review一下我们搭建自己的个人博客要做的三件事。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-02-26T18:46:41+08:00</updated><id>http://localhost:4000/</id><title type="html">Mr.Nyanko</title><subtitle>Hao Qiang's Bolg</subtitle><author><name>Hao Qiang</name></author><entry><title type="html">搭建Scala项目——play</title><link href="http://localhost:4000/documentation/scala-project-play.html" rel="alternate" type="text/html" title="搭建Scala项目——play" /><published>2018-01-20T00:00:00+08:00</published><updated>2018-01-20T00:00:00+08:00</updated><id>http://localhost:4000/documentation/scala-project-play</id><content type="html" xml:base="http://localhost:4000/documentation/scala-project-play.html">&lt;h2 id=&quot;关于play-framework&quot;&gt;关于Play Framework&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;「&lt;a href=&quot;https://www.playframework.com&quot;&gt;Play Framework&lt;/a&gt;」&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The High Velocity Web Framework For Java and Scala.Play Framework makes it easy to build web applications with Java &amp;amp; Scala.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;「Play Framework」&lt;/strong&gt;是一个轻量级的web框架，它主要的思路是让开发者简单便捷的搭建一个web应用。并且兼容Java和Scala两种语言。&lt;/p&gt;
+
+&lt;p&gt;个人感觉现代的web框架基本上思路都大同小异。Java的web框架现在这么多，不过目前主流都离不开SSI。在使用层面上&lt;strong&gt;「Play Framework」&lt;/strong&gt;和&lt;strong&gt;「Spring Boot」&lt;/strong&gt;思路也比较接近。在&lt;strong&gt;「Spring Boot」&lt;/strong&gt;中封装好了许多的实用的插件，只要在&lt;strong&gt;「Maven」&lt;/strong&gt;中引入相应的插件，就可以方便的使用了。而在&lt;strong&gt;「Play Framework」&lt;/strong&gt;中有许多&lt;strong&gt;「&lt;a href=&quot;https://www.playframework.com/documentation/2.6.x/ModuleDirectory#play-modules&quot;&gt;module&lt;/a&gt;」&lt;/strong&gt;这些实用的模块也能很方便的引入和使用。总之都是为了把复杂的配置简单化，通过插件或者模块的形式，把需要的组件方便的引入到应用之中。不过对于Scala的支持上必然会选择&lt;strong&gt;「Play Framework」&lt;/strong&gt;。而如果选择Java作为开发语言，则更倾向于选择&lt;strong&gt;&lt;em&gt;“Spring全家桶”&lt;/em&gt;&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;关于sbt&quot;&gt;关于SBT&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;「&lt;a href=&quot;https://www.scala-sbt.org&quot;&gt;SBT&lt;/a&gt;」&lt;/strong&gt;：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The interactive build tool。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;「SBT」&lt;/strong&gt;是一个“交互式的”（&lt;em&gt;interactive&lt;/em&gt;）构建工具。在开发过程中，使用最多的是对引入的包进行管理、定义一些task以及打包。对于Scala的项目，SBT当然是首选的build工具，但是如果项目是Java和Scala的混合项目（虽然我不喜欢混合着用），还是用Maven好一些。顺带一提，SBT的交互模式和Play Console结合起来用。&lt;/p&gt;
+
+&lt;p&gt;##Play Starter Projects&lt;/p&gt;
+
+&lt;p&gt;以前的&lt;strong&gt;「Play Framework」&lt;/strong&gt;提供了一个叫&lt;strong&gt;「activator」&lt;/strong&gt;的工具，当时觉得和&lt;strong&gt;「SBT」&lt;/strong&gt;有些重叠，估计官方也是觉得多此一举，因此现在已经抛弃了&lt;strong&gt;「activator」&lt;/strong&gt;。目前创建Play项目官方提供了两种方法。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;从&lt;strong&gt;「&lt;a href=&quot;https://github.com/playframework/play-scala-starter-example/tree/2.6.x&quot;&gt;GitHub&lt;/a&gt;」&lt;/strong&gt;上下载到本地&lt;/li&gt;
+  &lt;li&gt;如果在电脑上已经安装过了&lt;em&gt;SBT 0.13.13&lt;/em&gt;或者更高的版本那么可以通过sbt new命令创建一个Play的项目。（&lt;em&gt;&lt;a href=&quot;https://www.playframework.com/download&quot;&gt;详细步骤&lt;/a&gt;&lt;/em&gt;）&lt;/li&gt;
+  &lt;li&gt;之后运行&lt;code class=&quot;highlighter-rouge&quot;&gt;sbt run&lt;/code&gt;命令来启动项目。启动后则会出现以下页面。&lt;img src=&quot;../assets/img/scala-project-play-1.png&quot; alt=&quot;build-blog-jekyll-1&quot; /&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;the-play-application-layout&quot;&gt;The Play application layout&lt;/h2&gt;
+
+&lt;p&gt;比较重要的是先了解&lt;a href=&quot;https://www.playframework.com/documentation/2.6.x/Anatomy#the-play-application-layout&quot;&gt;The Play application layout&lt;/a&gt;。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;app                      → Application sources
+ └ assets                → Compiled asset sources
+    └ stylesheets        → Typically LESS CSS sources
+    └ javascripts        → Typically CoffeeScript sources
+ └ controllers           → Application controllers
+ └ models                → Application business layer
+ └ views                 → Templates
+build.sbt                → Application build script
+conf                     → Configurations files and other non-compiled resources (on classpath)
+ └ application.conf      → Main configuration file
+ └ routes                → Routes definition
+dist                     → Arbitrary files to be included in your projects distribution
+public                   → Public assets
+ └ stylesheets           → CSS files
+ └ javascripts           → Javascript files
+ └ images                → Image files
+project                  → sbt configuration files
+ └ build.properties      → Marker for sbt project
+ └ plugins.sbt           → sbt plugins including the declaration for Play itself
+lib                      → Unmanaged libraries dependencies
+logs                     → Logs folder
+ └ application.log       → Default log file
+target                   → Generated stuff
+ └ resolution-cache      → Info about dependencies
+ └ scala-2.11
+    └ api                → Generated API docs
+    └ classes            → Compiled class files
+    └ routes             → Sources generated from routes
+    └ twirl              → Sources generated from templates
+ └ universal             → Application packaging
+ └ web                   → Compiled web assets
+test                     → source folder for unit or functional tests
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;官方对于Play应用的结构解释的很清楚了。个人觉得Play的文档要Spring的文档要清晰很多。毕竟Play比较新，而且把许多配置和API都简化了，找起来很方便。相比Spring的文档感觉是一坨放在那儿。都不知道从何看起…&lt;/p&gt;
+
+&lt;h2 id=&quot;结尾&quot;&gt;结尾&lt;/h2&gt;
+
+&lt;p&gt;这一篇主要是对&lt;strong&gt;「&lt;a href=&quot;https://www.playframework.com&quot;&gt;Play Framework&lt;/a&gt;」&lt;/strong&gt;有个简单的了解，更多的还是需要去看官方文档，再次&lt;strong&gt;「赞」&lt;/strong&gt;一下官方文档，写的真的很清晰。后续打算从SBT构建项目开始一步一步的写出一个可以使用的Web应用。&lt;/p&gt;</content><author><name>郝强</name></author><category term="documentation" /><category term="scala-project" /><summary type="html">关于Play Framework 「Play Framework」:</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/scala-project-play-0.jpeg" /></entry><entry><title type="html">搭建Scala项目——序</title><link href="http://localhost:4000/documentation/scala-project-preface.html" rel="alternate" type="text/html" title="搭建Scala项目——序" /><published>2018-01-16T00:00:00+08:00</published><updated>2018-01-16T00:00:00+08:00</updated><id>http://localhost:4000/documentation/scala-project-preface</id><content type="html" xml:base="http://localhost:4000/documentation/scala-project-preface.html">&lt;p&gt;从2016年开始接触Scala这门语言，便喜欢上了这门OO+FP混合的语言。当时公司环境也比较open，有机会用Scala开发了一些后台系统。
+这些系统有些已经在生产环境跑到了现在。不过现在都在统一技术栈，很快将会变为Spring Boot的项目。并且很将会对接Spring Cloud。
+这两年时间其实已经积攒了很多这方面的经验，当然期间也用Java写过一些其他的项目。临近过年，想借此机会将之前的一些经验总结一下。
+不想将这些经验就流失掉了。&lt;/p&gt;
+
+&lt;h2 id=&quot;关于scala&quot;&gt;关于Scala&lt;/h2&gt;
+
+&lt;p&gt;使用Scala之前，工作中基本上我都是在用Java，由于一些机缘巧合，接手了一个Scala项目。从此便开始使用了他将近有一年半的时间吧。
+如果想快速上手Scala这门语言的话，推荐《快学Scala》这本书，当初我就是通过看这本书快速上手的，并且在给新来的同事培训的时候也大多是基于这本书为基础的。
+有过Java开发经验的能很快上手，有过其他编程经验的能更快上手，因为不会受Java的原有思维的影响。从世纪情况来开，反而应届生学习的比较快。没有太多历史包袱，而且
+16年间Scala相对比较流行，大家的学习氛围也比较好。&lt;/p&gt;
+
+&lt;p&gt;Scala语法上的进化我不想多说，因为任何脱离实际生产环境和业务的情况下去单一的去评判一个语言，这样太不客观了。学习Scala给我带来的最大的收获主要是思维模式的变换。即便在从新写Java语言的时候，也会受其影响。这里提到的影响是好的影响。在写一些设计模式或者多线程时，
+能很自然的想到注意的地方，以及更抽象、更快速的处理问题。&lt;/p&gt;
+
+&lt;h2 id=&quot;关于技术栈&quot;&gt;关于技术栈&lt;/h2&gt;
+
+&lt;p&gt;在这一年多的时间里，用到了很多Scala相关的技术，以及原有的技术框架与Scala的结合。在结合的过程中，并没有觉得特别的别扭。在选择技术框架的时候做了调研，避免了出现那种强行结合导致变成Java和Scala混合开发，使得项目变得相当奇怪。
+主要用到的技术有：Scala、SBT、Play Framework、Slick、Akka、RabbitMQ、Redis、Mongo、MySQL、ELK。
+个人感觉这些框架都结合的很完美。官方也都给出了针对Reactive这种编程模式的解决方案。
+在接下来的几篇博文里，我打算按照生产的要求，将这些结合起来。期间不光是写一些胶水代码将这些框架粘起来，同事也会写一些设计上的code来解决实际的生产中遇到的问题。也算是将这些时间里的沉淀积累起来吧。&lt;/p&gt;</content><author><name>郝强</name></author><category term="documentation" /><category term="scala-project" /><summary type="html">从2016年开始接触Scala这门语言，便喜欢上了这门OO+FP混合的语言。当时公司环境也比较open，有机会用Scala开发了一些后台系统。 这些系统有些已经在生产环境跑到了现在。不过现在都在统一技术栈，很快将会变为Spring Boot的项目。并且很将会对接Spring Cloud。 这两年时间其实已经积攒了很多这方面的经验，当然期间也用Java写过一些其他的项目。临近过年，想借此机会将之前的一些经验总结一下。 不想将这些经验就流失掉了。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/scala-project-preface-0.jpeg" /></entry><entry><title type="html">搭建属于自己的博客——Markdown篇</title><link href="http://localhost:4000/documentation/build-blog-markdown.html" rel="alternate" type="text/html" title="搭建属于自己的博客——Markdown篇" /><published>2018-01-12T00:00:00+08:00</published><updated>2018-01-12T00:00:00+08:00</updated><id>http://localhost:4000/documentation/build-blog-markdown</id><content type="html" xml:base="http://localhost:4000/documentation/build-blog-markdown.html">&lt;p&gt;这次我们依旧先review一下我们搭建自己的个人博客要做的三件事。&lt;/p&gt;
 
 &lt;ol&gt;
   &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-pages.html&quot;&gt;搭建属于自己的博客——GitHub Pages篇&lt;/a&gt;」&lt;/li&gt;
@@ -311,12 +402,12 @@ jekyll serve --watch
 
 &lt;p&gt;一个基本的 Jekyll 网站的目录结构一般是像这样的：&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;.
 ├── _config.yml
 ├── _data
 |   └── members.yml
 ├── _drafts
-|   ├── &lt;span class=&quot;k&quot;&gt;begin&lt;/span&gt;-with-the-crazy-ideas.md
+|   ├── begin-with-the-crazy-ideas.md
 |   └── on-simplicity-in-technology.md
 ├── _includes
 |   ├── footer.html
@@ -432,35 +523,39 @@ jekyll serve --watch
     &lt;p&gt;接下来我们在自己的账号下要创建一个repository。这个repository名称是有要求的，需要以&lt;em&gt;username&lt;/em&gt;.github.io来命名，其中username是我们的GitHub账号名称。&lt;img src=&quot;../assets/img/build-blog-pages-1.png&quot; alt=&quot;build-blog-pages-1&quot; /&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;创建完成后，GitHub会生成我们刚刚创建的repository的连接。接下来需要复制这个连接，大概terminal，将项目clone下来。&lt;/p&gt;
-
-    &lt;blockquote&gt;
-      &lt;p&gt;git clone https://github.com/&lt;em&gt;username&lt;/em&gt;/&lt;em&gt;username&lt;/em&gt;.github.io&lt;/p&gt;
-    &lt;/blockquote&gt;
+    &lt;p&gt;创建完成后，GitHub会生成我们刚刚创建的repository的连接。接下来需要复制这个连接，打开terminal，将项目clone下来。&lt;/p&gt;
   &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;继续进入到local的项目中，创建一个带有”Hello World“内容的index.html&lt;/p&gt;
+&lt;/ol&gt;
 
-    &lt;blockquote&gt;
-      &lt;p&gt;cd &lt;em&gt;username&lt;/em&gt;.github.io&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;git clone https://github.com/&lt;em&gt;username&lt;/em&gt;/&lt;em&gt;username&lt;/em&gt;.github.io&lt;/p&gt;
+&lt;/blockquote&gt;
 
-      &lt;p&gt;echo “Hello World” &amp;gt; index.html&lt;/p&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;最后将我们的个人首页push到remote的repository中。&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;继续进入到local的项目中，创建一个带有”Hello World“内容的index.html&lt;/li&gt;
+&lt;/ol&gt;
 
-    &lt;blockquote&gt;
-      &lt;p&gt;git add –all&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;cd &lt;em&gt;username&lt;/em&gt;.github.io&lt;/p&gt;
 
-      &lt;p&gt;git commit -m “Initial commit”&lt;/p&gt;
+  &lt;p&gt;echo “Hello World” &amp;gt; index.html&lt;/p&gt;
+&lt;/blockquote&gt;
 
-      &lt;p&gt;git push -u origin master&lt;/p&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;搞定！接下来在浏览器就可以直接访问我们的个人主页啦！&lt;strong&gt;https://username.github.io&lt;/strong&gt;.&lt;img src=&quot;../assets/img/build-blog-pages-2.png&quot; alt=&quot;build-blog-pages-2&quot; /&gt;&lt;/p&gt;
-  &lt;/li&gt;
+&lt;ol&gt;
+  &lt;li&gt;最后将我们的个人首页push到remote的repository中。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;git add –all&lt;/p&gt;
+
+  &lt;p&gt;git commit -m “Initial commit”&lt;/p&gt;
+
+  &lt;p&gt;git push -u origin master&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;搞定！接下来在浏览器就可以直接访问我们的个人主页啦！&lt;strong&gt;https://username.github.io&lt;/strong&gt;。
+&lt;img src=&quot;../assets/img/build-blog-pages-2.png&quot; alt=&quot;build-blog-pages-2&quot; /&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;p&gt;本编我们花了10分钟就快速搭建完了自己的个人主页，不过我们可以看到，还是一个很简单的首页。离我们想要的属于自己的博客还有一段距离，不过没关系，接下来的「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-jekyll.html&quot;&gt;搭建属于自己的博客——Jekyll篇&lt;/a&gt;」

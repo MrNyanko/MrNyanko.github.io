@@ -17,6 +17,14 @@
 <lastmod>2018-01-12T00:00:00+08:00</lastmod>
 </url>
 <url>
+<loc>http://localhost:4000/documentation/scala-project-preface.html</loc>
+<lastmod>2018-01-16T00:00:00+08:00</lastmod>
+</url>
+<url>
+<loc>http://localhost:4000/documentation/scala-project-play.html</loc>
+<lastmod>2018-01-20T00:00:00+08:00</lastmod>
+</url>
+<url>
 <loc>http://localhost:4000/pages/about.html</loc>
 </url>
 <url>
@@ -36,5 +44,8 @@
 </url>
 <url>
 <loc>http://localhost:4000/pages/resources.html</loc>
+</url>
+<url>
+<loc>http://localhost:4000/page2/</loc>
 </url>
 </urlset>

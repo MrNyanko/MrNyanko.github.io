@@ -40,26 +40,26 @@ GitHub Pages的设计目的是直接从GitHub库中托管我们的个人、组�
 
 2. 接下来我们在自己的账号下要创建一个repository。这个repository名称是有要求的，需要以*username*.github.io来命名，其中username是我们的GitHub账号名称。![build-blog-pages-1](../assets/img/build-blog-pages-1.png)
 
-3. 创建完成后，GitHub会生成我们刚刚创建的repository的连接。接下来需要复制这个连接，大概terminal，将项目clone下来。
+3. 创建完成后，GitHub会生成我们刚刚创建的repository的连接。接下来需要复制这个连接，打开terminal，将项目clone下来。
 
-
-   > git clone https://github.com/*username*/*username*.github.io
+> git clone https://github.com/*username*/*username*.github.io
 
 4. 继续进入到local的项目中，创建一个带有”Hello World“内容的index.html
 
-   > cd *username*.github.io
-   >
-   > echo "Hello World" > index.html
+> cd *username*.github.io
+>
+> echo "Hello World" > index.html
 
 5. 最后将我们的个人首页push到remote的repository中。
 
-   > git add --all
-   >
-   > git commit -m "Initial commit"
-   >
-   > git push -u origin master
+> git add --all
+>
+> git commit -m "Initial commit"
+>
+> git push -u origin master
 
-6. 搞定！接下来在浏览器就可以直接访问我们的个人主页啦！**https://username.github.io**.![build-blog-pages-2](../assets/img/build-blog-pages-2.png)
+6. 搞定！接下来在浏览器就可以直接访问我们的个人主页啦！**https://username.github.io**。
+![build-blog-pages-2](../assets/img/build-blog-pages-2.png)
 
 本编我们花了10分钟就快速搭建完了自己的个人主页，不过我们可以看到，还是一个很简单的首页。离我们想要的属于自己的博客还有一段距离，不过没关系，接下来的「[搭建属于自己的博客——Jekyll篇]({{ site.url }}/documentation/build-blog-jekyll.html)」
 中我们将会花10分钟快速生成我们的博客，敬请期待吧！

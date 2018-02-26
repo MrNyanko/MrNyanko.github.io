@@ -7,6 +7,40 @@
 		<atom:link href="/rss-feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>搭建Scala项目——play</title>
+				
+					<dc:creator>郝强</dc:creator>
+				
+				
+					<description>&lt;h2 id=&quot;关于play-framework&quot;&gt;关于Play Framework&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;「&lt;a href=&quot;https://www.playframework.com&quot;&gt;Play Framework&lt;/a&gt;」&lt;/strong&gt;:&lt;/p&gt;
+
+</description>
+				
+				<pubDate>Sat, 20 Jan 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/documentation/scala-project-play.html</link>
+				<guid isPermaLink="true">http://localhost:4000/documentation/scala-project-play.html</guid>
+			</item>
+		
+			<item>
+				<title>搭建Scala项目——序</title>
+				
+					<dc:creator>郝强</dc:creator>
+				
+				
+					<description>&lt;p&gt;从2016年开始接触Scala这门语言，便喜欢上了这门OO+FP混合的语言。当时公司环境也比较open，有机会用Scala开发了一些后台系统。
+这些系统有些已经在生产环境跑到了现在。不过现在都在统一技术栈，很快将会变为Spring Boot的项目。并且很将会对接Spring Cloud。
+这两年时间其实已经积攒了很多这方面的经验，当然期间也用Java写过一些其他的项目。临近过年，想借此机会将之前的一些经验总结一下。
+不想将这些经验就流失掉了。&lt;/p&gt;
+
+</description>
+				
+				<pubDate>Tue, 16 Jan 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/documentation/scala-project-preface.html</link>
+				<guid isPermaLink="true">http://localhost:4000/documentation/scala-project-preface.html</guid>
+			</item>
+		
+			<item>
 				<title>搭建属于自己的博客——Markdown篇</title>
 				
 					<dc:creator>郝强</dc:creator>
