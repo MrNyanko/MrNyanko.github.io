@@ -7,6 +7,21 @@
 		<atom:link href="/rss-feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>是时候祭出这张图了！</title>
+				
+					<dc:creator>郝强</dc:creator>
+				
+				
+					<description>&lt;p&gt;今天是正月初五。&lt;/p&gt;
+
+</description>
+				
+				<pubDate>Tue, 20 Feb 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/life/yehuimei.html</link>
+				<guid isPermaLink="true">http://localhost:4000/life/yehuimei.html</guid>
+			</item>
+		
+			<item>
 				<title>搭建Scala项目——play</title>
 				
 					<dc:creator>郝强</dc:creator>
