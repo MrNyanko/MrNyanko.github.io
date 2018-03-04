@@ -22,7 +22,7 @@
 			</item>
 		
 			<item>
-				<title>搭建Scala项目——play</title>
+				<title>搭建Scala项目——play篇</title>
 				
 					<dc:creator>郝强</dc:creator>
 				
@@ -32,9 +32,39 @@
 
 </description>
 				
-				<pubDate>Sat, 20 Jan 2018 00:00:00 +0800</pubDate>
+				<pubDate>Sun, 28 Jan 2018 00:00:00 +0800</pubDate>
 				<link>http://localhost:4000/documentation/scala-project-play.html</link>
 				<guid isPermaLink="true">http://localhost:4000/documentation/scala-project-play.html</guid>
+			</item>
+		
+			<item>
+				<title>搭建Scala项目——slick篇</title>
+				
+					<dc:creator>郝强</dc:creator>
+				
+				
+					<description>&lt;h2 id=&quot;关于slick&quot;&gt;关于Slick&lt;/h2&gt;
+
+</description>
+				
+				<pubDate>Wed, 24 Jan 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/documentation/scala-project-slick.html</link>
+				<guid isPermaLink="true">http://localhost:4000/documentation/scala-project-slick.html</guid>
+			</item>
+		
+			<item>
+				<title>搭建Scala项目——SBT篇</title>
+				
+					<dc:creator>郝强</dc:creator>
+				
+				
+					<description>&lt;h2 id=&quot;关于sbt&quot;&gt;关于SBT&lt;/h2&gt;
+
+</description>
+				
+				<pubDate>Sat, 20 Jan 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/documentation/scala-project-sbt.html</link>
+				<guid isPermaLink="true">http://localhost:4000/documentation/scala-project-sbt.html</guid>
 			</item>
 		
 			<item>

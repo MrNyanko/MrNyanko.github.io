@@ -21,8 +21,16 @@
 <lastmod>2018-01-16T00:00:00+08:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/documentation/scala-project-play.html</loc>
+<loc>http://localhost:4000/documentation/scala-project-sbt.html</loc>
 <lastmod>2018-01-20T00:00:00+08:00</lastmod>
+</url>
+<url>
+<loc>http://localhost:4000/documentation/scala-project-slick.html</loc>
+<lastmod>2018-01-24T00:00:00+08:00</lastmod>
+</url>
+<url>
+<loc>http://localhost:4000/documentation/scala-project-play.html</loc>
+<lastmod>2018-01-28T00:00:00+08:00</lastmod>
 </url>
 <url>
 <loc>http://localhost:4000/life/yehuimei.html</loc>
