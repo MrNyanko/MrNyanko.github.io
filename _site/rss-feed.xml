@@ -7,6 +7,41 @@
 		<atom:link href="/rss-feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>垃圾收集器与内存分配策略</title>
+				
+					<dc:creator>郝强</dc:creator>
+				
+				
+					<description>&lt;p&gt;收集算法是内存回收的方法论，垃圾收集器则是内存回收的具体实现。&lt;/p&gt;
+
+</description>
+				
+				<pubDate>Mon, 05 Mar 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/resources/java-gc.html</link>
+				<guid isPermaLink="true">http://localhost:4000/resources/java-gc.html</guid>
+			</item>
+		
+			<item>
+				<title>Java内存区域与内存溢出异常</title>
+				
+					<dc:creator>郝强</dc:creator>
+				
+				
+					<description>&lt;h2 id=&quot;java内存区域&quot;&gt;Java内存区域&lt;/h2&gt;
+&lt;p&gt;Java虚拟机在执行Java程序的过程中会把它所管理的内存划分为若干个不同的数据区域，这些区域都有各自的用途，以及创建和销毁时间。
+&lt;img src=&quot;../assets/img/java-space-1.png&quot; alt=&quot;java-space-1&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;【程序计数器】：是一块较小的内存空间，可以看作是当前线程所执行的字节码行号指示器。在虚拟机的概念模型里，字节码解释器工作时就是通过改变这个计数器的值，来选取下一条需要执行的字节码指令。&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+				
+				<pubDate>Thu, 01 Mar 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/resources/java-space.html</link>
+				<guid isPermaLink="true">http://localhost:4000/resources/java-space.html</guid>
+			</item>
+		
+			<item>
 				<title>是时候祭出这张图了！</title>
 				
 					<dc:creator>郝强</dc:creator>
@@ -38,7 +73,7 @@
 			</item>
 		
 			<item>
-				<title>搭建Scala项目——slick篇</title>
+				<title>搭建Scala项目——Slick篇</title>
 				
 					<dc:creator>郝强</dc:creator>
 				
@@ -130,21 +165,6 @@
 				<pubDate>Thu, 04 Jan 2018 00:00:00 +0800</pubDate>
 				<link>http://localhost:4000/documentation/build-blog-pages.html</link>
 				<guid isPermaLink="true">http://localhost:4000/documentation/build-blog-pages.html</guid>
-			</item>
-		
-			<item>
-				<title>写给2018年的自己</title>
-				
-					<dc:creator>郝强</dc:creator>
-				
-				
-					<description>&lt;p&gt;想来想去打算用这个标题作为我的博客的开篇。感觉程序员都想有一个自己的博客，我也不例外。尤其是两年前开始，这个想法更为强烈。之前也调研过，最后还是选择了在GitHub上驻留。本来这个博客其实可以更早开始，标题也可以更早，比如写给2016年的我，或者写给2017年的我。最后却还是拖到了2018年……&lt;/p&gt;
-
-</description>
-				
-				<pubDate>Mon, 01 Jan 2018 00:00:00 +0800</pubDate>
-				<link>http://localhost:4000/life/welcome-to-nyanko.html</link>
-				<guid isPermaLink="true">http://localhost:4000/life/welcome-to-nyanko.html</guid>
 			</item>
 		
 	</channel>

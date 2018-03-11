@@ -37,6 +37,14 @@
 <lastmod>2018-02-20T00:00:00+08:00</lastmod>
 </url>
 <url>
+<loc>http://localhost:4000/resources/java-space.html</loc>
+<lastmod>2018-03-01T00:00:00+08:00</lastmod>
+</url>
+<url>
+<loc>http://localhost:4000/resources/java-gc.html</loc>
+<lastmod>2018-03-05T00:00:00+08:00</lastmod>
+</url>
+<url>
 <loc>http://localhost:4000/pages/about.html</loc>
 </url>
 <url>
@@ -59,5 +67,8 @@
 </url>
 <url>
 <loc>http://localhost:4000/page2/</loc>
+</url>
+<url>
+<loc>http://localhost:4000/page3/</loc>
 </url>
 </urlset>

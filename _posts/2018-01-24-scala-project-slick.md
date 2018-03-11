@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "搭建Scala项目——slick篇"
+title: "搭建Scala项目——Slick篇"
 author: "郝强"
 categories: documentation
 tags: [documentation,scala-project]

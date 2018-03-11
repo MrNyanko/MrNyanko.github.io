@@ -1,4 +1,137 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-03-02T17:30:19+08:00</updated><id>http://localhost:4000/</id><title type="html">Mr.Nyanko</title><subtitle>Hao Qiang's Bolg</subtitle><author><name>Hao Qiang</name></author><entry><title type="html">是时候祭出这张图了！</title><link href="http://localhost:4000/life/yehuimei.html" rel="alternate" type="text/html" title="是时候祭出这张图了！" /><published>2018-02-20T00:00:00+08:00</published><updated>2018-02-20T00:00:00+08:00</updated><id>http://localhost:4000/life/yehuimei</id><content type="html" xml:base="http://localhost:4000/life/yehuimei.html">&lt;p&gt;今天是正月初五。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-03-09T19:28:33+08:00</updated><id>http://localhost:4000/</id><title type="html">Mr.Nyanko</title><subtitle>Hao Qiang's Bolg</subtitle><author><name>Hao Qiang</name></author><entry><title type="html">垃圾收集器与内存分配策略</title><link href="http://localhost:4000/resources/java-gc.html" rel="alternate" type="text/html" title="垃圾收集器与内存分配策略" /><published>2018-03-05T00:00:00+08:00</published><updated>2018-03-05T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-gc</id><content type="html" xml:base="http://localhost:4000/resources/java-gc.html">&lt;p&gt;收集算法是内存回收的方法论，垃圾收集器则是内存回收的具体实现。&lt;/p&gt;
+
+&lt;p&gt;下图展示了7种作用于不同年代的收集器，两个收集器存在连线，则说明它们可以搭配使用。虚拟机所处的区域则表示它是属于新生代还是老年代的收集器。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;../assets/img/java-gc-1.png&quot; alt=&quot;java-gc-1&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;【Serial收集器】：Serial收集器是最基本，发展历史最悠久的收集器。
+    &lt;ul&gt;
+      &lt;li&gt;新生代收集器，采用复制算法&lt;/li&gt;
+      &lt;li&gt;单线程收集&lt;/li&gt;
+      &lt;li&gt;会发生“Stop-The-World”&lt;/li&gt;
+      &lt;li&gt;是运行在Client模式下的默认新生代收集器&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;【ParNew收集器】：ParNew收集器是Serial收集器的多线程版本。
+    &lt;ul&gt;
+      &lt;li&gt;新生代收集器，采用复制算法&lt;/li&gt;
+      &lt;li&gt;多线程收集&lt;/li&gt;
+      &lt;li&gt;会发生“Stop-The-World”&lt;/li&gt;
+      &lt;li&gt;是运行在Server模式下的默认新生代收集器&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;【Parallel Scavenge收集器】：与ParNew很相似，不同之处是吞吐量优先的收集器。自适应调节策略是Parallel Scavenge收集器与ParNew收集器的一个重要区别。
+    &lt;ul&gt;
+      &lt;li&gt;新生代收集器，采用复制算法&lt;/li&gt;
+      &lt;li&gt;多线程收集&lt;/li&gt;
+      &lt;li&gt;会发生“Stop-The-World”&lt;/li&gt;
+      &lt;li&gt;吞吐量优先&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;【Serial Old收集器】：Serial Old收集器是Serial收集器的老年代版本。
+    &lt;ul&gt;
+      &lt;li&gt;老年代收集器，采用标记-整理算法&lt;/li&gt;
+      &lt;li&gt;单线程收集&lt;/li&gt;
+      &lt;li&gt;会发生“Stop-The-World”&lt;/li&gt;
+      &lt;li&gt;在Client模式下使用&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;【Parallel Old收集器】：是Parallel Scavenge收集器的老年代版本
+    &lt;ul&gt;
+      &lt;li&gt;老年代收集器，采用标记-整理算法&lt;/li&gt;
+      &lt;li&gt;多线程收集&lt;/li&gt;
+      &lt;li&gt;会发生“Stop-The-World”&lt;/li&gt;
+      &lt;li&gt;吞吐量优先&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;【CMS收集器】：CMS收集器是一种以获取最短回收停顿时间为目标的收集器。
+    &lt;ul&gt;
+      &lt;li&gt;老年代收集器，采用标记-清除算法&lt;/li&gt;
+      &lt;li&gt;初始标记、并发标记、重新标记、并发清除&lt;/li&gt;
+      &lt;li&gt;初始标记和重新标记会“Stop-The-World”&lt;/li&gt;
+      &lt;li&gt;缺点：对CPU资源敏感、无法处理浮动垃圾（易触发Full GC）、大量空间碎片产生&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;【G1收集器】：G1是一款面向服务端应用的垃圾收集器。
+    &lt;ul&gt;
+      &lt;li&gt;并行与并发、通过使用多个CPU来缩短“Stop-the-World“的时间&lt;/li&gt;
+      &lt;li&gt;分代收集&lt;/li&gt;
+      &lt;li&gt;空间整合&lt;/li&gt;
+      &lt;li&gt;可预测的停顿&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="java based" /><summary type="html">收集算法是内存回收的方法论，垃圾收集器则是内存回收的具体实现。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-gc-0.jpeg" /></entry><entry><title type="html">Java内存区域与内存溢出异常</title><link href="http://localhost:4000/resources/java-space.html" rel="alternate" type="text/html" title="Java内存区域与内存溢出异常" /><published>2018-03-01T00:00:00+08:00</published><updated>2018-03-01T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-space</id><content type="html" xml:base="http://localhost:4000/resources/java-space.html">&lt;h2 id=&quot;java内存区域&quot;&gt;Java内存区域&lt;/h2&gt;
+&lt;p&gt;Java虚拟机在执行Java程序的过程中会把它所管理的内存划分为若干个不同的数据区域，这些区域都有各自的用途，以及创建和销毁时间。
+&lt;img src=&quot;../assets/img/java-space-1.png&quot; alt=&quot;java-space-1&quot; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;【程序计数器】：是一块较小的内存空间，可以看作是当前线程所执行的字节码行号指示器。在虚拟机的概念模型里，字节码解释器工作时就是通过改变这个计数器的值，来选取下一条需要执行的字节码指令。&lt;/p&gt;
+
+    &lt;p&gt;由于Java虚拟机的多线程是通过线程轮流切换并分配处理器的执行时间的方式来实现的，在任何一个确定的时刻，一个处理器（对于多核处理器来说是一个内核）都只会执行一条线程中的指令。因此，为了线程切换后，能够恢复到正确的执行位置，每条线程都需要一个独立的线程计数器，各条线程之间的计数器互不影响，独立存储，我们称这类内存区域为“线程私有”的内存。&lt;/p&gt;
+
+    &lt;p&gt;此内存区域是唯一一个在Java虚拟机规范中没有规定任何&lt;code class=&quot;highlighter-rouge&quot;&gt;OutOfMemoryError&lt;/code&gt;情况的区域。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;【Java虚拟机栈】：与程序计数器一样，Java虚拟机栈也是线程私有的，它的生命周期和线程相同。虚拟机栈描述的是Java方法执行的内存模型：每个方法在执行同时都会创建一个栈帧用于存储局部变量表，操作数栈，动态链接，方法出口等信息。每一个方法从调用直至执行完成的过程，就对应着一个栈帧在虚拟机栈中入栈到出栈的过程。&lt;/p&gt;
+
+    &lt;p&gt;经常有人把Java内存区分为对内存和栈内存，这种分法比较粗糙，Java内存区域的划分实际上远比这复杂。这种划分方式的流行只能说明大多数程序员最关注的，与对象内存分配关系最密切的内存区域就是这两块。&lt;/p&gt;
+
+    &lt;p&gt;在Java虚拟机规范中，对这个区域规定了两种异常状况：如果线程请求的栈深度大于虚拟机允许的深度，将抛出&lt;code class=&quot;highlighter-rouge&quot;&gt;StackOverFlowError&lt;/code&gt;异常；如果虚拟机栈可以动态扩展，如果扩展时无法申请到足够的内存，就会抛出OutOfMemoryError异常。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;【本地方法栈】：本地方法栈与虚拟机方法栈所发挥的作用非常相似，他们之间的区别不过是虚拟机栈为虚拟机执行Java方法服务，而本地方法栈则为虚拟机使用到的Native方法服务。&lt;/p&gt;
+
+    &lt;p&gt;与虚拟机栈一样，本地方法栈区域也会抛出&lt;code class=&quot;highlighter-rouge&quot;&gt;StackOverFlowError&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;OutOfMemoryError&lt;/code&gt;异常。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;【Java堆】：Java堆是被所有线程共享的一块内存区域，在虚拟机启动时创建。次内存区的唯一目的就是存放对象实例。&lt;/p&gt;
+
+    &lt;p&gt;Java堆是来及收集器管理的主要区域。从内存回收的角度来看，由于现代收集器基本都采用了分代收集算法，所以Java堆还可以细分为：新生代和老年代：再细致一点的有&lt;code class=&quot;highlighter-rouge&quot;&gt;Eden&lt;/code&gt;空间，&lt;code class=&quot;highlighter-rouge&quot;&gt;From Survivor&lt;/code&gt;空间、&lt;code class=&quot;highlighter-rouge&quot;&gt;To Servivor&lt;/code&gt;空间等。&lt;/p&gt;
+
+    &lt;p&gt;当前主流的虚拟机都是可以扩展堆空间的，如果在堆中没有内存完成实例分配，并且也无法再扩展时，将会抛出&lt;code class=&quot;highlighter-rouge&quot;&gt;OutOfMemoryError&lt;/code&gt;异常。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;【方法区】：方法区与Java堆一样，是各个线程共享的内存区域，它用于存储已被虚拟机加载的类信息、常量、静态变量、即使编译器编译后的代码等数据。&lt;/p&gt;
+
+    &lt;p&gt;对于习惯在HotSpot虚拟机上开发，部署程序的开发者来说，很多人愿意把方法区称为“永久代”，本质上两者并不等价，仅仅是因为HotSpot虚拟机的设计团队选择把GC分代收集扩展至方法区，或者说使用永久代来实现方法区而已，这样HotSpot的垃圾收集器可以像管理Java堆一样管理这部分内存。&lt;/p&gt;
+
+    &lt;p&gt;根据Java虚拟机规范的规定，当方法区无法满足内存分配的需求时，将抛出&lt;code class=&quot;highlighter-rouge&quot;&gt;OutOfMemoryError&lt;/code&gt;异常。&lt;/p&gt;
+
+    &lt;p&gt;​&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;java对象在heap中的状态&quot;&gt;Java对象在heap中的状态&lt;/h2&gt;
+&lt;p&gt;Java对象在堆中的状态与垃圾回收紧密相关，关于垃圾回收后面会有专门的文章进行介绍。&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;【可触及状态】：从根节点开始，可以搜索到这个对象，也就是说这个对象可以被访问到。&lt;/li&gt;
+  &lt;li&gt;【可复活状态】：从根节点开始，无论如何也不能访问到这个对象，也就是说这个对象的所有引用都已经被释放，没有任何变量引用该对象了。
+  但是该对象可能在&lt;code class=&quot;highlighter-rouge&quot;&gt;finalize()&lt;/code&gt;方法中被再次引用，从而复活。&lt;/li&gt;
+  &lt;li&gt;【不可触及状态】：对象的引用都被释放了，并且在对象的&lt;code class=&quot;highlighter-rouge&quot;&gt;finalize()&lt;/code&gt;方法中没有复活，这样的话，该对象就是不可触及状态。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;关于【不可触及状态】所有的对象都有&lt;code class=&quot;highlighter-rouge&quot;&gt;finalize()&lt;/code&gt;方法，并且该方法只执行一次，并且他的执行时间是随机的，一般在我们为变量赋值&lt;code class=&quot;highlighter-rouge&quot;&gt;null&lt;/code&gt;之后执行。
+如果我们在某个对象的&lt;code class=&quot;highlighter-rouge&quot;&gt;finalize()&lt;/code&gt;方法中为他增加引用，那么该对象就会复活，但是我们再次将其赋值为&lt;code class=&quot;highlighter-rouge&quot;&gt;null&lt;/code&gt;，将不会再执行&lt;code class=&quot;highlighter-rouge&quot;&gt;finalize()&lt;/code&gt;方法。&lt;/p&gt;
+
+&lt;h2 id=&quot;outofmemory异常&quot;&gt;OutOfMemory异常&lt;/h2&gt;
+&lt;p&gt;在Java虚拟机规范的描述中，除了程序计数器外，虚拟机内存的其他几个运行时区域都有发生OutOfMemory（OOM）的可能。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;【Java堆益处】：Java堆用于存储对象实例，只要不断地创建对象，并且保证GC Roots到对象之间有可达路径来避免垃圾回收机制清除这些对象，那么在对象数量达到最大堆的容量限制后就会产生内存溢出异常。&lt;/p&gt;
+
+    &lt;p&gt;Java堆内存的OOM异常是实际应用中常见的内存溢出异常情况。当出现Java堆内存溢出时，异常堆栈信息&lt;code class=&quot;highlighter-rouge&quot;&gt;java.lang.OutOfMemoryError&lt;/code&gt;会跟着进一步提示&lt;code class=&quot;highlighter-rouge&quot;&gt;Java heap space&lt;/code&gt;。&lt;/p&gt;
+
+    &lt;p&gt;堆溢出重点是确认内存中的对象是否是必要的，也就是要先分清楚到底是出现了内存泄漏（Memory Leak）还是内存溢出（Memory OverFlow）。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;【虚拟机栈和本地方法栈溢出】：在Java虚拟机规范中描述了两种异常：如果线程请求的栈深度大于虚拟机所允许的最大深度，将抛出&lt;code class=&quot;highlighter-rouge&quot;&gt;StackOverflowError&lt;/code&gt;异常；如果虚拟机再扩展栈时无法申请到足够的空间，则抛出&lt;code class=&quot;highlighter-rouge&quot;&gt;OutOfMemoryError&lt;/code&gt;异常。一般情况下都会抛出&lt;code class=&quot;highlighter-rouge&quot;&gt;StackOverflowError&lt;/code&gt;异常。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;【方法区和运行时常量池溢出】：运行时常量池时方法区的一部分，因此&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="java based" /><summary type="html">Java内存区域 Java虚拟机在执行Java程序的过程中会把它所管理的内存划分为若干个不同的数据区域，这些区域都有各自的用途，以及创建和销毁时间。 【程序计数器】：是一块较小的内存空间，可以看作是当前线程所执行的字节码行号指示器。在虚拟机的概念模型里，字节码解释器工作时就是通过改变这个计数器的值，来选取下一条需要执行的字节码指令。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-space-0.jpeg" /></entry><entry><title type="html">是时候祭出这张图了！</title><link href="http://localhost:4000/life/yehuimei.html" rel="alternate" type="text/html" title="是时候祭出这张图了！" /><published>2018-02-20T00:00:00+08:00</published><updated>2018-02-20T00:00:00+08:00</updated><id>http://localhost:4000/life/yehuimei</id><content type="html" xml:base="http://localhost:4000/life/yehuimei.html">&lt;p&gt;今天是正月初五。&lt;/p&gt;
 
 &lt;p&gt;原本计划今天和老婆做高铁回家，结果初中同学Hht也正要去北京宜家买点儿家具，就决定搭Hht的便车一同去北京。因为时间比较充裕，我们就抱着郊游的心态，一路不慌不忙。&lt;/p&gt;
 
@@ -79,7 +212,7 @@ test                     → source folder for unit or functional tests
 
 &lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
 
-&lt;p&gt;这一篇主要是对&lt;strong&gt;「&lt;a href=&quot;https://www.playframework.com&quot;&gt;Play Framework&lt;/a&gt;」&lt;/strong&gt;有个简单的了解，更多的还是需要去看官方文档，再次&lt;strong&gt;「赞」&lt;/strong&gt;一下官方文档，写的真的很清晰。后续打算从SBT构建项目开始一步一步的写出一个可以使用的web应用。&lt;/p&gt;</content><author><name>郝强</name></author><category term="documentation" /><category term="scala-project" /><summary type="html">关于Play Framework 「Play Framework」:</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/scala-project-play-0.jpeg" /></entry><entry><title type="html">搭建Scala项目——slick篇</title><link href="http://localhost:4000/documentation/scala-project-slick.html" rel="alternate" type="text/html" title="搭建Scala项目——slick篇" /><published>2018-01-24T00:00:00+08:00</published><updated>2018-01-24T00:00:00+08:00</updated><id>http://localhost:4000/documentation/scala-project-slick</id><content type="html" xml:base="http://localhost:4000/documentation/scala-project-slick.html">&lt;h2 id=&quot;关于slick&quot;&gt;关于Slick&lt;/h2&gt;
+&lt;p&gt;这一篇主要是对&lt;strong&gt;「&lt;a href=&quot;https://www.playframework.com&quot;&gt;Play Framework&lt;/a&gt;」&lt;/strong&gt;有个简单的了解，更多的还是需要去看官方文档，再次&lt;strong&gt;「赞」&lt;/strong&gt;一下官方文档，写的真的很清晰。后续打算从SBT构建项目开始一步一步的写出一个可以使用的web应用。&lt;/p&gt;</content><author><name>郝强</name></author><category term="documentation" /><category term="scala-project" /><summary type="html">关于Play Framework 「Play Framework」:</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/scala-project-play-0.jpeg" /></entry><entry><title type="html">搭建Scala项目——Slick篇</title><link href="http://localhost:4000/documentation/scala-project-slick.html" rel="alternate" type="text/html" title="搭建Scala项目——Slick篇" /><published>2018-01-24T00:00:00+08:00</published><updated>2018-01-24T00:00:00+08:00</updated><id>http://localhost:4000/documentation/scala-project-slick</id><content type="html" xml:base="http://localhost:4000/documentation/scala-project-slick.html">&lt;h2 id=&quot;关于slick&quot;&gt;关于Slick&lt;/h2&gt;
 
 &lt;p&gt;&lt;strong&gt;「&lt;a href=&quot;http://slick.lightbend.com&quot;&gt;Slick&lt;/a&gt;」&lt;/strong&gt; (“Scala Language-Integrated Connection Kit”) is &lt;a href=&quot;https://lightbend.com/&quot;&gt;Lightbend&lt;/a&gt;’s Functional Relational Mapping (FRM) library for Scala that makes it easy to work with relational databases. It allows you to work with stored data almost as if you were using Scala collections while at the same time giving you full control over when database access happens and which data is transferred. You can also use SQL directly. Execution of database actions is done asynchronously, making Slick a perfect fit for your reactive applications based on &lt;a href=&quot;https://playframework.com/&quot;&gt;Play&lt;/a&gt; and &lt;a href=&quot;http://akka.io/&quot;&gt;Akka&lt;/a&gt;.&lt;/p&gt;
 
@@ -910,18 +1043,4 @@ jekyll serve --watch
 &lt;/ol&gt;
 
 &lt;p&gt;本编我们花了10分钟就快速搭建完了自己的个人主页，不过我们可以看到，还是一个很简单的首页。离我们想要的属于自己的博客还有一段距离，不过没关系，接下来的「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-jekyll.html&quot;&gt;搭建属于自己的博客——Jekyll篇&lt;/a&gt;」
-中我们将会花10分钟快速生成我们的博客，敬请期待吧！&lt;/p&gt;</content><author><name>郝强</name></author><category term="documentation" /><category term="blog" /><summary type="html">作为第一篇分享的技术类文章，打算从如何搭建这个个人博客说起。想必每一名程序员都想拥有自己的博客，大致上无外乎以下三种：</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/build-blog-pages-0.jpeg" /></entry><entry><title type="html">写给2018年的自己</title><link href="http://localhost:4000/life/welcome-to-nyanko.html" rel="alternate" type="text/html" title="写给2018年的自己" /><published>2018-01-01T00:00:00+08:00</published><updated>2018-01-01T00:00:00+08:00</updated><id>http://localhost:4000/life/welcome-to-nyanko</id><content type="html" xml:base="http://localhost:4000/life/welcome-to-nyanko.html">&lt;p&gt;想来想去打算用这个标题作为我的博客的开篇。感觉程序员都想有一个自己的博客，我也不例外。尤其是两年前开始，这个想法更为强烈。之前也调研过，最后还是选择了在GitHub上驻留。本来这个博客其实可以更早开始，标题也可以更早，比如写给2016年的我，或者写给2017年的我。最后却还是拖到了2018年……&lt;/p&gt;
-
-&lt;p&gt;主要是因为这两年经历了太多人生大事，从买房到装修再到结婚。整整跨越了两年时间。期间穿插着各种紧急的项目，仿佛工作和生活在跟我开玩笑，生活上能喘口气，结果重要的工作紧接着开始，刚刚把重要的工作做完，生活中又开始忙活起来。结果导致这两年间几乎没有休息的时间。整个人也异常疲惫。本以为到一个节点能停下来休息一会，结果工作和生活就开始推着我不得不继续前行。因此，我的博客直到现在才开始弄的有些模样。&lt;/p&gt;
-
-&lt;p&gt;搭建自己的博客呢主要是有以下几个目的：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;我会在这里介绍一些我写过的小demo「&lt;a href=&quot;http://localhost:4000/pages/project.html&quot;&gt;My Projects&lt;/a&gt;」。&lt;/li&gt;
-  &lt;li&gt;我会在这里记录一些我总结的经验「&lt;a href=&quot;http://localhost:4000/pages/documentation.html&quot;&gt;Documentation&lt;/a&gt;」。&lt;/li&gt;
-  &lt;li&gt;我会在这里分享一些我认为有用的资料「&lt;a href=&quot;http://localhost:4000/pages/resources.html&quot;&gt;Learning Resources&lt;/a&gt;」。&lt;/li&gt;
-  &lt;li&gt;我会在这里留下一些我的生活感悟「&lt;a href=&quot;/pages/life.html&quot;&gt;My Life&lt;/a&gt;」。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;以上这四点也是在「&lt;a href=&quot;http://localhost:4000/pages/about.html&quot;&gt;About&lt;/a&gt;」中有了介绍。
-关于这个网站的整体风格也是我花了一些时间仔细挑选的。比较喜欢这种简单文艺的风格，这也是我自己搭建博客的原因之一吧。同时，也希望这个地方能给我带来一片宁静……&lt;/p&gt;</content><author><name>郝强</name></author><category term="life" /><summary type="html">想来想去打算用这个标题作为我的博客的开篇。感觉程序员都想有一个自己的博客，我也不例外。尤其是两年前开始，这个想法更为强烈。之前也调研过，最后还是选择了在GitHub上驻留。本来这个博客其实可以更早开始，标题也可以更早，比如写给2016年的我，或者写给2017年的我。最后却还是拖到了2018年……</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/welcome-to-nyanko-0.jpeg" /></entry></feed>
+中我们将会花10分钟快速生成我们的博客，敬请期待吧！&lt;/p&gt;</content><author><name>郝强</name></author><category term="documentation" /><category term="blog" /><summary type="html">作为第一篇分享的技术类文章，打算从如何搭建这个个人博客说起。想必每一名程序员都想拥有自己的博客，大致上无外乎以下三种：</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/build-blog-pages-0.jpeg" /></entry></feed>
