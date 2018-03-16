@@ -1,1046 +1,699 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-03-09T19:28:33+08:00</updated><id>http://localhost:4000/</id><title type="html">Mr.Nyanko</title><subtitle>Hao Qiang's Bolg</subtitle><author><name>Hao Qiang</name></author><entry><title type="html">垃圾收集器与内存分配策略</title><link href="http://localhost:4000/resources/java-gc.html" rel="alternate" type="text/html" title="垃圾收集器与内存分配策略" /><published>2018-03-05T00:00:00+08:00</published><updated>2018-03-05T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-gc</id><content type="html" xml:base="http://localhost:4000/resources/java-gc.html">&lt;p&gt;收集算法是内存回收的方法论，垃圾收集器则是内存回收的具体实现。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-03-16T19:06:58+08:00</updated><id>http://localhost:4000/</id><title type="html">Mr.Nyanko</title><subtitle>Hao Qiang's Bolg</subtitle><author><name>Hao Qiang</name></author><entry><title type="html">Spring在web容器中的启动过程</title><link href="http://localhost:4000/resources/spring-run.html" rel="alternate" type="text/html" title="Spring在web容器中的启动过程" /><published>2018-03-15T00:00:00+08:00</published><updated>2018-03-15T00:00:00+08:00</updated><id>http://localhost:4000/resources/spring-run</id><content type="html" xml:base="http://localhost:4000/resources/spring-run.html">&lt;h2 id=&quot;spring容器的启动过程是什么&quot;&gt;Spring容器的启动过程是什么？&lt;/h2&gt;
+&lt;p&gt;Spring在web容器中，启动过程是Servlet容器对Spring环境的构造，初始化，装配的过程。&lt;/p&gt;
 
-&lt;p&gt;下图展示了7种作用于不同年代的收集器，两个收集器存在连线，则说明它们可以搭配使用。虚拟机所处的区域则表示它是属于新生代还是老年代的收集器。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;../assets/img/java-gc-1.png&quot; alt=&quot;java-gc-1&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;【Serial收集器】：Serial收集器是最基本，发展历史最悠久的收集器。
-    &lt;ul&gt;
-      &lt;li&gt;新生代收集器，采用复制算法&lt;/li&gt;
-      &lt;li&gt;单线程收集&lt;/li&gt;
-      &lt;li&gt;会发生“Stop-The-World”&lt;/li&gt;
-      &lt;li&gt;是运行在Client模式下的默认新生代收集器&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;【ParNew收集器】：ParNew收集器是Serial收集器的多线程版本。
-    &lt;ul&gt;
-      &lt;li&gt;新生代收集器，采用复制算法&lt;/li&gt;
-      &lt;li&gt;多线程收集&lt;/li&gt;
-      &lt;li&gt;会发生“Stop-The-World”&lt;/li&gt;
-      &lt;li&gt;是运行在Server模式下的默认新生代收集器&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;【Parallel Scavenge收集器】：与ParNew很相似，不同之处是吞吐量优先的收集器。自适应调节策略是Parallel Scavenge收集器与ParNew收集器的一个重要区别。
-    &lt;ul&gt;
-      &lt;li&gt;新生代收集器，采用复制算法&lt;/li&gt;
-      &lt;li&gt;多线程收集&lt;/li&gt;
-      &lt;li&gt;会发生“Stop-The-World”&lt;/li&gt;
-      &lt;li&gt;吞吐量优先&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;【Serial Old收集器】：Serial Old收集器是Serial收集器的老年代版本。
-    &lt;ul&gt;
-      &lt;li&gt;老年代收集器，采用标记-整理算法&lt;/li&gt;
-      &lt;li&gt;单线程收集&lt;/li&gt;
-      &lt;li&gt;会发生“Stop-The-World”&lt;/li&gt;
-      &lt;li&gt;在Client模式下使用&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;【Parallel Old收集器】：是Parallel Scavenge收集器的老年代版本
-    &lt;ul&gt;
-      &lt;li&gt;老年代收集器，采用标记-整理算法&lt;/li&gt;
-      &lt;li&gt;多线程收集&lt;/li&gt;
-      &lt;li&gt;会发生“Stop-The-World”&lt;/li&gt;
-      &lt;li&gt;吞吐量优先&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;【CMS收集器】：CMS收集器是一种以获取最短回收停顿时间为目标的收集器。
-    &lt;ul&gt;
-      &lt;li&gt;老年代收集器，采用标记-清除算法&lt;/li&gt;
-      &lt;li&gt;初始标记、并发标记、重新标记、并发清除&lt;/li&gt;
-      &lt;li&gt;初始标记和重新标记会“Stop-The-World”&lt;/li&gt;
-      &lt;li&gt;缺点：对CPU资源敏感、无法处理浮动垃圾（易触发Full GC）、大量空间碎片产生&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;【G1收集器】：G1是一款面向服务端应用的垃圾收集器。
-    &lt;ul&gt;
-      &lt;li&gt;并行与并发、通过使用多个CPU来缩短“Stop-the-World“的时间&lt;/li&gt;
-      &lt;li&gt;分代收集&lt;/li&gt;
-      &lt;li&gt;空间整合&lt;/li&gt;
-      &lt;li&gt;可预测的停顿&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="java based" /><summary type="html">收集算法是内存回收的方法论，垃圾收集器则是内存回收的具体实现。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-gc-0.jpeg" /></entry><entry><title type="html">Java内存区域与内存溢出异常</title><link href="http://localhost:4000/resources/java-space.html" rel="alternate" type="text/html" title="Java内存区域与内存溢出异常" /><published>2018-03-01T00:00:00+08:00</published><updated>2018-03-01T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-space</id><content type="html" xml:base="http://localhost:4000/resources/java-space.html">&lt;h2 id=&quot;java内存区域&quot;&gt;Java内存区域&lt;/h2&gt;
-&lt;p&gt;Java虚拟机在执行Java程序的过程中会把它所管理的内存划分为若干个不同的数据区域，这些区域都有各自的用途，以及创建和销毁时间。
-&lt;img src=&quot;../assets/img/java-space-1.png&quot; alt=&quot;java-space-1&quot; /&gt;&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;【程序计数器】：是一块较小的内存空间，可以看作是当前线程所执行的字节码行号指示器。在虚拟机的概念模型里，字节码解释器工作时就是通过改变这个计数器的值，来选取下一条需要执行的字节码指令。&lt;/p&gt;
-
-    &lt;p&gt;由于Java虚拟机的多线程是通过线程轮流切换并分配处理器的执行时间的方式来实现的，在任何一个确定的时刻，一个处理器（对于多核处理器来说是一个内核）都只会执行一条线程中的指令。因此，为了线程切换后，能够恢复到正确的执行位置，每条线程都需要一个独立的线程计数器，各条线程之间的计数器互不影响，独立存储，我们称这类内存区域为“线程私有”的内存。&lt;/p&gt;
-
-    &lt;p&gt;此内存区域是唯一一个在Java虚拟机规范中没有规定任何&lt;code class=&quot;highlighter-rouge&quot;&gt;OutOfMemoryError&lt;/code&gt;情况的区域。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;【Java虚拟机栈】：与程序计数器一样，Java虚拟机栈也是线程私有的，它的生命周期和线程相同。虚拟机栈描述的是Java方法执行的内存模型：每个方法在执行同时都会创建一个栈帧用于存储局部变量表，操作数栈，动态链接，方法出口等信息。每一个方法从调用直至执行完成的过程，就对应着一个栈帧在虚拟机栈中入栈到出栈的过程。&lt;/p&gt;
-
-    &lt;p&gt;经常有人把Java内存区分为对内存和栈内存，这种分法比较粗糙，Java内存区域的划分实际上远比这复杂。这种划分方式的流行只能说明大多数程序员最关注的，与对象内存分配关系最密切的内存区域就是这两块。&lt;/p&gt;
-
-    &lt;p&gt;在Java虚拟机规范中，对这个区域规定了两种异常状况：如果线程请求的栈深度大于虚拟机允许的深度，将抛出&lt;code class=&quot;highlighter-rouge&quot;&gt;StackOverFlowError&lt;/code&gt;异常；如果虚拟机栈可以动态扩展，如果扩展时无法申请到足够的内存，就会抛出OutOfMemoryError异常。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;【本地方法栈】：本地方法栈与虚拟机方法栈所发挥的作用非常相似，他们之间的区别不过是虚拟机栈为虚拟机执行Java方法服务，而本地方法栈则为虚拟机使用到的Native方法服务。&lt;/p&gt;
-
-    &lt;p&gt;与虚拟机栈一样，本地方法栈区域也会抛出&lt;code class=&quot;highlighter-rouge&quot;&gt;StackOverFlowError&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;OutOfMemoryError&lt;/code&gt;异常。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;【Java堆】：Java堆是被所有线程共享的一块内存区域，在虚拟机启动时创建。次内存区的唯一目的就是存放对象实例。&lt;/p&gt;
-
-    &lt;p&gt;Java堆是来及收集器管理的主要区域。从内存回收的角度来看，由于现代收集器基本都采用了分代收集算法，所以Java堆还可以细分为：新生代和老年代：再细致一点的有&lt;code class=&quot;highlighter-rouge&quot;&gt;Eden&lt;/code&gt;空间，&lt;code class=&quot;highlighter-rouge&quot;&gt;From Survivor&lt;/code&gt;空间、&lt;code class=&quot;highlighter-rouge&quot;&gt;To Servivor&lt;/code&gt;空间等。&lt;/p&gt;
-
-    &lt;p&gt;当前主流的虚拟机都是可以扩展堆空间的，如果在堆中没有内存完成实例分配，并且也无法再扩展时，将会抛出&lt;code class=&quot;highlighter-rouge&quot;&gt;OutOfMemoryError&lt;/code&gt;异常。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;【方法区】：方法区与Java堆一样，是各个线程共享的内存区域，它用于存储已被虚拟机加载的类信息、常量、静态变量、即使编译器编译后的代码等数据。&lt;/p&gt;
-
-    &lt;p&gt;对于习惯在HotSpot虚拟机上开发，部署程序的开发者来说，很多人愿意把方法区称为“永久代”，本质上两者并不等价，仅仅是因为HotSpot虚拟机的设计团队选择把GC分代收集扩展至方法区，或者说使用永久代来实现方法区而已，这样HotSpot的垃圾收集器可以像管理Java堆一样管理这部分内存。&lt;/p&gt;
-
-    &lt;p&gt;根据Java虚拟机规范的规定，当方法区无法满足内存分配的需求时，将抛出&lt;code class=&quot;highlighter-rouge&quot;&gt;OutOfMemoryError&lt;/code&gt;异常。&lt;/p&gt;
-
-    &lt;p&gt;​&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;java对象在heap中的状态&quot;&gt;Java对象在heap中的状态&lt;/h2&gt;
-&lt;p&gt;Java对象在堆中的状态与垃圾回收紧密相关，关于垃圾回收后面会有专门的文章进行介绍。&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;【可触及状态】：从根节点开始，可以搜索到这个对象，也就是说这个对象可以被访问到。&lt;/li&gt;
-  &lt;li&gt;【可复活状态】：从根节点开始，无论如何也不能访问到这个对象，也就是说这个对象的所有引用都已经被释放，没有任何变量引用该对象了。
-  但是该对象可能在&lt;code class=&quot;highlighter-rouge&quot;&gt;finalize()&lt;/code&gt;方法中被再次引用，从而复活。&lt;/li&gt;
-  &lt;li&gt;【不可触及状态】：对象的引用都被释放了，并且在对象的&lt;code class=&quot;highlighter-rouge&quot;&gt;finalize()&lt;/code&gt;方法中没有复活，这样的话，该对象就是不可触及状态。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;关于【不可触及状态】所有的对象都有&lt;code class=&quot;highlighter-rouge&quot;&gt;finalize()&lt;/code&gt;方法，并且该方法只执行一次，并且他的执行时间是随机的，一般在我们为变量赋值&lt;code class=&quot;highlighter-rouge&quot;&gt;null&lt;/code&gt;之后执行。
-如果我们在某个对象的&lt;code class=&quot;highlighter-rouge&quot;&gt;finalize()&lt;/code&gt;方法中为他增加引用，那么该对象就会复活，但是我们再次将其赋值为&lt;code class=&quot;highlighter-rouge&quot;&gt;null&lt;/code&gt;，将不会再执行&lt;code class=&quot;highlighter-rouge&quot;&gt;finalize()&lt;/code&gt;方法。&lt;/p&gt;
-
-&lt;h2 id=&quot;outofmemory异常&quot;&gt;OutOfMemory异常&lt;/h2&gt;
-&lt;p&gt;在Java虚拟机规范的描述中，除了程序计数器外，虚拟机内存的其他几个运行时区域都有发生OutOfMemory（OOM）的可能。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;【Java堆益处】：Java堆用于存储对象实例，只要不断地创建对象，并且保证GC Roots到对象之间有可达路径来避免垃圾回收机制清除这些对象，那么在对象数量达到最大堆的容量限制后就会产生内存溢出异常。&lt;/p&gt;
-
-    &lt;p&gt;Java堆内存的OOM异常是实际应用中常见的内存溢出异常情况。当出现Java堆内存溢出时，异常堆栈信息&lt;code class=&quot;highlighter-rouge&quot;&gt;java.lang.OutOfMemoryError&lt;/code&gt;会跟着进一步提示&lt;code class=&quot;highlighter-rouge&quot;&gt;Java heap space&lt;/code&gt;。&lt;/p&gt;
-
-    &lt;p&gt;堆溢出重点是确认内存中的对象是否是必要的，也就是要先分清楚到底是出现了内存泄漏（Memory Leak）还是内存溢出（Memory OverFlow）。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;【虚拟机栈和本地方法栈溢出】：在Java虚拟机规范中描述了两种异常：如果线程请求的栈深度大于虚拟机所允许的最大深度，将抛出&lt;code class=&quot;highlighter-rouge&quot;&gt;StackOverflowError&lt;/code&gt;异常；如果虚拟机再扩展栈时无法申请到足够的空间，则抛出&lt;code class=&quot;highlighter-rouge&quot;&gt;OutOfMemoryError&lt;/code&gt;异常。一般情况下都会抛出&lt;code class=&quot;highlighter-rouge&quot;&gt;StackOverflowError&lt;/code&gt;异常。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;【方法区和运行时常量池溢出】：运行时常量池时方法区的一部分，因此&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="java based" /><summary type="html">Java内存区域 Java虚拟机在执行Java程序的过程中会把它所管理的内存划分为若干个不同的数据区域，这些区域都有各自的用途，以及创建和销毁时间。 【程序计数器】：是一块较小的内存空间，可以看作是当前线程所执行的字节码行号指示器。在虚拟机的概念模型里，字节码解释器工作时就是通过改变这个计数器的值，来选取下一条需要执行的字节码指令。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-space-0.jpeg" /></entry><entry><title type="html">是时候祭出这张图了！</title><link href="http://localhost:4000/life/yehuimei.html" rel="alternate" type="text/html" title="是时候祭出这张图了！" /><published>2018-02-20T00:00:00+08:00</published><updated>2018-02-20T00:00:00+08:00</updated><id>http://localhost:4000/life/yehuimei</id><content type="html" xml:base="http://localhost:4000/life/yehuimei.html">&lt;p&gt;今天是正月初五。&lt;/p&gt;
-
-&lt;p&gt;原本计划今天和老婆做高铁回家，结果初中同学Hht也正要去北京宜家买点儿家具，就决定搭Hht的便车一同去北京。因为时间比较充裕，我们就抱着郊游的心态，一路不慌不忙。&lt;/p&gt;
-
-&lt;p&gt;从唐山到北京大概两个小时的车程吧，除了聊天，车内的BGM定是少不了的。我是很喜欢这种调调的，北京生活节奏比较快，即便是回到老家，也因为是过年，大多要串亲戚，拜年之类的，也没有什么休假的感觉。
-Hht是我发小，从初中开始我们就是同学，一直到大学毕业，再到后来一同到北京闯荡，这一晃也有15年了。他现在回到老家也有了自己得意的工作，我则是留在了北京。
-近几年大家工作也都很忙，平时聊天的机会也是很少。因此我们这一路也是有说不完的话题，BGM也是一首接着一首不停的变换。随之音响里传出了熟悉的前奏，正是周杰伦的《晴天》。我和我老婆，包括Hht都是Jay的歌迷。
-我们不再继续聊天，而是静静的聆听这首《晴天》。”故事的小黄花，从出生那年就飘着…“，熟悉歌词也一下把我的记忆拉回了我的初中时代。回忆起了那时的无忧无虑，回忆起了那时的青葱懵懂，回忆起了那时的自由自在…&lt;/p&gt;
-
-&lt;p&gt;今年是戊戌年，这一年我30岁了。我不由得看了看坐在驾驶座操纵方向盘的Hht，又看了看后视镜中的自己，颇有些感触。自打2012年毕业来到北京，我在北京漂了也有5年了。相比之下，我可能比其他北漂要幸运的多，在房价还没有高的离谱的时候及时买了房子，同时也和老婆在17年结了婚。
-今年是我们第一年回唐山过年，我笑称”这是一趟洗涤心灵的旅程”。这话其实不假，长时间的在北京的工作生活，使我看惯了冷漠，残忍，变得有些麻木。即便我时刻提醒自己要保持乐观，但是还是按捺不住心中的刻薄。
-但是，一回到老家，就顿时体会到这些快要失去的人情味。&lt;/p&gt;
-
-&lt;p&gt;回想起来，好几年没听过Jay的歌了，从初中到高中，他的每张CD我都会买，即便到了大学，也会在软件上不停的循环他的新专辑。但是从工作以后渐渐的不再听他的歌了，确切的说是不怎么听歌了。
-我是很欣赏现在的Hht的，成熟又保留了年少时的洒脱，相比之下现在的我，油腻、刻薄，生活过的小心翼翼。事实上那时的我和Hht性格是很相像的，我们都喜欢《同一种调调》歌词中描写的”凡事要自己主导，决定穿什么外套，有专属的铃声讯号，很少笑、吃全麦的面包”的那种屌屌的生活态度。
-我想这种”屌屌感”，大概是源于对自己的自信，却不是轻狂；源于对自由的向往，却不是放纵；源于对理想的崇拜，却不是盲目。不过从现实看来生活不光会磨平我们的棱角，还会切掉我们的”屌”。&lt;/p&gt;
-
-&lt;p&gt;Jay原本是我最喜欢的歌手，《叶惠美》也是我最喜欢的专辑。但是如果这两年你问我，喜欢哪个歌手，哪张专辑，哪首歌（虽然现实中也几乎没有人关心你的喜好…），恐怕我真的答不上来。
-感觉这些年，像是有一股力量，推着我不由自主的向前走，却不知道自己想要得到什么，也同时忘了自己喜欢什么，渐渐的也就迷失了自我…&lt;/p&gt;
-
-&lt;p&gt;我想在这吵杂的城市中，有时候确实应该停下来等等灵魂…&lt;/p&gt;</content><author><name>郝强</name></author><category term="life" /><summary type="html">今天是正月初五。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/yehuimei-0.jpeg" /></entry><entry><title type="html">搭建Scala项目——play篇</title><link href="http://localhost:4000/documentation/scala-project-play.html" rel="alternate" type="text/html" title="搭建Scala项目——play篇" /><published>2018-01-28T00:00:00+08:00</published><updated>2018-01-28T00:00:00+08:00</updated><id>http://localhost:4000/documentation/scala-project-play</id><content type="html" xml:base="http://localhost:4000/documentation/scala-project-play.html">&lt;h2 id=&quot;关于play-framework&quot;&gt;关于Play Framework&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;「&lt;a href=&quot;https://www.playframework.com&quot;&gt;Play Framework&lt;/a&gt;」&lt;/strong&gt;:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;The High Velocity Web Framework For Java and Scala.Play Framework makes it easy to build web applications with Java &amp;amp; Scala.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;strong&gt;「Play Framework」&lt;/strong&gt;是一个轻量级的web框架，它主要的思路是让开发者简单便捷的搭建一个web应用。并且兼容Java和Scala两种语言。&lt;/p&gt;
-
-&lt;p&gt;个人感觉现代的web框架基本上思路都大同小异。Java的web框架现在这么多，不过目前主流都离不开SSI。在使用层面上&lt;strong&gt;「Play Framework」&lt;/strong&gt;和&lt;strong&gt;「Spring Boot」&lt;/strong&gt;思路也比较接近。在&lt;strong&gt;「Spring Boot」&lt;/strong&gt;中封装好了许多的实用的插件，只要在&lt;strong&gt;「Maven」&lt;/strong&gt;中引入相应的插件，就可以方便的使用了。而在&lt;strong&gt;「Play Framework」&lt;/strong&gt;中有许多&lt;strong&gt;「&lt;a href=&quot;https://www.playframework.com/documentation/2.6.x/ModuleDirectory#play-modules&quot;&gt;module&lt;/a&gt;」&lt;/strong&gt;这些实用的模块也能很方便的引入和使用。总之都是为了把复杂的配置简单化，通过插件或者模块的形式，把需要的组件方便的引入到应用之中。不过对于Scala的支持上必然会选择&lt;strong&gt;「Play Framework」&lt;/strong&gt;。而如果选择Java作为开发语言，则更倾向于选择&lt;strong&gt;&lt;em&gt;“Spring全家桶”&lt;/em&gt;&lt;/strong&gt;。&lt;/p&gt;
-
-&lt;p&gt;##Play Starter Projects&lt;/p&gt;
-
-&lt;p&gt;以前的&lt;strong&gt;「Play Framework」&lt;/strong&gt;提供了一个叫&lt;strong&gt;「activator」&lt;/strong&gt;的工具，当时觉得和&lt;strong&gt;「SBT」&lt;/strong&gt;有些重叠，估计官方也是觉得多此一举，因此现在已经抛弃了&lt;strong&gt;「activator」&lt;/strong&gt;。目前创建Play项目官方提供了两种方法。&lt;/p&gt;
+&lt;h2 id=&quot;spring的启动过程&quot;&gt;Spring的启动过程&lt;/h2&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;从&lt;strong&gt;「&lt;a href=&quot;https://github.com/playframework/play-scala-starter-example/tree/2.6.x&quot;&gt;GitHub&lt;/a&gt;」&lt;/strong&gt;上下载到本地&lt;/li&gt;
-  &lt;li&gt;如果在电脑上已经安装过了&lt;em&gt;SBT 0.13.13&lt;/em&gt;或者更高的版本那么可以通过sbt new命令创建一个Play的项目。（&lt;em&gt;&lt;a href=&quot;https://www.playframework.com/download&quot;&gt;详细步骤&lt;/a&gt;&lt;/em&gt;）&lt;/li&gt;
-  &lt;li&gt;之后运行&lt;code class=&quot;highlighter-rouge&quot;&gt;sbt run&lt;/code&gt;命令来启动项目。启动后则会出现以下页面。&lt;img src=&quot;../assets/img/scala-project-play-1.png&quot; alt=&quot;build-blog-jekyll-1&quot; /&gt;&lt;/li&gt;
-&lt;/ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;通过ContextLoaderListener监听作为启动Spring的入口&lt;/strong&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;the-play-application-layout&quot;&gt;The Play application layout&lt;/h2&gt;
+    &lt;p&gt;启动必要条件：在web.xml中配置&lt;/p&gt;
 
-&lt;p&gt;比较重要的是先了解&lt;a href=&quot;https://www.playframework.com/documentation/2.6.x/Anatomy#the-play-application-layout&quot;&gt;The Play application layout&lt;/a&gt;。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;app                      → Application sources
- └ assets                → Compiled asset sources
-    └ stylesheets        → Typically LESS CSS sources
-    └ javascripts        → Typically CoffeeScript sources
- └ controllers           → Application controllers
- └ models                → Application business layer
- └ views                 → Templates
-build.sbt                → Application build script
-conf                     → Configurations files and other non-compiled resources (on classpath)
- └ application.conf      → Main configuration file
- └ routes                → Routes definition
-dist                     → Arbitrary files to be included in your projects distribution
-public                   → Public assets
- └ stylesheets           → CSS files
- └ javascripts           → Javascript files
- └ images                → Image files
-project                  → sbt configuration files
- └ build.properties      → Marker for sbt project
- └ plugins.sbt           → sbt plugins including the declaration for Play itself
-lib                      → Unmanaged libraries dependencies
-logs                     → Logs folder
- └ application.log       → Default log file
-target                   → Generated stuff
- └ resolution-cache      → Info about dependencies
- └ scala-2.11
-    └ api                → Generated API docs
-    └ classes            → Compiled class files
-    └ routes             → Sources generated from routes
-    └ twirl              → Sources generated from templates
- └ universal             → Application packaging
- └ web                   → Compiled web assets
-test                     → source folder for unit or functional tests
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;官方对于Play应用的结构解释的很清楚了。个人觉得Play的文档要Spring的文档要清晰很多。毕竟Play比较新，而且把许多配置和API都简化了，找起来很方便。相比Spring的文档感觉是一坨放在那儿。都不知道从何看起…&lt;/p&gt;
+    &lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;listener&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;listener-class&amp;gt;&lt;/span&gt;org.springframework.web.context.ContextLoaderListener&lt;span class=&quot;nt&quot;&gt;&amp;lt;/listener-class&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/listener&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
 
-&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+    &lt;p&gt;ContextLoaderListener(Spring中的类)继承ContextLoader（Spring中的类），并实现ServletContextListener（Servlet中的接口），ServletContextListener监听ServletContext，当容器启动时，会触发ServletContextEvent事件，该事件由ServletContextListener来处理，启动初始化ServletContext时，调用contextInitiallized方法。而ContextLoaderListener实现了ServletContextListener，所以，当容器启动时，触发ServletContextEvent事件，让ContextLoaderListener执行实现方法contextInitialized（ServletContextEvent sce）&lt;/p&gt;
 
-&lt;p&gt;这一篇主要是对&lt;strong&gt;「&lt;a href=&quot;https://www.playframework.com&quot;&gt;Play Framework&lt;/a&gt;」&lt;/strong&gt;有个简单的了解，更多的还是需要去看官方文档，再次&lt;strong&gt;「赞」&lt;/strong&gt;一下官方文档，写的真的很清晰。后续打算从SBT构建项目开始一步一步的写出一个可以使用的web应用。&lt;/p&gt;</content><author><name>郝强</name></author><category term="documentation" /><category term="scala-project" /><summary type="html">关于Play Framework 「Play Framework」:</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/scala-project-play-0.jpeg" /></entry><entry><title type="html">搭建Scala项目——Slick篇</title><link href="http://localhost:4000/documentation/scala-project-slick.html" rel="alternate" type="text/html" title="搭建Scala项目——Slick篇" /><published>2018-01-24T00:00:00+08:00</published><updated>2018-01-24T00:00:00+08:00</updated><id>http://localhost:4000/documentation/scala-project-slick</id><content type="html" xml:base="http://localhost:4000/documentation/scala-project-slick.html">&lt;h2 id=&quot;关于slick&quot;&gt;关于Slick&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;「&lt;a href=&quot;http://slick.lightbend.com&quot;&gt;Slick&lt;/a&gt;」&lt;/strong&gt; (“Scala Language-Integrated Connection Kit”) is &lt;a href=&quot;https://lightbend.com/&quot;&gt;Lightbend&lt;/a&gt;’s Functional Relational Mapping (FRM) library for Scala that makes it easy to work with relational databases. It allows you to work with stored data almost as if you were using Scala collections while at the same time giving you full control over when database access happens and which data is transferred. You can also use SQL directly. Execution of database actions is done asynchronously, making Slick a perfect fit for your reactive applications based on &lt;a href=&quot;https://playframework.com/&quot;&gt;Play&lt;/a&gt; and &lt;a href=&quot;http://akka.io/&quot;&gt;Akka&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;简单来说&lt;strong&gt;「Slick」&lt;/strong&gt;就是ORM，不过他提供的API是函数式的，所以是FRM。&lt;strong&gt;「Slick」&lt;/strong&gt;对于Play这种响应式应用是完美适配的，这也是我选择&lt;strong&gt;「Slick」&lt;/strong&gt;的原因。我们可以很方便的用Scala的语法来操作数据对象。&lt;/p&gt;
-
-&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Coffees&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tag&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Tag&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Table&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;, &lt;span class=&quot;kt&quot;&gt;Double&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)](&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tag&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;COFFEES&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;column&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;](&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;COF_NAME&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;O&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;PrimaryKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;price&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;column&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Double&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;](&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;PRICE&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;coffees&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TableQuery&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Coffees&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// Query that only returns the &quot;name&quot; column
-// Equivalent SQL: select NAME from COFFEES
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coffees&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// Query that limits results by price &amp;lt; 10.0
-// Equivalent SQL: select * from COFFEES where PRICE &amp;lt; 10.0
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;coffees&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;price&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;10.0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;用slick-codegen来生成数据映射&quot;&gt;用Slick codegen来生成数据映射&lt;/h2&gt;
-
-&lt;p&gt;与&lt;strong&gt;「Mybatis」&lt;/strong&gt;的codegen用来生成带SQL模版的XML文件和Entity类似，&lt;strong&gt;「Slick」&lt;/strong&gt;也能通过codegen来生成Tables.scala文件。之前在「&lt;a href=&quot;http://localhost:4000/documentation/scala-project-slick.html&quot;&gt;搭建Scala项目——SBT篇&lt;/a&gt;」中已经创建了一个名叫&lt;strong&gt;「mrnyanko-model」&lt;/strong&gt;的module。这个module就是用来执行codegen task和生成数据对象。目录结构如下：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mrnyanko-model      → 项目的基目录
- └ project          → 元构建根项目的基目录
- └ src              → src目录
-    └ main          → mian目录
-      └ java        → Java文件目录
-      └ resources   → 资源配置文件目录
-      └ scala       → Scala文件目录
-    └ test          → test目录
-      └ java        → Java文件目录
-      └ resources   → 资源配置文件目录
-      └ scala       → Scala文件目录
- └ target           → target目录
- └ .gitignore       → git忽略文件配置
- └ build.sbt        → 项目build配置
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;创建build.sbt并引入需要的依赖：&lt;/p&gt;
-
-&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mrnyanko-model&quot;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;slickVersion&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;3.2.1&quot;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;libraryDependencies&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;++=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;com.typesafe&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;config&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;1.3.0&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;com.typesafe.slick&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%%&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;slick&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;slickVersion&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;com.typesafe.slick&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%%&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;slick-codegen&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;slickVersion&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;org.slf4j&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;slf4j-nop&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;1.7.19&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;mysql&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mysql-connector-java&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;5.1.38&quot;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;之后在&lt;code class=&quot;highlighter-rouge&quot;&gt;resources&lt;/code&gt;目录下创建&lt;code class=&quot;highlighter-rouge&quot;&gt;application.conf&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;database.conf&lt;/code&gt;文件。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;application.conf&lt;/code&gt;文件主要定义了log级别：&lt;/p&gt;
-
-&lt;div class=&quot;language-properties highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;py&quot;&gt;logger.scala.slick&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;DEBUG&lt;/span&gt;
-&lt;span class=&quot;py&quot;&gt;db.default.logSql&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;而在&lt;code class=&quot;highlighter-rouge&quot;&gt;database.conf&lt;/code&gt;文件中主要是用来定义一些数据库配置和生成的文件路径：&lt;/p&gt;
-
-&lt;div class=&quot;language-properties highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;py&quot;&gt;slick.driver&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;slick.jdbc.MySQLProfile&quot;&lt;/span&gt;
-&lt;span class=&quot;py&quot;&gt;jdbc.driver&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;com.mysql.jdbc.Driver&quot;&lt;/span&gt;
-&lt;span class=&quot;py&quot;&gt;db.url&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;jdbc:mysql://localhost:3306/playscala&quot;&lt;/span&gt;
-&lt;span class=&quot;py&quot;&gt;output.folder&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mrnyanko-model/src/main/scala&quot;&lt;/span&gt;
-&lt;span class=&quot;py&quot;&gt;pkg.name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mr.nyanko.playscala.models&quot;&lt;/span&gt;
-&lt;span class=&quot;py&quot;&gt;db.user.name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;XXXXX&quot;&lt;/span&gt;
-&lt;span class=&quot;py&quot;&gt;db.user.password&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;*************&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;在&lt;code class=&quot;highlighter-rouge&quot;&gt;src/main/scala&lt;/code&gt;下创建&lt;code class=&quot;highlighter-rouge&quot;&gt;codegen&lt;/code&gt; package。并在&lt;code class=&quot;highlighter-rouge&quot;&gt;codegen&lt;/code&gt; package下创建&lt;code class=&quot;highlighter-rouge&quot;&gt;CodeGenerator&lt;/code&gt; Object：&lt;/p&gt;
-
-&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;codegen&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.typesafe.config.ConfigFactory&lt;/span&gt;
-
-
-&lt;span class=&quot;cm&quot;&gt;/**
-  * Created by Nyankosensei on 18/1/24.
-  */&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CodeGenerator&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;App&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dbConf&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ConfigFactory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;database&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;slickDriver&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dbConf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;slick.driver&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jdbcDriver&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dbConf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;jdbc.driver&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dbConf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;db.url&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;outputFolder&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dbConf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;output.folder&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pkg&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dbConf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pkg.name&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dbConf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;db.user.name&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dbConf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;db.user.password&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-
-    &lt;span class=&quot;n&quot;&gt;slick&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;codegen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;SourceCodeGenerator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;slickDriver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jdbcDriver&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;outputFolder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pkg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;之后我们只需要在项目中执行以下sbt命令就可以生成Tables.scala文件了。&lt;/p&gt;
-
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;➜  mrnyanko-play-scala git:&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;master&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; ✗ sbt                     
-sbt:mrnyanko-play-scala&amp;gt; project mrnyanko-model
-sbt:mrnyanko-model&amp;gt; run
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;目录结构如下：&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;scala                   → Scala文件目录
- └ codegen              → codegen package
-    └ CodeGenerator$    → CodeGenerator Object
- └ models               → models package
-    └ Tables            → 生成的数据映射文件
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-
-&lt;p&gt;一般情况下，数据库设计和架构设计都是并行的。因此大多数情况我都是先搭框架，等数据库设计完成后，再生成相应的PO。只需要通过依赖的方式把model模块依赖进来就可以了。&lt;/p&gt;
-
-&lt;p&gt;值得注意的是官方给的&lt;a href=&quot;https://github.com/slick/slick-codegen-example&quot;&gt;slick-codegen-example&lt;/a&gt;使用的sbt版本为0.13.9我使用的是1.0.3因此有些在build.sbt的参数可能存在差异。当然定义codegen task方式有很多，除了我使用的这种官方还提供了另一种方式&lt;a href=&quot;https://github.com/slick/slick-codegen-customization-example&quot;&gt;slick-codegen-customization-example&lt;/a&gt;。实际搭建中，应注意版本问题。之前我们项目中用的是：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Scala版本：2.11.8&lt;/p&gt;
-
-  &lt;p&gt;SBT版本：0.13.8&lt;/p&gt;
-
-  &lt;p&gt;Slick版本：3.1.1&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;在这个项目中我用的是：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Scala版本：2.12.4&lt;/p&gt;
-
-  &lt;p&gt;SBT版本：1.0.3&lt;/p&gt;
-
-  &lt;p&gt;Slick版本：3.2.1&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;版本不同会导致一些使用上的变化，这点应该是需要特别注意的。比如说之前一个配置：&lt;/p&gt;
-
-&lt;div class=&quot;language-properties highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;## slick version 3.1.1
-&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;slick.driver&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;slick.driver.MySQLDriver&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;在新版本中变为：&lt;/p&gt;
-
-&lt;div class=&quot;language-properties highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;## slick version 3.2.1
-&lt;/span&gt;&lt;span class=&quot;py&quot;&gt;slick.driver&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;slick.jdbc.MySQLProfile&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;还有一个需要吐槽和注意的地方时，如果一个表的字断超过了22个，由于Scala Tuple最多支持22个元素，因此在生成对应的table时会生成一个Hlist的链表结构。目前我们还没有找到特别好的方法去解决这个问题。我的解决方法是，通过写一个隐式转换，将相应case calss转换成对应的PO中的链表结构的成员属性。&lt;/p&gt;
-
-&lt;div class=&quot;language-scala highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;implicit&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TContactsShiftImplicit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tContact&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;root_.xxx.xxx.xxxxxxx.models.Tables.TContactsRow&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shift&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;TContactsShiftRow&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TContactsShiftRow&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tContact&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ContextLoaderListener&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ContextLoader&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ServletContextListener&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;contextInitialized&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ServletContextEvent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;contextLoader&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;createContextLoader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;contextLoader&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;contextLoader&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;contextLoader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;initWebApplicationContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getServletContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
     &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;img src=&quot;../assets/img/spring-run-1.png&quot; alt=&quot;spring-run-1&quot; /&gt;&lt;/p&gt;
 
-    &lt;span class=&quot;k&quot;&gt;implicit&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TContactsShiftsImplicit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tContacts&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;root_.xxx.xxx.xxxxxxx.models.Tables.TContactsRow&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shift&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tContacts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;TContactsShiftRow&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;toList&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;ol&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;通过initWebApplicationContext方法来初始化WebApplicaitionContext&lt;/strong&gt;&lt;/p&gt;
 
+        &lt;p&gt;webApplicationContext是Spring中的上下文。它的作用等同于Servlet中的ServletContext。&lt;/p&gt;
 
-    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TContactsShiftRow&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Long&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;uuid&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;customerName&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
-                                 &lt;span class=&quot;n&quot;&gt;customerIdNumber&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gender&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
-                                 &lt;span class=&quot;n&quot;&gt;age&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;idNumber&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;relationship&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
-                                 &lt;span class=&quot;n&quot;&gt;relationshipOthers&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;department&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
-                                 &lt;span class=&quot;n&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;company&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
-                                 &lt;span class=&quot;n&quot;&gt;`type`&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;province&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
-                                 &lt;span class=&quot;n&quot;&gt;city&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;district&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;detail&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
-                                 &lt;span class=&quot;n&quot;&gt;evaluation&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;remarks&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;initialOrigin&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Long&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
-                                 &lt;span class=&quot;n&quot;&gt;effectiveTimestamp&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;java.sql.Timestamp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;auditTimestamp&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;java.sql.Timestamp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isDeleted&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Boolean&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-
-
-    &lt;span class=&quot;k&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;TContactsShiftRow&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tContact&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;root_.xxx.xxx.xxxxxxx.models.Tables.TContactsRow&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;TContactsShiftRow&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;tContact&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;toList&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;match&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;uuid&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;customerName&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;
-                    &lt;span class=&quot;n&quot;&gt;customerIdNumber&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gender&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;
-                    &lt;span class=&quot;n&quot;&gt;age&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;relationship&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;relationshipOthers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;
-                    &lt;span class=&quot;n&quot;&gt;department&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;position&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;company&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;
-                    &lt;span class=&quot;n&quot;&gt;typeType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;province&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;city&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;
-                    &lt;span class=&quot;n&quot;&gt;district&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;detail&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;evaluation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;
-                    &lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;idNumber&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;remarks&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;initialOrigin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;
-                    &lt;span class=&quot;n&quot;&gt;version&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;effectiveTimestamp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;auditTimestamp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;
-                    &lt;span class=&quot;n&quot;&gt;isDeleted&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;::&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Nil&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-                    &lt;span class=&quot;nc&quot;&gt;TContactsShiftRow&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Long&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;uuid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;customerName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt;
-                        &lt;span class=&quot;n&quot;&gt;customerIdNumber&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gender&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt;
-                        &lt;span class=&quot;n&quot;&gt;age&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;idNumber&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;relationship&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt;
-                        &lt;span class=&quot;n&quot;&gt;relationshipOthers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;department&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]],&lt;/span&gt;
-                        &lt;span class=&quot;n&quot;&gt;position&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;company&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]],&lt;/span&gt;
-                        &lt;span class=&quot;n&quot;&gt;typeType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;province&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]],&lt;/span&gt;
-                        &lt;span class=&quot;n&quot;&gt;city&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;district&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;detail&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]],&lt;/span&gt;
-                        &lt;span class=&quot;n&quot;&gt;evaluation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;remarks&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Option&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;initialOrigin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Long&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt;
-                        &lt;span class=&quot;n&quot;&gt;effectiveTimestamp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;java.sql.Timestamp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;auditTimestamp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;java.sql.Timestamp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isDeleted&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;asInstanceOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Boolean&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;])&lt;/span&gt;
+        &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;WebApplicationContext&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initWebApplicationContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ServletContext&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;servletContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;servletContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getAttribute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WebApplicationContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;IllegalStateException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+                    &lt;span class=&quot;s&quot;&gt;&quot;Cannot initialize context because there is already a root application context present - &quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;
+                    &lt;span class=&quot;s&quot;&gt;&quot;check whether you have multiple ContextLoader* definitions in your web.xml!&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;context&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;context&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;createWebApplicationContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;servletContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;context&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;instanceof&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ConfigurableWebApplicationContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;ConfigurableWebApplicationContext&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cwac&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ConfigurableWebApplicationContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cwac&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isActive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cwac&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getParent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                        &lt;span class=&quot;n&quot;&gt;ApplicationContext&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;loadParentContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;servletContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                        &lt;span class=&quot;n&quot;&gt;cwac&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setParent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+                    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+                    &lt;span class=&quot;n&quot;&gt;configureAndRefreshWebApplicationContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cwac&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;servletContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
                 &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;servletContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setAttribute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WebApplicationContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
 
+            &lt;span class=&quot;n&quot;&gt;ClassLoader&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ccl&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Thread&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;currentThread&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getContextClassLoader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ccl&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ContextLoader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getClassLoader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;currentContext&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ccl&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;currentContextPerThread&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;put&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ccl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isDebugEnabled&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;debug&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Published root WebApplicationContext as ServletContext attribute with name [&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;
+                        &lt;span class=&quot;n&quot;&gt;WebApplicationContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;]&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isInfoEnabled&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;elapsedTime&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;currentTimeMillis&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;startTime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Root WebApplicationContext: initialization completed in &quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;elapsedTime&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; ms&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RuntimeException&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ex&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Context initialization failed&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ex&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;servletContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setAttribute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WebApplicationContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ex&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ex&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Error&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Context initialization failed&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;servletContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setAttribute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WebApplicationContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+
+        &lt;p&gt;initWebApplicationContext(ServletContext servletContext)方法是ContextLoader中的方法。他的作用是只做一个WebApplicationContext上下文，并将这个上下文保存在servletContext中，并保存在当前ContextLoader实例中。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;如何初始化WebApplicationContext&lt;/strong&gt;&lt;/p&gt;
+
+        &lt;p&gt;上面的源码中的&lt;code class=&quot;highlighter-rouge&quot;&gt;this.context = createWebApplicationContext(servletContext);&lt;/code&gt;用来制造一个WebApplicationContext，制造的过程，依赖ServletContext。&lt;/p&gt;
+
+        &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;protected&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;WebApplicationContext&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;createWebApplicationContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ServletContext&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;?&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;contextClass&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;determineContextClass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ConfigurableWebApplicationContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isAssignableFrom&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contextClass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ApplicationContextException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Custom context class [&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;contextClass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;
+                    &lt;span class=&quot;s&quot;&gt;&quot;] is not of type [&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ConfigurableWebApplicationContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;]&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ConfigurableWebApplicationContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BeanUtils&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;instantiateClass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contextClass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+
+        &lt;p&gt;通过&lt;code class=&quot;highlighter-rouge&quot;&gt;determineContextClass(ServletContext servletContext)&lt;/code&gt;方法获取需要实例化的context类的class，通过&lt;code class=&quot;highlighter-rouge&quot;&gt;BeanUtils.instantiateClass(contextClasss)&lt;/code&gt;将这个class用反射的手段实例化WebApplicationContext。&lt;/p&gt;
+
+        &lt;p&gt;那么determineContextClass怎样来确定实例化哪个context类呢？（Spring有很多的context类实现了WebApplicationContext，当然这个context类也可以是我们自己写的，具体实例化哪个，在&lt;code class=&quot;highlighter-rouge&quot;&gt;web.xml&lt;/code&gt;中配置）&lt;/p&gt;
+
+        &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;protected&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;?&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;determineContextClass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ServletContext&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;servletContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;contextClassName&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;servletContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getInitParameter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CONTEXT_CLASS_PARAM&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contextClassName&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ClassUtils&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;forName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contextClassName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ClassUtils&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getDefaultClassLoader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ClassNotFoundException&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ex&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ApplicationContextException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+                        &lt;span class=&quot;s&quot;&gt;&quot;Failed to load custom context class [&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;contextClassName&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;]&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ex&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;contextClassName&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;defaultStrategies&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getProperty&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WebApplicationContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ClassUtils&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;forName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contextClassName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ContextLoader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;getClassLoader&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ClassNotFoundException&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ex&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;ApplicationContextException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+                        &lt;span class=&quot;s&quot;&gt;&quot;Failed to load default context class [&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;contextClassName&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;]&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ex&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
             &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
         &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
     &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>郝强</name></author><category term="documentation" /><category term="scala-project" /><summary type="html">关于Slick</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/scala-project-slick-0.jpeg" /></entry><entry><title type="html">搭建Scala项目——SBT篇</title><link href="http://localhost:4000/documentation/scala-project-sbt.html" rel="alternate" type="text/html" title="搭建Scala项目——SBT篇" /><published>2018-01-20T00:00:00+08:00</published><updated>2018-01-20T00:00:00+08:00</updated><id>http://localhost:4000/documentation/scala-project-sbt</id><content type="html" xml:base="http://localhost:4000/documentation/scala-project-sbt.html">&lt;h2 id=&quot;关于sbt&quot;&gt;关于SBT&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
 
-&lt;p&gt;&lt;strong&gt;「&lt;a href=&quot;https://www.scala-sbt.org&quot;&gt;SBT&lt;/a&gt;」&lt;/strong&gt;：&lt;/p&gt;
+        &lt;p&gt;从上面的代码可以看出，先从servletContext中找我们在&lt;code class=&quot;highlighter-rouge&quot;&gt;web.xml&lt;/code&gt;中有没有配置要实例化哪个上下文context，如果配置了&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;The interactive build tool。&lt;/p&gt;
-&lt;/blockquote&gt;
+        &lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;context-param&amp;gt;&lt;/span&gt;   
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;param-name&amp;gt;&lt;/span&gt;contextClass&lt;span class=&quot;nt&quot;&gt;&amp;lt;/param-name&amp;gt;&lt;/span&gt;   
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;param-value&amp;gt;&lt;/span&gt;rg.springframework.web.context.support.StaticWebApplicationContext&lt;span class=&quot;nt&quot;&gt;&amp;lt;/param-value&amp;gt;&lt;/span&gt;   
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/context-param&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
 
-&lt;p&gt;&lt;strong&gt;「SBT」&lt;/strong&gt;是一个“交互式的”（&lt;em&gt;interactive&lt;/em&gt;）构建工具。在开发过程中，使用最多的是对引入的包进行管理、定义一些task以及打包。对于Scala的项目，SBT当然是首选的build工具，但是如果项目是Java和Scala的混合项目（虽然我不喜欢混合着用），还是用Maven好一些。顺带一提，SBT的交互模式和Play Console结合起来用。&lt;/p&gt;
-
-&lt;p&gt;在Mac上安装SBT是非常方便的只需要用home brew安装就可以了。&lt;/p&gt;
-
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew install sbt@1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;创建项目&quot;&gt;创建项目&lt;/h2&gt;
-
-&lt;p&gt;我在IDE中创建了一个名为&lt;strong&gt;「mrnyanko-play-scala」&lt;/strong&gt;的SBT项目。当然也可以通过&lt;code class=&quot;highlighter-rouge&quot;&gt;sbt new&lt;/code&gt;的命令来创建项目再import到IDE中也是没有问题的。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;JDK：1.8
-ScalaVersion：2.12.4
-SBTVersion：1.0.3
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;则会生成如下项目：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mrnyanko-play-scala     → 项目的基目录
- └ project              → 元构建根项目的基目录
-    └ project           → 元元构建的根项目的基目录；构建定义的构建定义工程
-    └ target            → target
-    └ build.properties  → 设置一些SBT的属性
-    └ plugins.sbt       → 配置一些需要的插件
- └ target               → target
- └ .gitignore           → git忽略文件配置
- └ build.sbt            → 是构建定义项目的一部分。
- └ README.md            → 项目介绍
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;在 sbt 的术语里，“基础目录”是包含项目的目录。所以，如果你创建了一个和「mrnyanko-play-scala」一样的项目 &lt;code class=&quot;highlighter-rouge&quot;&gt;mrnyanko-play-scala&lt;/code&gt; ，包含 &lt;code class=&quot;highlighter-rouge&quot;&gt;mrnyanko-play-scala/build.sbt &lt;/code&gt;，&lt;code class=&quot;highlighter-rouge&quot;&gt;mrnyanko-play-scala&lt;/code&gt; 就是基础目录。&lt;/p&gt;
-
-&lt;h2 id=&quot;拆分项目&quot;&gt;拆分项目&lt;/h2&gt;
-
-&lt;p&gt;我打算把项目拆分成三个部分：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;&lt;strong&gt;mrnyanko-web&lt;/strong&gt;主要提供API接口和业务逻辑处理&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;mrnyanko-model&lt;/strong&gt;通过slick的codegen生成数据模型&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;mrnyanko-common&lt;/strong&gt;公共组建，可单独发布。&lt;/li&gt;
+        &lt;p&gt;那么实例化StaticWebApplicationContext这个上下文。注意这个地方的&lt;code class=&quot;highlighter-rouge&quot;&gt;param-name&lt;/code&gt;必须是&lt;code class=&quot;highlighter-rouge&quot;&gt;contextClass&lt;/code&gt;（约定俗成的，其实是写死的）。如果没有这个配置，那么程序会找到一个叫&lt;code class=&quot;highlighter-rouge&quot;&gt;ContextLoader.properties&lt;/code&gt;的配置文件，这个配置文件注明了一个默认的上下文：&lt;code class=&quot;highlighter-rouge&quot;&gt;XMLWebApplicationContext&lt;/code&gt;。这个&lt;code class=&quot;highlighter-rouge&quot;&gt;XMLWebApplicationContext&lt;/code&gt;实例化的过程是制造一个ResourcePatternResolver的实例，这个实例将会在后面的Srping启动过程中起到关键作用。&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;依赖关系：&lt;strong&gt;mrnyanko-web&lt;/strong&gt; →（&lt;strong&gt;mrnyanko-model&lt;/strong&gt;，&lt;strong&gt;mrnyanko-common&lt;/strong&gt;）&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;name := &quot;mrnyanko-play-scala&quot;
-
-lazy val commonSetting = Seq(
-    organization := &quot;mr.nyanko&quot;,
-    version := &quot;1.0.0-SNAPSHOT&quot;,
-    scalaVersion := &quot;2.12.4&quot;
-)
-
-lazy val `mrnyanko-play-scala` = project in file(&quot;.&quot;) settings (commonSetting: _*)
-
-lazy val `mrnyanko-model` = project in file(&quot;mrnyanko-model&quot;) settings (commonSetting: _*)
-
-lazy val `mrnyanko-common` = project in file(&quot;mrnyanko-common&quot;) settings(commonSetting: _*)
-
-lazy val `mrnyanko-web` = project in file(&quot;mrnyanko-web&quot;) settings(commonSetting: _*) enablePlugins PlayScala dependsOn (`mrnyanko-model`,`mrnyanko-common`)
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;这样的话，如果业务有新扩展，而这种拓展不太适合放在现有的业务中那么我们就可以通过拓展新的module来满足业务需求。&lt;/p&gt;
-
-&lt;h2 id=&quot;sbt常用命令&quot;&gt;SBT常用命令&lt;/h2&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;命令&lt;/th&gt;
-      &lt;th&gt;描述&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;clean&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;删除所有生成的文件 （在 &lt;code class=&quot;highlighter-rouge&quot;&gt;target&lt;/code&gt; 目录下）。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;compile&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;编译源文件（在 &lt;code class=&quot;highlighter-rouge&quot;&gt;src/main/scala&lt;/code&gt; 和 &lt;code class=&quot;highlighter-rouge&quot;&gt;src/main/java&lt;/code&gt; 目录下）。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;编译和运行所有测试。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;console&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;进入到一个包含所有编译的文件和所有依赖的 classpath 的 Scala 解析器。输入 &lt;code class=&quot;highlighter-rouge&quot;&gt;:quit&lt;/code&gt;， Ctrl+D （Unix），或者 Ctrl+Z （Windows） 返回到 sbt。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;run &amp;lt;参数&amp;gt;*&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;在和 sbt 所处的同一个虚拟机上执行项目的 main class。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;package&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;将 &lt;code class=&quot;highlighter-rouge&quot;&gt;src/main/resources&lt;/code&gt; 下的文件和 &lt;code class=&quot;highlighter-rouge&quot;&gt;src/main/scala&lt;/code&gt; 以及 &lt;code class=&quot;highlighter-rouge&quot;&gt;src/main/java&lt;/code&gt;中编译出来的 class 文件打包成一个 jar 文件。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;help &amp;lt;命令&amp;gt;&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;显示指定的命令的详细帮助信息。如果没有指定命令，会显示所有命令的简介。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;reload&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;重新加载构建定义（&lt;code class=&quot;highlighter-rouge&quot;&gt;build.sbt&lt;/code&gt;， &lt;code class=&quot;highlighter-rouge&quot;&gt;project/*.scala&lt;/code&gt;， &lt;code class=&quot;highlighter-rouge&quot;&gt;project/*.sbt&lt;/code&gt; 这些文件中定义的内容)。在修改了构建定义文件之后需要重新加载。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;projects&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;罗列项目中所有的project&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;project &amp;lt;项目名&amp;gt;&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;在不同的项目中进行切换&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;publish&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;将项目打包发布至对应的仓库&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-
-&lt;p&gt;在实际项目中，我就是按照上述的拆分方式对项目结构进行拆分的。每个module都可以单独run或者publish。这样的好处就是业务逻辑和数据模型进行了隔离，使开发人员只关注逻辑实现就可以了。有时候我也会将API单独抽离出来并创建一个名为&lt;strong&gt;xxx-dal&lt;/strong&gt;的module。把API当作一个内部网关，可以单独部署到其他服务器上，web层与dal层通过common中提供的业务对象对传输的json进行序列化与反序列化的方式进行交互，当然也可以直接操作json。这时如果业务变化，需要我们提供一个可视化的操作入口，那么DAL的module可以几乎不动，只需要在新增一个view module或者在项目之外单独做一些静态页面就能满足业务需求了。&lt;/p&gt;
-
-&lt;p&gt;在两年前，微服务概念还没有现在成熟，公司中也没有这样的环境。虽然这样的纵向拆分方式当然也有他的局限性，不过也为未来的大方向的技术架构提供了思路。当然，作为一个规模不大的APP的server 端应该说是没有问题的。&lt;/p&gt;</content><author><name>郝强</name></author><category term="documentation" /><category term="scala-project" /><summary type="html">关于SBT</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/scala-project-sbt-0.jpeg" /></entry><entry><title type="html">搭建Scala项目——序</title><link href="http://localhost:4000/documentation/scala-project-preface.html" rel="alternate" type="text/html" title="搭建Scala项目——序" /><published>2018-01-16T00:00:00+08:00</published><updated>2018-01-16T00:00:00+08:00</updated><id>http://localhost:4000/documentation/scala-project-preface</id><content type="html" xml:base="http://localhost:4000/documentation/scala-project-preface.html">&lt;p&gt;从2016年开始接触Scala这门语言，便喜欢上了这门OO+FP混合的语言。当时公司环境也比较open，有机会用Scala开发了一些后台系统。
-这些系统有些已经在生产环境跑到了现在。不过现在都在统一技术栈，很快将会变为Spring Boot的项目。并且很将会对接Spring Cloud。
-这两年时间其实已经积攒了很多这方面的经验，当然期间也用Java写过一些其他的项目。临近过年，想借此机会将之前的一些经验总结一下。
-不想将这些经验就流失掉了。&lt;/p&gt;
-
-&lt;h2 id=&quot;关于scala&quot;&gt;关于Scala&lt;/h2&gt;
-
-&lt;p&gt;使用Scala之前，工作中基本上我都是在用Java，由于一些机缘巧合，接手了一个Scala项目。从此便开始使用了他将近有一年半的时间吧。
-如果想快速上手Scala这门语言的话，推荐《快学Scala》这本书，当初我就是通过看这本书快速上手的，并且在给新来的同事培训的时候也大多是基于这本书为基础的。
-有过Java开发经验的能很快上手，有过其他编程经验的能更快上手，因为不会受Java的原有思维的影响。从世纪情况来开，反而应届生学习的比较快。没有太多历史包袱，而且
-16年间Scala相对比较流行，大家的学习氛围也比较好。&lt;/p&gt;
-
-&lt;p&gt;Scala语法上的进化我不想多说，因为任何脱离实际生产环境和业务的情况下去单一的去评判一个语言，这样太不客观了。学习Scala给我带来的最大的收获主要是思维模式的变换。即便在从新写Java语言的时候，也会受其影响。这里提到的影响是好的影响。在写一些设计模式或者多线程时，
-能很自然的想到注意的地方，以及更抽象、更快速的处理问题。&lt;/p&gt;
-
-&lt;h2 id=&quot;关于技术栈&quot;&gt;关于技术栈&lt;/h2&gt;
-
-&lt;p&gt;在这一年多的时间里，用到了很多Scala相关的技术，以及原有的技术框架与Scala的结合。在结合的过程中，并没有觉得特别的别扭。在选择技术框架的时候做了调研，避免了出现那种强行结合导致变成Java和Scala混合开发，使得项目变得相当奇怪。
-主要用到的技术有：Scala、SBT、Play Framework、Slick、Akka、RabbitMQ、Redis、Mongo、MySQL、ELK。
-个人感觉这些框架都结合的很完美。官方也都给出了针对Reactive这种编程模式的解决方案。
-在接下来的几篇博文里，我打算按照生产的要求，将这些结合起来。期间不光是写一些胶水代码将这些框架粘起来，同事也会写一些设计上的code来解决实际的生产中遇到的问题。也算是将这些时间里的沉淀积累起来吧。&lt;/p&gt;</content><author><name>郝强</name></author><category term="documentation" /><category term="scala-project" /><summary type="html">从2016年开始接触Scala这门语言，便喜欢上了这门OO+FP混合的语言。当时公司环境也比较open，有机会用Scala开发了一些后台系统。 这些系统有些已经在生产环境跑到了现在。不过现在都在统一技术栈，很快将会变为Spring Boot的项目。并且很将会对接Spring Cloud。 这两年时间其实已经积攒了很多这方面的经验，当然期间也用Java写过一些其他的项目。临近过年，想借此机会将之前的一些经验总结一下。 不想将这些经验就流失掉了。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/scala-project-preface-0.jpeg" /></entry><entry><title type="html">搭建属于自己的博客——Markdown篇</title><link href="http://localhost:4000/documentation/build-blog-markdown.html" rel="alternate" type="text/html" title="搭建属于自己的博客——Markdown篇" /><published>2018-01-12T00:00:00+08:00</published><updated>2018-01-12T00:00:00+08:00</updated><id>http://localhost:4000/documentation/build-blog-markdown</id><content type="html" xml:base="http://localhost:4000/documentation/build-blog-markdown.html">&lt;p&gt;这次我们依旧先review一下我们搭建自己的个人博客要做的三件事。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-pages.html&quot;&gt;搭建属于自己的博客——GitHub Pages篇&lt;/a&gt;」&lt;/li&gt;
-  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-jekyll.html&quot;&gt;搭建属于自己的博客——Jekyll篇&lt;/a&gt;」&lt;/li&gt;
-  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-markdown.html&quot;&gt;搭建属于自己的博客——Markdown篇&lt;/a&gt;」&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;我们在「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-pages.html&quot;&gt;搭建属于自己的博客——GitHub Pages篇&lt;/a&gt;」中已经在GitHub Pages上创建了属于自己主页。在「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-jekyll.html&quot;&gt;搭建属于自己的博客——Jekyll篇&lt;/a&gt;」中快速搭建了自己的个人博客，并且也将搭建好的博客发布到了之前的https://&lt;em&gt;username&lt;/em&gt;.github.io域名下接下来写第一篇自己的博文。&lt;/p&gt;
-
-&lt;p&gt;我们可以在&lt;code class=&quot;highlighter-rouge&quot;&gt;_post&lt;/code&gt;文件夹下创建一个名为&lt;code class=&quot;highlighter-rouge&quot;&gt;YEAR-MONTH-DAY-title.md&lt;/code&gt;的文件。我们将使用Markdown标记语言来写我们的第一遍博文。&lt;/p&gt;
-
-&lt;h2 id=&quot;什么是markdown&quot;&gt;什么是Markdown&lt;/h2&gt;
-
-&lt;p&gt;「&lt;a href=&quot;https://daringfireball.net/projects/markdown/&quot;&gt;Markdown&lt;/a&gt;」是一个针对web写手的文本到html转换工具。Markdown允许您使用易于阅读、易于编写的纯文本格式编写，然后将其转换为结构有效的XHTML(或HTML)。&lt;/p&gt;
-
-&lt;h2 id=&quot;为什么选择markdown&quot;&gt;为什么选择Markdown&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;../assets/img/spring-run-2.png&quot; alt=&quot;spring-run-2&quot; /&gt;&lt;/p&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="spring" /><summary type="html">Spring容器的启动过程是什么？ Spring在web容器中，启动过程是Servlet容器对Spring环境的构造，初始化，装配的过程。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/spring-run-0.jpeg" /></entry><entry><title type="html">Executor框架</title><link href="http://localhost:4000/resources/java-concurrency-executor.html" rel="alternate" type="text/html" title="Executor框架" /><published>2018-03-14T00:00:00+08:00</published><updated>2018-03-14T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-executor</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-executor.html">&lt;h2 id=&quot;java内存模型的基础&quot;&gt;Java内存模型的基础&lt;/h2&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;纯文本：兼容性强，所有的编辑器都能打开&lt;/li&gt;
-  &lt;li&gt;内容与格式完全分离：写好的内容可以用不同的方式渲染，因此所展现给读者的只是渲染方式不同，而与内容无关。&lt;/li&gt;
-  &lt;li&gt;可以轻松转换格式：即便对方看不懂原始的Markdown文件，我们可以轻松的将其转换成PDF或者HTML发布。&lt;/li&gt;
+  &lt;li&gt;【&lt;strong&gt;Java内存模型的抽象结构&lt;/strong&gt;】：&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;因为目前的国内一些比较流行的论坛大多数都不支持Markdown，这也是我选择搭建自己的博客的原因之一。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;../assets/img/java-concurrency-space-1.png&quot; alt=&quot;java-concurrency-space-1&quot; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;markdown语法&quot;&gt;Markdown语法&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;【&lt;strong&gt;从源代码到指令序列的重排序&lt;/strong&gt;】：在执行程序时，为了提高性能，编译器和处理器常常会对指令做重排序。重排序分为三种类型：&lt;/p&gt;
 
-&lt;p&gt;Markdown的语法其实非常简单，即便没有编程基础的萌新，花上30分钟也能轻松掌握。&lt;/p&gt;
+    &lt;ol&gt;
+      &lt;li&gt;编译器优化的重排序。编译器在不改变单线程程序语义的前提下，可以重新安排语句的执行顺序。&lt;/li&gt;
+      &lt;li&gt;指令集并行的重排序。现代冲利器采用了指令级并行技术来将多条指令重叠执行。如果不存在数据依赖性，处理器可以改变语句对应机器指令的执行顺序。&lt;/li&gt;
+      &lt;li&gt;内存系统的重排序。由于处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是乱序执行&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;ol&gt;
-  &lt;li&gt;标题&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h2 id=&quot;重排序&quot;&gt;重排序&lt;/h2&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;#(空格)一级标题 
-##(空格)二级标题
-###(空格)三级标题
-####(空格)四级标题
-#####(空格)五级标题
-######(空格)六级标题&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;重排序是指编译器和处理器为了优化程序性能而对指令序列进行重新排序的一种手段。&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;h1 id=&quot;一级标题&quot;&gt;一级标题&lt;/h1&gt;
-  &lt;h2 id=&quot;二级标题&quot;&gt;二级标题&lt;/h2&gt;
-  &lt;h3 id=&quot;三级标题&quot;&gt;三级标题&lt;/h3&gt;
-  &lt;h4 id=&quot;四级标题&quot;&gt;四级标题&lt;/h4&gt;
-  &lt;h5 id=&quot;五级标题&quot;&gt;五级标题&lt;/h5&gt;
-  &lt;h6 id=&quot;六级标题&quot;&gt;六级标题&lt;/h6&gt;
-&lt;/blockquote&gt;
+&lt;h2 id=&quot;顺序一致性&quot;&gt;顺序一致性&lt;/h2&gt;
 
-&lt;ol&gt;
-  &lt;li&gt;列表&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;顺序一致性内存模型是一个理论参考模型，在设计的时候，处理器的内存模型和编程语言的内存模型都会以顺序一致性内存模型作为参考。&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;1.(空格)内容1
-2.(空格)内容2
-3.(空格)内容3
-或者
--(空格)内容1
--(空格)内容2
--(空格)内容3&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;h2 id=&quot;volatile的内存语义&quot;&gt;volatile的内存语义&lt;/h2&gt;
 
-&lt;blockquote&gt;
-  &lt;ol&gt;
-    &lt;li&gt;内容1&lt;/li&gt;
-    &lt;li&gt;内容2&lt;/li&gt;
-    &lt;li&gt;内容3
-  或者
-      &lt;ul&gt;
-        &lt;li&gt;内容1&lt;/li&gt;
-        &lt;li&gt;内容2&lt;/li&gt;
-        &lt;li&gt;内容3&lt;/li&gt;
-      &lt;/ul&gt;
-    &lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/blockquote&gt;
+&lt;h2 id=&quot;锁的内存语义&quot;&gt;锁的内存语义&lt;/h2&gt;
+
+&lt;h2 id=&quot;final域的内存语义&quot;&gt;final域的内存语义&lt;/h2&gt;
+
+&lt;h2 id=&quot;happens-before&quot;&gt;happens-before&lt;/h2&gt;
+
+&lt;h2 id=&quot;双重检查锁与延迟初始化&quot;&gt;双重检查锁与延迟初始化&lt;/h2&gt;
+
+&lt;h2 id=&quot;java内存模型综述&quot;&gt;Java内存模型综述&lt;/h2&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html">Java内存模型的基础</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-executor-0.jpeg" /></entry><entry><title type="html">Java中的线程池</title><link href="http://localhost:4000/resources/java-concurrency-threadpool.html" rel="alternate" type="text/html" title="Java中的线程池" /><published>2018-03-13T00:00:00+08:00</published><updated>2018-03-13T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-threadpool</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-threadpool.html"></content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html"></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-threadpool-0.jpeg" /></entry><entry><title type="html">Java并发容器和框架</title><link href="http://localhost:4000/resources/java-concurrency-collectionandfram.html" rel="alternate" type="text/html" title="Java并发容器和框架" /><published>2018-03-12T00:00:00+08:00</published><updated>2018-03-12T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-collectionandfram</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-collectionandfram.html">&lt;h2 id=&quot;concurrenthashmap的实现原理与使用&quot;&gt;ConcurrentHashMap的实现原理与使用&lt;/h2&gt;
+
+&lt;p&gt;ConcurrentHashMap是线程安全且高效的HashMap。&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;粗体和斜体&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;为什么要使用ConcurrentHashMap&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;在并发编程中使用HashMap可能导致程序死循环。而使用线程安全的HashTable效率又非常低下，基于以上两个原因，便于有了ConcurrentHashMap登场的机会。&lt;/p&gt;
+
+    &lt;ol&gt;
+      &lt;li&gt;
+        &lt;p&gt;线程不安全的HashMap&lt;/p&gt;
+
+        &lt;p&gt;在多线程环境下，使用HashMap进行put操作会引起死循环，导致CPU利用率接近100%，所以在并发的情况下不能使用HashMap。&lt;/p&gt;
+
+        &lt;p&gt;HashMap在并发执行put操作时会引起死循环，是因为多线程会导致HashMap的Entry链表形成环形数据结构，一旦形成环形数据结构，Entry的next节点永远不为空，就会产生死循环获取Entry。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;效率低下的HashTable&lt;/p&gt;
+
+        &lt;p&gt;HashTable容器使用synchronized来保证线程安全，但在线程竞争激烈的情况下HashTable的效率非常低下。因为当一个线程访问HashTable的同步方法，其他线程也访问HashTable的同步方法，会进入阻塞或轮询状态。如线程1使用put进行元素添加，线程2不但不能使用put方法添加元素，也不能使用get方法来获取元素，所以竞争越激烈效率越低。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;ConcurrentHashMap的锁分段技术可有效提升并发访问率&lt;/p&gt;
+
+        &lt;p&gt;HashTable容器在竞争激烈的并发环境下表现出效率低下的原因是所有访问HashTable的线程都必须竞争同一把锁，假如容器里又多把锁，每一把锁用于锁容器其中一部分数据，那么当多线程访问容器里不同数据段的数据时，线程间就不会存在锁竞争，从而可以有效提高并发访问率，这就是ConcurrentHashMap所使用的锁分段技术。首先将数据分成一段一段地存储，然后给每一段数据配一把锁，当一个线程占用锁访问其中一个段数据的时候，其他段的数据也能被其他线程访问。&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;ConcurrentHashMap的结构&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;通过ConcurrentHashMap的类图来分析ConcurrentHashMap的结构。
+&lt;img src=&quot;../assets/img/java-concurrency-collectionandfram-1.png&quot; alt=&quot;java-concurrency-collectionandfram-1&quot; /&gt;
+ConcurrentHashMap是由Segment数组结构组成。Segment是一种可重入锁（ReentrantLock），在ConcurrentHashMap里扮演锁的角色；HashEntry则用于存储健值对数据。一个ConcurrentHashMap里包含一个Segment数组。Segment结构和HashMap类似，是一种数组和链表的结构。一个Segment里包含一个HashEntry数组，每个HashEntry是一个链表结构的元素，每个segment守护着一个HashEntry数组里的元素，当对HashEntry数组的数据进行修改时，必须首先获得与它对应的Segment锁。
+&lt;img src=&quot;../assets/img/java-concurrency-collectionandfram-2.png&quot; alt=&quot;java-concurrency-collectionandfram-2&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;**粗体**
-*斜体*&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;h2 id=&quot;concurrentlinkedqueue&quot;&gt;ConcurrentLinkedQueue&lt;/h2&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;strong&gt;粗体&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在并发编程中，有时候需要使用线程安全的队列。如果要实现一个线程安全的队列有两种方式：一种是使用阻塞算法，另一种是使用非阻塞算法。使用阻塞算法的队列可以用一个锁（入队和出队用同一把锁）或两个锁（入队和出队不同的锁）等方式来实现。非阻塞的实现方式则可以使用循环CAS的方式来实现。&lt;/p&gt;
 
-  &lt;p&gt;&lt;em&gt;斜体&lt;/em&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;ConcurrentLinkedQueue是一个基于链接节点的无界线程安全队列，它采用先进先出的规则对节点进行排序，当我们添加一个元素的时候，它会添加到队列的尾部；当我们获取一个元素时，他会返回队列头部的元素。它采用”wait-free”算法（即CAS算法）来实现。&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;普通引用&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;ConcurrentLinkedQueue的结构&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;ConcurrentLinkedQueue类图如下：
+&lt;img src=&quot;../assets/img/java-concurrency-collectionandfram-3.png&quot; alt=&quot;java-concurrency-collectionandfram-3&quot; /&gt;
+ConcurrentLinkedQueue由head节点和tail节点组成，每个节点（Node）由节点元素（item）和指向下一个节点（next）的引用组成，节点与节点之间就是通过这个next关联起来，从而组成一张链表结构的队列。默认情况下head节点存储的元素为空，tail节点等于head节点。&lt;/p&gt;
+
+    &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;transient&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;volatile&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;E&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tail&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;入队列&lt;/strong&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;出队列&lt;/strong&gt;&lt;/p&gt;
+  &lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;&amp;gt;(空格)引用内容&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;引用内容&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;h2 id=&quot;java中的阻塞队列&quot;&gt;Java中的阻塞队列&lt;/h2&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;代码引用&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;什么是阻塞队列&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;阻塞队列（BlockingQueue）是一个支持两个附加操作的队列。这两个附加的操作支持阻塞的插入和移除方法。&lt;/p&gt;
+
+    &lt;ol&gt;
+      &lt;li&gt;支持阻塞的插入方法：意思是当队列满时，队列会阻塞插入元素的线程，直到队列不满。&lt;/li&gt;
+      &lt;li&gt;支持阻塞的移除方法：意思是在队列为空时，获取元素的线程会等待队列变为非空。&lt;/li&gt;
+    &lt;/ol&gt;
+
+    &lt;p&gt;阻塞队列常用于生产者和消费者的场景，生产者是向队列里添加元素的线程，消费者时从队列里去元素的线程。阻塞队列就是生产者用来存放元素、消费者用来获取元素的容器。&lt;/p&gt;
+
+    &lt;p&gt;在阻塞队列不可用时，两个附加操作提供了4中处理方式。&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;抛出异常：当队列满时，如果再往队列里插入元素，会抛出&lt;code class=&quot;highlighter-rouge&quot;&gt;IllegalStateException(&quot;Queue full&quot;)&lt;/code&gt;异常。当队列空时，从队列里取元素会抛出&lt;code class=&quot;highlighter-rouge&quot;&gt;NoSuchElementException&lt;/code&gt;异常。&lt;/li&gt;
+      &lt;li&gt;返回特殊值：当往队列插入元素时，会返回元素是否插入成功，成功返回true。如果是移除方法，则是从队列里取出一个元素，如果没有则返回null。&lt;/li&gt;
+      &lt;li&gt;一直阻塞：当阻塞队列满时，如果生产者线程往队列里put元素，队列会一直阻塞生产者线程，直到队列可用或者响应中断退出。当队列空时，如果消费者线程从队列里take元素，队列会阻塞住消费者线程，直到队列不为空。&lt;/li&gt;
+      &lt;li&gt;超时退出：当阻塞队列满时，如果生产者线程往队列里插入元素，队列会阻塞生产者线程一段时间，如果超过了指定的时间，生产者线程就会退出。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
 &lt;/ol&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;`&lt;code class=&quot;highlighter-rouge&quot;&gt;代码引用&lt;/code&gt;`&lt;/p&gt;
-
-  &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;​```&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;java&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;多段代码引用&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;多段代码引用&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;多段代码引用&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;​```&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;代码引用&lt;/code&gt;&lt;/p&gt;
-
-  &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;err&quot;&gt;多段代码引用&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;多段代码引用&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;多段代码引用&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;表格&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;| 标题1   | 标题2   | 标题3   |
-| —– | —– | —– |
-| 内容1.1 | 内容1.2 | 内容1.3 |
-| 内容2.1 | 内容2.2 | 内容2.3 |&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;table&gt;
-    &lt;thead&gt;
-      &lt;tr&gt;
-        &lt;th&gt;标题1&lt;/th&gt;
-        &lt;th&gt;标题2&lt;/th&gt;
-        &lt;th&gt;标题3&lt;/th&gt;
-      &lt;/tr&gt;
-    &lt;/thead&gt;
-    &lt;tbody&gt;
-      &lt;tr&gt;
-        &lt;td&gt;内容1.1&lt;/td&gt;
-        &lt;td&gt;内容1.2&lt;/td&gt;
-        &lt;td&gt;内容1.3&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;td&gt;内容2.1&lt;/td&gt;
-        &lt;td&gt;内容2.2&lt;/td&gt;
-        &lt;td&gt;内容2.3&lt;/td&gt;
-      &lt;/tr&gt;
-    &lt;/tbody&gt;
-  &lt;/table&gt;
-&lt;/blockquote&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;链接&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;[Markdown](https://daringfireball.net/projects/markdown/)&lt;/p&gt;
-
-  &lt;p&gt;![build-blog-markdown-1](../assets/img/build-blog-markdown-1.jpg)&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;a href=&quot;https://daringfireball.net/projects/markdown/&quot;&gt;Markdown&lt;/a&gt;&lt;/p&gt;
-
-  &lt;p&gt;&lt;img src=&quot;../assets/img/build-blog-markdown-1.jpg&quot; alt=&quot;build-blog-markdown-1&quot; /&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;发布我们的第一篇博文&quot;&gt;发布我们的第一篇博文&lt;/h2&gt;
-
-&lt;p&gt;熟悉完Markdown的语法，写下第一篇博文，然后执行&lt;/p&gt;
-
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;jekyll serve
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;就可以在本地查看我们发布的博文啦。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;../assets/img/build-blog-markdown-2.png&quot; alt=&quot;build-blog-markdown-2&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;可以review一下我们文章有没有其他问题，检查完毕后，就可以将code push到remote的repository中。这样在我们的https://&lt;em&gt;username&lt;/em&gt;.github.io域名下就可以看到我们的第一篇博文了。&lt;/p&gt;
-
-&lt;h2 id=&quot;结尾&quot;&gt;结尾&lt;/h2&gt;
-
-&lt;p&gt;通过这三篇文章，我们可以快速搭建起一个我们自己的博客，原始的主题比较简单，我们可以去&lt;a href=&quot;http://jekyllthemes.org/&quot;&gt;Jekyll Themes&lt;/a&gt;挑选我们比较中意的主题，之后再做一些个性化的改造就可以了。另外推荐一下mac上超好用的Markdown编辑器&lt;a href=&quot;https://typora.io&quot;&gt;Typora&lt;/a&gt;。我平时都是用这款编辑器来写文章的。&lt;/p&gt;
-
-&lt;p&gt;最后再回顾一次：&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-pages.html&quot;&gt;搭建属于自己的博客——GitHub Pages篇&lt;/a&gt;」快速搭建了自己的个人站点。&lt;/li&gt;
-  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-jekyll.html&quot;&gt;搭建属于自己的博客——Jekyll篇&lt;/a&gt;」将简单的个人站带你快速改造成一个个人博客。&lt;/li&gt;
-  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-markdown.html&quot;&gt;搭建属于自己的博客——Markdown篇&lt;/a&gt;」非常便捷的发布我们的第一篇博文。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;以上！&lt;/p&gt;</content><author><name>郝强</name></author><category term="documentation" /><category term="blog" /><summary type="html">这次我们依旧先review一下我们搭建自己的个人博客要做的三件事。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/build-blog-markdown-0.jpeg" /></entry><entry><title type="html">搭建属于自己的博客——Jekyll篇</title><link href="http://localhost:4000/documentation/build-blog-jekyll.html" rel="alternate" type="text/html" title="搭建属于自己的博客——Jekyll篇" /><published>2018-01-08T00:00:00+08:00</published><updated>2018-01-08T00:00:00+08:00</updated><id>http://localhost:4000/documentation/build-blog-jekyll</id><content type="html" xml:base="http://localhost:4000/documentation/build-blog-jekyll.html">&lt;p&gt;我们在上一篇「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-pages.html&quot;&gt;搭建属于自己的博客——GitHub Pages篇&lt;/a&gt;」中
-已经在GitHub Pages上创建了属于自己主页，当然了内容非常简单，只有一个简单的”Hello World”。
-接下来我们打算用10分钟的时间将这个简单的”Hello World”页面快速的搭建好一套可以用来发布博文的博客空间。&lt;/p&gt;
-
-&lt;p&gt;首先我们先review一遍我们要做的三件事：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-pages.html&quot;&gt;搭建属于自己的博客——GitHub Pages篇&lt;/a&gt;」&lt;/li&gt;
-  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-jekyll.html&quot;&gt;搭建属于自己的博客——Jekyll篇&lt;/a&gt;」&lt;/li&gt;
-  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-markdown.html&quot;&gt;搭建属于自己的博客——Markdown篇&lt;/a&gt;」&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;本篇是搭建属于自己的博客系列的第二篇：Jekyll篇。那么就先介绍一下Jekyll。&lt;/p&gt;
-
-&lt;h2 id=&quot;什么是jekyll&quot;&gt;什么是Jekyll？&lt;/h2&gt;
-&lt;p&gt;「&lt;a href=&quot;https://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt;」是一个简单的博客形态的静态站点生产机器。它有一个模版目录，其中包含原始文本格式的文档，通过 Markdown （或者 Textile） 以及 Liquid 转化成一个完整的可发布的静态网站，我们可以发布在任何你喜爱的服务器上。Jekyll 也可以运行在 GitHub Page 上，也就是说，我们可以使用 GitHub 的服务来搭建你的项目页面、博客或者网站，而且是完全免费的。&lt;/p&gt;
-
-&lt;h2 id=&quot;快速创建一个属于自己的博客&quot;&gt;快速创建一个属于自己的博客&lt;/h2&gt;
-&lt;ol&gt;
-  &lt;li&gt;安装Jekyll&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;在Jekyll的官网中的Quick-start instructions介绍还是很简单的。&lt;img src=&quot;../assets/img/build-blog-jekyll-1.png&quot; alt=&quot;build-blog-jekyll-1&quot; /&gt;
-但是由于我自己用的是mac所以还是遇到了一些特殊的问题。不过在Jekyll的官方网站上都已经给出了解决方案。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;On macOS, you may need to update RubyGems (using sudo only if necessary):&lt;/p&gt;
-  &lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem update --system
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;If you still have issues, you can download and install new Command Line
-Tools (such as &lt;code class=&quot;highlighter-rouge&quot;&gt;gcc&lt;/code&gt;) using the following command:&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;xcode-select --install
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;###&lt;a href=&quot;https://jekyllrb.com/docs/troubleshooting/#jekyll--mac-os-x-1011&quot;&gt; Jekyll &amp;amp; Mac OS X 10.11&lt;/a&gt;&lt;/p&gt;
-
-  &lt;p&gt;With the introduction of System Integrity Protection, several directoriesthat were previously writable are now considered system locations and are nolonger available. Given these changes, there are a couple of simple ways to getup and running. One option is to change the location where the gem will beinstalled (again, using &lt;code class=&quot;highlighter-rouge&quot;&gt;sudo&lt;/code&gt; only if necessary):&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem install -n /usr/local/bin jekyll
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;这样我们就完成了Jekyll的安装。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;创建一个初始模版的博客&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jekyll new my-awesome-site
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;启动服务&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;my-awesome-site
-bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;jekyll serve
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;../assets/img/build-blog-jekyll-2.png&quot; alt=&quot;build-blog-jekyll-2&quot; /&gt;
-这样我们的博客就建好啦！&lt;/p&gt;
-
-&lt;h2 id=&quot;基本用法&quot;&gt;基本用法&lt;/h2&gt;
-
-&lt;p&gt;安装了 Jekyll 的 Gem 包之后，就可以在命令行中使用 Jekyll 命令了。有以下这些用法：&lt;/p&gt;
-
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jekyll build
-&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 当前文件夹中的内容将会生成到 ./site 文件夹中。&lt;/span&gt;
-
-jekyll build --destination &amp;lt;destination&amp;gt;
-&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 当前文件夹中的内容将会生成到目标文件夹&amp;lt;destination&amp;gt;中。&lt;/span&gt;
-
-jekyll build --source &amp;lt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; --destination &amp;lt;destination&amp;gt;
-&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 指定源文件夹&amp;lt;source&amp;gt;中的内容将会生成到目标文件夹&amp;lt;destination&amp;gt;中。&lt;/span&gt;
-
-jekyll build --watch
-&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 当前文件夹中的内容将会生成到 ./site 文件夹中，&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#    查看改变，并且自动再生成。&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Jekyll 同时也集成了一个开发用的服务器，可以让你使用浏览器在本地进行预览。&lt;/p&gt;
-
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jekyll serve
-&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 一个开发服务器将会运行在 http://localhost:4000/&lt;/span&gt;
-
-jekyll serve --detach
-&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 功能和`jekyll serve`命令相同，但是会脱离终端在后台运行。&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#    如果你想关闭服务器，可以使用`kill -9 1234`命令，&quot;1234&quot; 是进程号（PID）。&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#    如果你找不到进程号，那么就用`ps aux | grep jekyll`命令来查看，然后关闭服务器。&lt;/span&gt;
-
-jekyll serve --watch
-&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 和`jekyll serve`相同，但是会查看变更并且自动再生成。&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;目录结构&quot;&gt;目录结构&lt;/h2&gt;
-
-&lt;p&gt;Jekyll 的核心其实是一个文本转换引擎。它的概念其实就是： 你用你最喜欢的标记语言来写文章，可以是 Markdown，也可以是 Textile,或者就是简单的 HTML, 然后 Jekyll 就会帮你套入一个或一系列的布局中。在整个过程中你可以设置URL路径, 你的文本在布局中的显示样式等等。这些都可以通过纯文本编辑来实现，最终生成的静态页面就是你的成品了。&lt;/p&gt;
-
-&lt;p&gt;一个基本的 Jekyll 网站的目录结构一般是像这样的：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;.
-├── _config.yml
-├── _data
-|   └── members.yml
-├── _drafts
-|   ├── begin-with-the-crazy-ideas.md
-|   └── on-simplicity-in-technology.md
-├── _includes
-|   ├── footer.html
-|   └── header.html
-├── _layouts
-|   ├── default.html
-|   └── post.html
-├── _posts
-|   ├── 2007-10-29-why-every-programmer-should-play-nethack.md
-|   └── 2009-04-26-barcamp-boston-4-roundup.md
-├── _sass
-|   ├── _base.scss
-|   └── _layout.scss
-├── _site
-├── .jekyll-metadata
-└── index.html
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;来看看这些都有什么用：&lt;/p&gt;
 
 &lt;table&gt;
   &lt;thead&gt;
     &lt;tr&gt;
-      &lt;th&gt;文件 / 目录&lt;/th&gt;
-      &lt;th&gt;描述&lt;/th&gt;
+      &lt;th&gt;方法/处理方式&lt;/th&gt;
+      &lt;th&gt;抛出异常&lt;/th&gt;
+      &lt;th&gt;返回特殊值&lt;/th&gt;
+      &lt;th&gt;一直阻塞&lt;/th&gt;
+      &lt;th&gt;超时退出&lt;/th&gt;
     &lt;/tr&gt;
   &lt;/thead&gt;
   &lt;tbody&gt;
     &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_config.yml&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;保存配置数据。很多配置选项都会直接从命令行中进行设置，但是如果你把那些配置写在这儿，你就不用非要去记住那些命令了。&lt;/td&gt;
+      &lt;td&gt;插入方法&lt;/td&gt;
+      &lt;td&gt;add(e)&lt;/td&gt;
+      &lt;td&gt;offer(e)&lt;/td&gt;
+      &lt;td&gt;put(e)&lt;/td&gt;
+      &lt;td&gt;offer(e,time,unit)&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_drafts&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;drafts 是未发布的文章。这些文件的格式中都没有 &lt;code class=&quot;highlighter-rouge&quot;&gt;title.MARKUP&lt;/code&gt; 数据。&lt;/td&gt;
+      &lt;td&gt;移除方法&lt;/td&gt;
+      &lt;td&gt;remove()&lt;/td&gt;
+      &lt;td&gt;poll()&lt;/td&gt;
+      &lt;td&gt;take()&lt;/td&gt;
+      &lt;td&gt;poll(time, unit)&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_includes&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;你可以加载这些包含部分到你的布局或者文章中以方便重用。可以用这个标签&lt;code class=&quot;highlighter-rouge&quot;&gt;include file.ext &lt;/code&gt;来把文件 &lt;code class=&quot;highlighter-rouge&quot;&gt;_includes/file.ext&lt;/code&gt; 包含进来。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_layouts&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;layouts 是包裹在文章外部的模板。布局可以在YAML头信息中根据不同文章进行选择。这将在下一个部分进行介绍。标签  &lt;code class=&quot;highlighter-rouge&quot;&gt;content&lt;/code&gt; 可以将content插入页面中。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;这里放的就是你的文章了。文件格式很重要，必须要符合:&lt;code class=&quot;highlighter-rouge&quot;&gt;YEAR-MONTH-DAY-title.MARKUP&lt;/code&gt;。The permalinks可以在文章中自己定制，但是数据和标记语言都是根据文件名来确定的。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_data&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;一般都会存放&lt;code class=&quot;highlighter-rouge&quot;&gt;settings.yml&lt;/code&gt;文件，其中会又一些对于网站的配置。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_site&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;一旦 Jekyll 完成转换，就会将生成的页面放在这里（默认）。最好将这个目录放进你的 &lt;code class=&quot;highlighter-rouge&quot;&gt;.gitignore&lt;/code&gt; 文件中。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;index.html&lt;/code&gt; and other HTML, Markdown, Textile files&lt;/td&gt;
-      &lt;td&gt;如果这些文件中包含YAML头信息部分，Jekyll 就会自动将它们进行转换。当然，其他的如 &lt;code class=&quot;highlighter-rouge&quot;&gt;.html&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;.markdown&lt;/code&gt;、&lt;code class=&quot;highlighter-rouge&quot;&gt;.md&lt;/code&gt;或者 &lt;code class=&quot;highlighter-rouge&quot;&gt;.textile&lt;/code&gt; 等在你的站点根目录下或者不是以上提到的目录中的文件也会被转换。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Other Files/Folders&lt;/td&gt;
-      &lt;td&gt;其他一些未被提及的目录和文件如&lt;code class=&quot;highlighter-rouge&quot;&gt;css&lt;/code&gt; 还有 &lt;code class=&quot;highlighter-rouge&quot;&gt;images&lt;/code&gt; 文件夹，&lt;code class=&quot;highlighter-rouge&quot;&gt;favicon.ico&lt;/code&gt; 等文件都将被完全拷贝到生成的 site 中。&lt;/td&gt;
+      &lt;td&gt;检查方法&lt;/td&gt;
+      &lt;td&gt;element()&lt;/td&gt;
+      &lt;td&gt;peek()&lt;/td&gt;
+      &lt;td&gt;不可用&lt;/td&gt;
+      &lt;td&gt;不可用&lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;h2 id=&quot;将内容发布到自己的usernamegithubio域名下&quot;&gt;将内容发布到自己的&lt;em&gt;username&lt;/em&gt;.github.io域名下&lt;/h2&gt;
-
-&lt;p&gt;好啦，关于Jekyll的详细介绍就不再本文中赘述了，有什么问题都可以去看&lt;a href=&quot;https://jekyllrb.com/docs/home/&quot;&gt;Jekyll的官方文档&lt;/a&gt;。
-我们只要简单的会用Jekyll来搭建我们的博客网站，并且发布我们的博文就好了。
-接下来我们只要将生成好的文件push到自己的&lt;em&gt;username&lt;/em&gt;.github.io的repository中，我们的网站就会自动发布到&lt;em&gt;username&lt;/em&gt;.github.io域名下。
-值得注意的是：通常情况下我们会把&lt;code class=&quot;highlighter-rouge&quot;&gt;_site&lt;/code&gt;目录下的内容加入到&lt;code class=&quot;highlighter-rouge&quot;&gt;.gitignore&lt;/code&gt;文件中，因为在&lt;code class=&quot;highlighter-rouge&quot;&gt;_post&lt;/code&gt;中的markdown文件会在远程自动生成到&lt;code class=&quot;highlighter-rouge&quot;&gt;_site&lt;/code&gt;的HTML页面。&lt;/p&gt;
-
-&lt;p&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-pages.html&quot;&gt;搭建属于自己的博客——GitHub Pages篇&lt;/a&gt;」介绍了在使用GitHub Pages来创建自己的主页。「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-jekyll.html&quot;&gt;搭建属于自己的博客——Jekyll篇&lt;/a&gt;」介绍了如何在本地快速生成自己的博客并快速上传到自己的&lt;em&gt;username&lt;/em&gt;.github.io域名下。接下来我们要通过「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-markdown.html&quot;&gt;搭建属于自己的博客——Markdown篇&lt;/a&gt;」来学习Markdown语法，来编写我们的博文。敬请期待吧！&lt;/p&gt;</content><author><name>郝强</name></author><category term="documentation" /><category term="blog" /><summary type="html">我们在上一篇「搭建属于自己的博客——GitHub Pages篇」中 已经在GitHub Pages上创建了属于自己主页，当然了内容非常简单，只有一个简单的”Hello World”。 接下来我们打算用10分钟的时间将这个简单的”Hello World”页面快速的搭建好一套可以用来发布博文的博客空间。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/build-blog-jekyll-0.jpeg" /></entry><entry><title type="html">搭建属于自己的博客——GitHub Pages篇</title><link href="http://localhost:4000/documentation/build-blog-pages.html" rel="alternate" type="text/html" title="搭建属于自己的博客——GitHub Pages篇" /><published>2018-01-04T00:00:00+08:00</published><updated>2018-01-04T00:00:00+08:00</updated><id>http://localhost:4000/documentation/build-blog-pages</id><content type="html" xml:base="http://localhost:4000/documentation/build-blog-pages.html">&lt;p&gt;作为第一篇分享的技术类文章，打算从如何搭建这个个人博客说起。想必每一名程序员都想拥有自己的博客，大致上无外乎以下三种：&lt;/p&gt;
-
 &lt;ol&gt;
-  &lt;li&gt;在某个技术论坛扎根&lt;/li&gt;
-  &lt;li&gt;自己买空间&lt;/li&gt;
-  &lt;li&gt;在GitHub Pages上搭建自己的个人主页&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Java里的阻塞队列&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;ArrayBlockingQueue：一个由数组结构组成的有界阻塞队列。&lt;/li&gt;
+      &lt;li&gt;LinkedBlockingQueue：一个由链表结构组成的有界阻塞队列。&lt;/li&gt;
+      &lt;li&gt;PriorityBlockingQueue：一个支持优先级排序的无界阻塞队列。&lt;/li&gt;
+      &lt;li&gt;DelayQueue：一个使用优先级队列实现的无阻塞队列。&lt;/li&gt;
+      &lt;li&gt;SynchronousQueue：一个不存储元素的阻塞队列。&lt;/li&gt;
+      &lt;li&gt;LinkedTransferQueue：一个由链表结构组成的无界阻塞队列。&lt;/li&gt;
+      &lt;li&gt;LinkedBlockingDeque：一个由链表结构组成的双向阻塞队列。&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;ol&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;ArrayBlockingQueue&lt;/strong&gt;&lt;/p&gt;
+
+        &lt;p&gt;ArrayBlockingQueue是一个用数组实现的有界阻塞队列。此队列按照先进先出（FIFO）的原则对元素进行排序。&lt;/p&gt;
+
+        &lt;p&gt;默认情况下不保证线程公平的访问队列，所谓公平访问队列是指阻塞的线程，可以按照阻塞的先后顺序访问队列，即先阻塞线程先访问队列。非公平性是先等待的线程是非公平的，当队列可用时，阻塞的线程都可以争夺访问队列的资格，有可能先阻塞的线程最后才访问队列。为了保证公平性，通常会降低吞吐量。访问者的公平性时使用可重入锁实现的。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;LinkedBlockingQueue&lt;/strong&gt;&lt;/p&gt;
+
+        &lt;p&gt;LinkedBlockingQueue是一个用链表实现的有界阻塞队列。此队列的默认和最大长度为Integer.MAX_VALUE。此队列按照先进先出的原则对元素进行排序。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;PriorityBlockingQueue&lt;/strong&gt;&lt;/p&gt;
+
+        &lt;p&gt;PriorityBlockingQueue是一个支持优先级的无界阻塞队列。默认情况下元素采取自然顺序生序排列，也可以自定义实现compareTo()方法来指定元素的排序规则，或者初始化PriorityBlockingQueue时，指定构造参数Comparator来对元素进行排序。需要注意的是不能保证同优先级元素的顺序。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;DelayQueue&lt;/strong&gt;&lt;/p&gt;
+
+        &lt;p&gt;DelayQueue是一个支持延时获取元素的无界阻塞队列。队列使用PriorityQueue来实现。队列中的元素必须实现Delayed接口，在创建元素时可以指定多久才能从队列中获取当前元素。只有在延迟期满时才能从队列中提取元素。&lt;/p&gt;
+
+        &lt;p&gt;DelayQueue非常有用，可以将DelayQueue运用在以下应用场景。&lt;/p&gt;
+
+        &lt;ul&gt;
+          &lt;li&gt;缓存系统的设计：可以用DelayQueue保存缓存元素的有效期，使用一个线程循环查询DelayQueue，一旦能从DelayQueue中获取元素时，表示缓存有效期到了。&lt;/li&gt;
+          &lt;li&gt;定时任务调度：使用DelayQueue保存当天将会执行的任务和执行时间，一旦从DelayQueue中获取到任务就开始执行，比如TimerQueue就是使用DelayQueue实现的。&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;SynchronousQueue&lt;/strong&gt;&lt;/p&gt;
+
+        &lt;p&gt;SynchronousQueue是一个不存储元素的阻塞队列。每一个put操作必须等待一个take操作，否则不能继续添加元素。&lt;/p&gt;
+
+        &lt;p&gt;它支持公平访问队列。默认情况下线程采用非公平性策略访问队列。使用以下构造方法可以创建公平性访问的SynchronousQueue，如果设置为true，则等待线程会采用先进先出的顺序访问队列。&lt;/p&gt;
+
+        &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;SynchronousQueue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fair&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;transfere&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fair&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TransferQueue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TransferStack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+
+        &lt;p&gt;SynchronousQueue可以看成是一个传球手，负责把生产者线程处理的数据直接传递给消费者线程。队列本身不存储任何元素，非常适合传递性场景。SynchronousQueue的吞吐量高于LinkedBlockingQueue和ArrayBlockingQueue。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;LinkedTransferQueue&lt;/strong&gt;&lt;/p&gt;
+
+        &lt;p&gt;LinkedTransferQueue是一个由链表结构组成的无界阻塞TransferQueue队列。相对于其他阻塞队列，LinkedTransferQueue多了tryTransfer和transfer方法。&lt;/p&gt;
+
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;p&gt;transfer方法&lt;/p&gt;
+
+            &lt;p&gt;如果当前有消费者正在等待接收元素（消费者使用take()方法或带时间限制的poll()方法时），transfer方法可以把生产者传入的元素立刻transfer（传输）给消费者。如果没有消费者等待接收元素，transfer方法会将元素存放在队列的tail节点，并等到该元素被消费者消费了才返回。&lt;/p&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;p&gt;tryTransfer方法&lt;/p&gt;
+
+            &lt;p&gt;tryTransfer方法是用来试探生产者传入的元素是否能直接传递给消费者。如果没有消费者等待接收元素，则返回false。和transfer方法的区别是tryTransfer方法无论消费者是否接收，方法立即返回，而transfer方法是必须等到消费者消费了才返回。&lt;/p&gt;
+
+            &lt;p&gt;对于带有时间限制的tryTransfer(E e, long timeout, TimeUnit unit)方法，试图把生产者传入的元素直接给消费者，但是如果没有消费者消费该元素则等待指定的时间再返回，如果超时还没消费元素，则返回false，如果在超时时间内消费了元素，则返回true。&lt;/p&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;LinkedBlockingDeque&lt;/strong&gt;&lt;/p&gt;
+
+        &lt;p&gt;LinkedBlockingDque是一个由链表结构组成的双向阻塞队列。所谓双向队列指的是可以从队列的两端插入和移出元素。双向队列因为多了一个操作队列的入口，在多线程同时入队时，也就减少了一半的竞争。相比其他阻塞队列，LinkedBlockingDeque多了addFirst、addLast、offerFirst、offerLast、peekFirst和peekLast等方法。以First结尾的方法，表示插入、获取（peek）或移除双端队列的第一个元素。以Last单词结尾的方法，表示插入、获取或移除双端队列的最后一个元素。另外，插入方法add等同于addList，移除方法remove等效于removeFirst。但是take方法却等同于takeFirst。在初始化LinkedBlockingDeque时可以设置容量防止其过度膨胀。另外，双向阻塞队列可以运用在”工作窃取”模式中。&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;阻塞队列的实现原理&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;使用通知模式实现。所谓通知模式，就是当生产者往满的队列里添加元素时会阻塞住生产者，当消费者消费了一个队列中的元素后，会通知生产者当前队列可用。&lt;/p&gt;
+  &lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;从我个人的考虑还是倾向于第三种，第一种不太适合我是因为目前支持markdown的论坛比较少，还没找到合适的。
-第二种需要自己买空间，花钱倒不是主要问题，问题是维护成本有点高，而且买了空间，只用搭建自己的博客感觉有点浪费……
-所以最后决定是用GitHub Pages+Jekyll+Markdown来搭建自己的个人博客。&lt;/p&gt;
-
-&lt;p&gt;因此，打算分别用三个篇章来介绍如何搭建自己的个人博客。&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-pages.html&quot;&gt;搭建属于自己的博客——GitHub Pages篇&lt;/a&gt;」&lt;/li&gt;
-  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-jekyll.html&quot;&gt;搭建属于自己的博客——Jekyll篇&lt;/a&gt;」&lt;/li&gt;
-  &lt;li&gt;「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-markdown.html&quot;&gt;搭建属于自己的博客——Markdown篇&lt;/a&gt;」&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;什么是github-pages&quot;&gt;什么是GitHub Pages?&lt;/h2&gt;
-
-&lt;p&gt;「&lt;a href=&quot;https://pages.github.com/&quot;&gt;GitHub Pages&lt;/a&gt;」是一个静态站点托管服务。&lt;/p&gt;
-
-&lt;p&gt;GitHub Pages的设计目的是直接从GitHub库中托管我们的个人、组织或项目页面。
-我们可以使用Jekyll主题选择器在网上创建和发布GitHub页面。如果喜欢在本地工作，可以使用GitHub桌面或命令行。&lt;/p&gt;
-
-&lt;p&gt;其实最重要的是GitHub Pages支持了我们可以直接在自己的GitHub上的repository上创建一个project，这个project就是我们的个人主页的项目。
-只要我们去把记得写的博文push到这个project，就可以直接发布到对应的自己的个人主页或者项目主页上。这是一个非常方便的操作。比方说我们有一些自己写过的project
-必然要有一个汇总的介绍，除了每个project中要有自己的页面做介绍外，还应该有一个个人主页。那么我只需要建立一个以我的GitHub的username.github.io的repository
-那么这个代码仓库中的pages就会自动发布到我们的个人主页上。&lt;/p&gt;
-
-&lt;h2 id=&quot;快速创建一个属于自己的站点&quot;&gt;快速创建一个属于自己的站点&lt;/h2&gt;
+&lt;h2 id=&quot;forkjoin框架&quot;&gt;Fork/Join框架&lt;/h2&gt;
 
 &lt;ol&gt;
   &lt;li&gt;
-    &lt;p&gt;首先要有一个自己的GitHub账号。作为一个程序员，大家应该都有自己的GitHub账号吧。如果还没有快去注册一个吧。「&lt;a href=&quot;https://github.com/&quot;&gt;GitHub&lt;/a&gt;」&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;什么是Fork/Join框架&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;Fork/Join框架是Java7提供的一个用于并行执行任务的框架，是一个把大任务分割成若干个小任务，在最终汇总每个小任务结构后得到大任务结果的框架。&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;接下来我们在自己的账号下要创建一个repository。这个repository名称是有要求的，需要以&lt;em&gt;username&lt;/em&gt;.github.io来命名，其中username是我们的GitHub账号名称。&lt;img src=&quot;../assets/img/build-blog-pages-1.png&quot; alt=&quot;build-blog-pages-1&quot; /&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;工作窃取算法&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;工作窃取（work-stealing）算法是指某个线程从其他队列里窃取任务来执行。那么，为什么需要使用工作窃取算法呢？假如我们需要做一个比较大的任务，可以把这个任务分割为若干互不依赖的子任务，为了减少线程间的竞争，把这些子任务分别放在不同的队列里，并为每个队列创建一个单独的线来执行队列里的任务，线程和队列一一对应。比如A线程负责处理A队列里的任务。但是，有的线程会先把自己队列里的任务干完，而其他线程对应的队列里还有任务等待处理。干完活儿的线程与其等着，不如去帮其他线程干活，于是它就去其他线程的队列里窃取一个任务来执行。而在这时它们会访问同一个队列，所以为了减少窃取任务线程和被窃取任务线程之间的竞争，通常会使用双端队列，被窃取任务线程永远从双端队列的头部拿任务执行，而窃取任务的线程永远从双端队列的尾部拿任务执行。&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;工作窃取算法的优点：充分利用线程进行并行计算，减少了线程间的竞争。&lt;/li&gt;
+      &lt;li&gt;工作窃取算法的缺点：在某些情况下还是存在竞争，比如双端队列里只有一个任务时。并且算法会消耗了更多的系统资源，比如创建多个线程和多个双端队列。&lt;/li&gt;
+    &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;创建完成后，GitHub会生成我们刚刚创建的repository的连接。接下来需要复制这个连接，打开terminal，将项目clone下来。&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;Fork/Join框架的设计&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;ol&gt;
+      &lt;li&gt;
+        &lt;p&gt;步骤1：分割任务。首先我们需要一个fork类把大任务分割成子任务，有可能任务还是很大，所以还需要不停地分割，直到分割出的子任务足够小。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;步骤2：执行任务并合并结果。分割的子任务分别放在双端队列里，然后几个启动线程分别从双端队列里获取任务执行。子任务执行完的结果都统一放在一个队列里，启动一个线程从队列里拿数据，然后合并这些数据。&lt;/p&gt;
+
+        &lt;p&gt;Fork/Join使用两个类来完成以上两件事情。&lt;/p&gt;
+
+        &lt;ol&gt;
+          &lt;li&gt;
+            &lt;p&gt;Fork/JoinTask：我们使用ForkJoin框架，必须首先创建一个ForkJoin任务。它提供在任务中执行fork()和join()操作的机制。通常情况下，我们不需要直接继承ForkJoinTask类，只需要继承它的子类，Fork/Join框架提供了以下两个子类。&lt;/p&gt;
+
+            &lt;ul&gt;
+              &lt;li&gt;RecursiveAction：用于没有返回结果的任务。&lt;/li&gt;
+              &lt;li&gt;RecursiveTask：用于有返回结果的任务。&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;p&gt;ForkJoinPool：ForkJoinTask需要通过ForkJoinPool来执行。&lt;/p&gt;
+
+            &lt;p&gt;任务分割出的子任务会添加到当前工作线程所维护的双端队列中，进入队列的头部。当一个工作线程的队列里暂时没有任务时，他会随机从其他工作线程的队列的尾部获取一个任务。&lt;/p&gt;
+          &lt;/li&gt;
+        &lt;/ol&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
   &lt;/li&gt;
-&lt;/ol&gt;
+&lt;/ol&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html">ConcurrentHashMap的实现原理与使用</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-collectionandfram-0.jpeg" /></entry><entry><title type="html">Java中的锁</title><link href="http://localhost:4000/resources/java-concurrency-lock.html" rel="alternate" type="text/html" title="Java中的锁" /><published>2018-03-11T00:00:00+08:00</published><updated>2018-03-11T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-lock</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-lock.html"></content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html"></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-lock-0.jpeg" /></entry><entry><title type="html">Java并发编程基础</title><link href="http://localhost:4000/resources/java-concurrency-basic.html" rel="alternate" type="text/html" title="Java并发编程基础" /><published>2018-03-10T00:00:00+08:00</published><updated>2018-03-10T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-basic</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-basic.html">&lt;h2 id=&quot;java内存模型的基础&quot;&gt;Java内存模型的基础&lt;/h2&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;git clone https://github.com/&lt;em&gt;username&lt;/em&gt;/&lt;em&gt;username&lt;/em&gt;.github.io&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;ul&gt;
+  &lt;li&gt;【&lt;strong&gt;Java内存模型的抽象结构&lt;/strong&gt;】：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;../assets/img/java-concurrency-space-1.png&quot; alt=&quot;java-concurrency-space-1&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;【&lt;strong&gt;从源代码到指令序列的重排序&lt;/strong&gt;】：在执行程序时，为了提高性能，编译器和处理器常常会对指令做重排序。重排序分为三种类型：&lt;/p&gt;
+
+    &lt;ol&gt;
+      &lt;li&gt;编译器优化的重排序。编译器在不改变单线程程序语义的前提下，可以重新安排语句的执行顺序。&lt;/li&gt;
+      &lt;li&gt;指令集并行的重排序。现代冲利器采用了指令级并行技术来将多条指令重叠执行。如果不存在数据依赖性，处理器可以改变语句对应机器指令的执行顺序。&lt;/li&gt;
+      &lt;li&gt;内存系统的重排序。由于处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是乱序执行&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;重排序&quot;&gt;重排序&lt;/h2&gt;
+
+&lt;p&gt;重排序是指编译器和处理器为了优化程序性能而对指令序列进行重新排序的一种手段。&lt;/p&gt;
+
+&lt;h2 id=&quot;顺序一致性&quot;&gt;顺序一致性&lt;/h2&gt;
+
+&lt;p&gt;顺序一致性内存模型是一个理论参考模型，在设计的时候，处理器的内存模型和编程语言的内存模型都会以顺序一致性内存模型作为参考。&lt;/p&gt;
+
+&lt;h2 id=&quot;volatile的内存语义&quot;&gt;volatile的内存语义&lt;/h2&gt;
+
+&lt;h2 id=&quot;锁的内存语义&quot;&gt;锁的内存语义&lt;/h2&gt;
+
+&lt;h2 id=&quot;final域的内存语义&quot;&gt;final域的内存语义&lt;/h2&gt;
+
+&lt;h2 id=&quot;happens-before&quot;&gt;happens-before&lt;/h2&gt;
+
+&lt;h2 id=&quot;双重检查锁与延迟初始化&quot;&gt;双重检查锁与延迟初始化&lt;/h2&gt;
+
+&lt;h2 id=&quot;java内存模型综述&quot;&gt;Java内存模型综述&lt;/h2&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html">Java内存模型的基础</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-basic-0.jpeg" /></entry><entry><title type="html">Java内存模型</title><link href="http://localhost:4000/resources/java-concurrency-space.html" rel="alternate" type="text/html" title="Java内存模型" /><published>2018-03-09T00:00:00+08:00</published><updated>2018-03-09T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-space</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-space.html">&lt;h2 id=&quot;java内存模型的基础&quot;&gt;Java内存模型的基础&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;【&lt;strong&gt;Java内存模型的抽象结构&lt;/strong&gt;】：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;../assets/img/java-concurrency-space-1.png&quot; alt=&quot;java-concurrency-space-1&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;【&lt;strong&gt;从源代码到指令序列的重排序&lt;/strong&gt;】：在执行程序时，为了提高性能，编译器和处理器常常会对指令做重排序。重排序分为三种类型：&lt;/p&gt;
+
+    &lt;ol&gt;
+      &lt;li&gt;编译器优化的重排序。编译器在不改变单线程程序语义的前提下，可以重新安排语句的执行顺序。&lt;/li&gt;
+      &lt;li&gt;指令集并行的重排序。现代冲利器采用了指令级并行技术来将多条指令重叠执行。如果不存在数据依赖性，处理器可以改变语句对应机器指令的执行顺序。&lt;/li&gt;
+      &lt;li&gt;内存系统的重排序。由于处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是乱序执行&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;重排序&quot;&gt;重排序&lt;/h2&gt;
+
+&lt;p&gt;重排序是指编译器和处理器为了优化程序性能而对指令序列进行重新排序的一种手段。&lt;/p&gt;
+
+&lt;h2 id=&quot;顺序一致性&quot;&gt;顺序一致性&lt;/h2&gt;
+
+&lt;p&gt;顺序一致性内存模型是一个理论参考模型，在设计的时候，处理器的内存模型和编程语言的内存模型都会以顺序一致性内存模型作为参考。&lt;/p&gt;
+
+&lt;h2 id=&quot;volatile的内存语义&quot;&gt;volatile的内存语义&lt;/h2&gt;
+
+&lt;h2 id=&quot;锁的内存语义&quot;&gt;锁的内存语义&lt;/h2&gt;
+
+&lt;h2 id=&quot;final域的内存语义&quot;&gt;final域的内存语义&lt;/h2&gt;
+
+&lt;h2 id=&quot;happens-before&quot;&gt;happens-before&lt;/h2&gt;
+
+&lt;h2 id=&quot;双重检查锁与延迟初始化&quot;&gt;双重检查锁与延迟初始化&lt;/h2&gt;
+
+&lt;h2 id=&quot;java内存模型综述&quot;&gt;Java内存模型综述&lt;/h2&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html">Java内存模型的基础</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-space-0.jpeg" /></entry><entry><title type="html">Spring事务</title><link href="http://localhost:4000/resources/spring-transaction.html" rel="alternate" type="text/html" title="Spring事务" /><published>2018-03-08T00:00:00+08:00</published><updated>2018-03-08T00:00:00+08:00</updated><id>http://localhost:4000/resources/spring-transaction</id><content type="html" xml:base="http://localhost:4000/resources/spring-transaction.html">&lt;h2 id=&quot;事务传播行为&quot;&gt;事务传播行为&lt;/h2&gt;
+
+&lt;p&gt;传播行为级别，定义的是事务的控制范围。通俗点说，执行到某段代码时，对已存在的事务的不同处理方式。&lt;/p&gt;
+
+&lt;p&gt;Spring对JDBC的事务隔离级别进行了补充和扩展，并提出了种事务传播行为。&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;继续进入到local的项目中，创建一个带有”Hello World“内容的index.html&lt;/li&gt;
-&lt;/ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;PROPAGATION_REQUIRED&lt;/strong&gt;：需要事务处理。有则使用，无则新建。这时Spring默认的事务传播行为。该级别的特征是，如果Context中已经存在事务，那么就将当前需要使用事务的代码加入到Context的事务中去执行，如果当前Context中不存在事务，则新建一个事物执行代码。这个级别通常能满足大多数的业务场景。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;PROPAGATION_SUPPORTS&lt;/strong&gt;：支持事务处理。该级别的特性是，如果Context存在事务，则将代码加入到Context的事务中执行，如果Context中没有事务，则使用非事务的方式执行。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;PROPAGATION_MANDATORY&lt;/strong&gt;：强制要求事务。该级别的特性是，当要以事务的方式执行代码时，要求Context中必须已经存在事务，否则就会抛出异常！使用MANDATORY强制事务，可以有效地控制“必须以事务执行的代码，却忘记给它加上事务控制”这种情况发生。举个简单的例子：有一个方法，对这个方法的要求时一旦被调用，该方法就必须包含在事务中才能正常执行，那么这个方法就适合设置为PROPAGATION_MANDATORY强制事务传播行为，从而在代码层面加以控制。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;PROPAGATION_REQUIRES_NEW&lt;/strong&gt;：每次都新建一个事务。该级别的特点是，当执行到一段需要事务的代码时，先判断Context中是否已经有事务存在，如果不存在，就去新建一个事物；如果已经存在，就suspend挂起当前事务，然后穿件一个新事务去执行，直到新事务执行完毕，才会恢复先前挂起的Context事务。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;PROPAGATION_NOT_SUPPORTED&lt;/strong&gt;：不支持事务。该级别的特点是，如果发现当Context中有事务存在，则挂起该事务，然后执行逻辑代码，执行完毕后，恢复先前挂起的Context事务。这个传播行为的事务，可以缩小事务处理过程的范围。举个简单的例子，在一个事物中要调用一段非核心业务的逻辑操作1000次，如果这段逻辑放在事务中，会导致该事务的范围变大，生命周期变长，为了避免因事物范围扩大、周期变长而引发一些的实现没有考虑到的异常情况发生，可以将这段逻辑设置为NOT_SUPPORTED不支持事务传播行为。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;PROPAGATION_NEVER&lt;/strong&gt;：对事务要求更严格。不能出现事务！该级别的特点是，设置了该级别的代码，在执行前一旦发现Context中有事务存在，就会抛出Runtime异常，强制停止执行，有我无他！&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;PROPATGATION_NESTED&lt;/strong&gt;：嵌套事务。该级别的特点是，如果Context中存在的事务A，就将当前代码对应的事务B加入到事务A内部，嵌套执行；如果Context中不存在事务，则新建事务执行代码。换句话说。事务A与事务B之间是父子关系，A是父，B是子。理解嵌套事务的关键点是：save point。&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;cd &lt;em&gt;username&lt;/em&gt;.github.io&lt;/p&gt;
+    &lt;p&gt;父、子事务嵌套、save point的说明：&lt;/p&gt;
 
-  &lt;p&gt;echo “Hello World” &amp;gt; index.html&lt;/p&gt;
-&lt;/blockquote&gt;
+    &lt;ul&gt;
+      &lt;li&gt;父事务会在子事务进入之前创建一个save point；&lt;/li&gt;
+      &lt;li&gt;子事务rollback，父事务只会会滚到save point，而不会回滚整个父事务；&lt;/li&gt;
+      &lt;li&gt;父事务commit之前，必须先commit子事务。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="spring" /><summary type="html">事务传播行为</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/spring-transaction-0.jpeg" /></entry><entry><title type="html">数据库事务</title><link href="http://localhost:4000/resources/db-transaction.html" rel="alternate" type="text/html" title="数据库事务" /><published>2018-03-07T00:00:00+08:00</published><updated>2018-03-07T00:00:00+08:00</updated><id>http://localhost:4000/resources/db-transaction</id><content type="html" xml:base="http://localhost:4000/resources/db-transaction.html">&lt;h2 id=&quot;数据库四大特性&quot;&gt;数据库四大特性&lt;/h2&gt;
+
+&lt;p&gt;数据库的四大特性简称ACID：Atomicity（原子性）、Consistency（一致性）、Isolation（隔离性）和Durability（持久性）。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;【原子性（Atomicity）】：原子性是指事物包含的操作要么全部成功，要么全部失败回滚。也就是说事务的操作如果成功就必须完全应用到数据库，如果操作失败则不能对数据库有任何影响。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;【一致性（Consistency）】：一致性是指事物必须使数据库从一个一致性状态变换到另一个一致性状态，也就是说一个事物执行之前和执行之后都必须处于一执行状态。&lt;/p&gt;
+
+    &lt;p&gt;比如说转账，假设用户A和用户B两者的钱加起来一共是50000，那么不管A和B之间如何转账，转账几次，事物结束后两个用户的钱相加起来应该还是50000，这就是事物一致性。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;【隔离性（Isolation）】：隔离性是当多个用户并发访问数据库时，比如操作同一张表时，数据库为每一个用户开启的事物，不能被其他事物的操作所干扰，多个并发事物之间要互相隔离。&lt;/p&gt;
+
+    &lt;p&gt;也就是说，对于任意两个并发事务T1和T2，在事务T1看来，T2要么在T1开始之前就已经结束，要么在T1结束之后才开始，这样每个事物都感觉不到其他事务的并发执行。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;【持久性（Durability）】：持久性是指一个事物一旦被提交了，那么对数据库中的改变就是永久性的，即便是在数据库系统遇到故障的情况下也不会丢失提交事务的操作。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;数据库四种事务隔离级别&quot;&gt;数据库四种事务隔离级别&lt;/h2&gt;
+
+&lt;p&gt;SQL标准定义了4类隔离级别，包括了一些具体规则，采用限定事务内外的哪些改变是可见的，哪些是不可见的。低级别的隔离级一般支持高并发处理，并拥有更低的系统开销。&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;最后将我们的个人首页push到remote的repository中。&lt;/li&gt;
+  &lt;li&gt;【&lt;strong&gt;Read Uncommitted（读取未提交内容）&lt;/strong&gt;】：在该隔离级别中，所有事务可以看到其他未提交事务的执行结果。本级别隔离很少用于实际应用，比其他隔离级别性能也好不了多少。&lt;em&gt;读取未提交的数据称为“脏读（Dirty Read）”&lt;/em&gt;。&lt;/li&gt;
+  &lt;li&gt;【&lt;strong&gt;Read Committed（读取提交内容）&lt;/strong&gt;】：这是大多数数据库默认的隔离级别，但是，不是MySQL的默认隔离级别。他满足了隔离简单的定义：一个事务只能看到已提交事务所做的改变。这种隔离会出现“不可重复读”的现象（Nonrepeatable Read），因为同一事务的其他实例在该实例处理期间可能会有新的commit（包括update和delete），导致目标数据被修改，所以同一select可能返回不同结果。&lt;/li&gt;
+  &lt;li&gt;【&lt;strong&gt;Repeatable Read（可重读）&lt;/strong&gt;】：这是MySQL默认的隔离级别，它确保同一事务的多个实例在并发读取数据时，会看到同样的数据行（目标数据行不会被修改）。不过，会出现“幻读”的现象。幻读是由insert引起的，简单来说，幻读指当用户读取某一范围的数据行时，另一个事务又在该范围内插入了新行，当用户再读取该范围的数据行时，会发现有新的“幻影”行。innoDB和Falcon存储引擎通过多版本并发控制（MVCC，Multiversion Concurrency Control）机制解决了该问题。&lt;/li&gt;
+  &lt;li&gt;【&lt;strong&gt;Serializable（可串行化&lt;/strong&gt;】：这是最高的事务隔离级别，它通过强制事务排序，使之不可能相互冲突，从而解决幻读问题。简而言之，他是每个读的数据行上，加了共享锁，在这个级别，可能导致大量的超时现象和锁竞争。&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;git add –all&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;em&gt;脏读（Dirty Read）&lt;/em&gt;&lt;/strong&gt;：某个事务已经更新一份数据，另一个事务在此时读取了同一份数据，由于某些原因，前一个事务RollBack了操作，则后一个事物所读取的数据就会是不正确的。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;em&gt;不可重复读（Non-repeatable Read）&lt;/em&gt;&lt;/strong&gt;：在一个事务内，多次读取同一数据。在这个事务还没有结束时，另外一个事务也访问该同一数据。那么，在第一个事务中的两次读数据之间，由于第二个事务的修改，那么第一个事务两次读到的数可能是不一样的。这样就发生了在一个事务内两次读到的数据不一样的，因此称为时不可重复读。（update和delete引起）&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;em&gt;幻读（Phantom Read）&lt;/em&gt;&lt;/strong&gt;：在一个事务的两次查询中数据笔数不一致，例如有一个事物查询了几列（Row）数据，而另一个事务却在时插入了新的几列数据，西芹钱的事务在接下来的查询中，就会发现有几列数据是它先前所没有的。（由insert引起）&lt;/li&gt;
+&lt;/ul&gt;
 
-  &lt;p&gt;git commit -m “Initial commit”&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;隔离级别&lt;/th&gt;
+      &lt;th&gt;脏读&lt;/th&gt;
+      &lt;th&gt;不可重复读&lt;/th&gt;
+      &lt;th&gt;幻读&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;读未提交（Read Uncommitted）&lt;/td&gt;
+      &lt;td&gt;✔&lt;/td&gt;
+      &lt;td&gt;✔&lt;/td&gt;
+      &lt;td&gt;✔&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;读已提交（Read committed）&lt;/td&gt;
+      &lt;td&gt;✖&lt;/td&gt;
+      &lt;td&gt;✔&lt;/td&gt;
+      &lt;td&gt;✔&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;可重复读（Repeatable Read）&lt;/td&gt;
+      &lt;td&gt;✖&lt;/td&gt;
+      &lt;td&gt;✖&lt;/td&gt;
+      &lt;td&gt;✔&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;可串行化（Serializable）&lt;/td&gt;
+      &lt;td&gt;✖&lt;/td&gt;
+      &lt;td&gt;✖&lt;/td&gt;
+      &lt;td&gt;✖&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
 
-  &lt;p&gt;git push -u origin master&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;h2 id=&quot;锁机制&quot;&gt;锁机制&lt;/h2&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;搞定！接下来在浏览器就可以直接访问我们的个人主页啦！&lt;strong&gt;https://username.github.io&lt;/strong&gt;。
-&lt;img src=&quot;../assets/img/build-blog-pages-2.png&quot; alt=&quot;build-blog-pages-2&quot; /&gt;&lt;/li&gt;
-&lt;/ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;共享锁和排它锁&lt;/p&gt;
 
-&lt;p&gt;本编我们花了10分钟就快速搭建完了自己的个人主页，不过我们可以看到，还是一个很简单的首页。离我们想要的属于自己的博客还有一段距离，不过没关系，接下来的「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-jekyll.html&quot;&gt;搭建属于自己的博客——Jekyll篇&lt;/a&gt;」
-中我们将会花10分钟快速生成我们的博客，敬请期待吧！&lt;/p&gt;</content><author><name>郝强</name></author><category term="documentation" /><category term="blog" /><summary type="html">作为第一篇分享的技术类文章，打算从如何搭建这个个人博客说起。想必每一名程序员都想拥有自己的博客，大致上无外乎以下三种：</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/build-blog-pages-0.jpeg" /></entry></feed>
+    &lt;ul&gt;
+      &lt;li&gt;共享锁：由读表操作加上的锁，加锁后其他用户只能获取该表或行的共享锁，不能获取排它锁，也就是说只能读不能写。&lt;/li&gt;
+      &lt;li&gt;排它锁：由写表操作加上的锁，加锁后其他用户不能获取该表或行的任何锁，典型是MySQL事务中的&lt;code class=&quot;highlighter-rouge&quot;&gt;for update&lt;/code&gt;。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;行锁和表锁&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;行锁：对某行记录加上锁&lt;/li&gt;
+      &lt;li&gt;表锁：对整个表加上锁&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;这样组合起来有：行级共享锁，表级共享锁，行级排它锁，表级排它锁。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;乐观锁、悲观锁&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;悲观锁（Pessimistic Lock）&lt;/p&gt;
+
+        &lt;p&gt;顾名思义，就是很悲观，每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人拿这个数据就会block直到它拿到锁。&lt;/p&gt;
+
+        &lt;p&gt;传统的关系型数据库里边就用到了很多这种锁机制，比如行锁，表锁，读锁，写锁等，都是在做操作之前先上锁。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;乐观锁（Optimistic Lock）&lt;/p&gt;
+
+        &lt;p&gt;顾名思义，就是很乐观，每次去拿数据的时候都认为别人不会修改，所以不会上锁。但是在更新数据的时候会判断一下在此期间别人有没有去更新这个数据，如果期间被修改，则给用户做出提示。可以使用版本号机制记录状态。&lt;/p&gt;
+
+        &lt;p&gt;乐观锁适用于多读的应用类型，这样可以提高吞吐量，想数据库如果提供类似于write_condition机制的其实都是提供的乐观锁。&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="db" /><summary type="html">数据库四大特性</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/db-transaction-0.jpeg" /></entry><entry><title type="html">Java并发机制的底层实现原理</title><link href="http://localhost:4000/resources/java-concurrency-principle.html" rel="alternate" type="text/html" title="Java并发机制的底层实现原理" /><published>2018-03-06T00:00:00+08:00</published><updated>2018-03-06T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-principle</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-principle.html">&lt;p&gt;Java代码在编译后会变成Java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在CPU上执行，Java中所使用的并发机制依赖于JVM的实现和CPU的指令。
+&lt;img src=&quot;../assets/img/java-concurrency-principle-1.png&quot; alt=&quot;java-concurrency-principle-1&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;volatile&quot;&gt;volatile&lt;/h2&gt;
+
+&lt;p&gt;在多线程并发编程中synchronized和volatile都扮演着重要角色，volatile是轻量级的synchronized，它在多处理器开发中保证了共享变量的“可见性”。可见性的意思是当一个线程修改一个共享变量时，另外一个线程能读到这个修改的值。如果volatile变量修饰符使用恰当的话，它比synchronized的使用和执行成本更低，因为它不会引起线程上下文的切换和调度。&lt;/p&gt;
+
+&lt;h2 id=&quot;synchronized&quot;&gt;synchronized&lt;/h2&gt;
+
+&lt;p&gt;在多线程并发编程中synchronized一直是元老级角色，很多人都会称呼它为重量级锁。Java中每一个对象都可以作为锁。具体表现为以下三种形式。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;对于普通的同步方法，锁的是当前实例的对象。&lt;/li&gt;
+  &lt;li&gt;对于静态同步方法，锁的是当前类的Class对象。&lt;/li&gt;
+  &lt;li&gt;对于同步方法块，锁的是synchronized括号里配置的对象。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html">Java代码在编译后会变成Java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在CPU上执行，Java中所使用的并发机制依赖于JVM的实现和CPU的指令。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-principle-0.jpeg" /></entry></feed>

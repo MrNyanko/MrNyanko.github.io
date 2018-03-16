@@ -7,164 +7,153 @@
 		<atom:link href="/rss-feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
-				<title>垃圾收集器与内存分配策略</title>
+				<title>Spring在web容器中的启动过程</title>
 				
 					<dc:creator>郝强</dc:creator>
 				
 				
-					<description>&lt;p&gt;收集算法是内存回收的方法论，垃圾收集器则是内存回收的具体实现。&lt;/p&gt;
+					<description>&lt;h2 id=&quot;spring容器的启动过程是什么&quot;&gt;Spring容器的启动过程是什么？&lt;/h2&gt;
+&lt;p&gt;Spring在web容器中，启动过程是Servlet容器对Spring环境的构造，初始化，装配的过程。&lt;/p&gt;
 
 </description>
 				
-				<pubDate>Mon, 05 Mar 2018 00:00:00 +0800</pubDate>
-				<link>http://localhost:4000/resources/java-gc.html</link>
-				<guid isPermaLink="true">http://localhost:4000/resources/java-gc.html</guid>
+				<pubDate>Thu, 15 Mar 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/resources/spring-run.html</link>
+				<guid isPermaLink="true">http://localhost:4000/resources/spring-run.html</guid>
 			</item>
 		
 			<item>
-				<title>Java内存区域与内存溢出异常</title>
+				<title>Executor框架</title>
 				
 					<dc:creator>郝强</dc:creator>
 				
 				
-					<description>&lt;h2 id=&quot;java内存区域&quot;&gt;Java内存区域&lt;/h2&gt;
-&lt;p&gt;Java虚拟机在执行Java程序的过程中会把它所管理的内存划分为若干个不同的数据区域，这些区域都有各自的用途，以及创建和销毁时间。
-&lt;img src=&quot;../assets/img/java-space-1.png&quot; alt=&quot;java-space-1&quot; /&gt;&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;【程序计数器】：是一块较小的内存空间，可以看作是当前线程所执行的字节码行号指示器。在虚拟机的概念模型里，字节码解释器工作时就是通过改变这个计数器的值，来选取下一条需要执行的字节码指令。&lt;/li&gt;
-&lt;/ul&gt;
+					<description>&lt;h2 id=&quot;java内存模型的基础&quot;&gt;Java内存模型的基础&lt;/h2&gt;
 
 </description>
 				
-				<pubDate>Thu, 01 Mar 2018 00:00:00 +0800</pubDate>
-				<link>http://localhost:4000/resources/java-space.html</link>
-				<guid isPermaLink="true">http://localhost:4000/resources/java-space.html</guid>
+				<pubDate>Wed, 14 Mar 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/resources/java-concurrency-executor.html</link>
+				<guid isPermaLink="true">http://localhost:4000/resources/java-concurrency-executor.html</guid>
 			</item>
 		
 			<item>
-				<title>是时候祭出这张图了！</title>
+				<title>Java中的线程池</title>
 				
 					<dc:creator>郝强</dc:creator>
 				
 				
-					<description>&lt;p&gt;今天是正月初五。&lt;/p&gt;
-
+					<description>
 </description>
 				
-				<pubDate>Tue, 20 Feb 2018 00:00:00 +0800</pubDate>
-				<link>http://localhost:4000/life/yehuimei.html</link>
-				<guid isPermaLink="true">http://localhost:4000/life/yehuimei.html</guid>
+				<pubDate>Tue, 13 Mar 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/resources/java-concurrency-threadpool.html</link>
+				<guid isPermaLink="true">http://localhost:4000/resources/java-concurrency-threadpool.html</guid>
 			</item>
 		
 			<item>
-				<title>搭建Scala项目——play篇</title>
+				<title>Java并发容器和框架</title>
 				
 					<dc:creator>郝强</dc:creator>
 				
 				
-					<description>&lt;h2 id=&quot;关于play-framework&quot;&gt;关于Play Framework&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;「&lt;a href=&quot;https://www.playframework.com&quot;&gt;Play Framework&lt;/a&gt;」&lt;/strong&gt;:&lt;/p&gt;
+					<description>&lt;h2 id=&quot;concurrenthashmap的实现原理与使用&quot;&gt;ConcurrentHashMap的实现原理与使用&lt;/h2&gt;
 
 </description>
 				
-				<pubDate>Sun, 28 Jan 2018 00:00:00 +0800</pubDate>
-				<link>http://localhost:4000/documentation/scala-project-play.html</link>
-				<guid isPermaLink="true">http://localhost:4000/documentation/scala-project-play.html</guid>
+				<pubDate>Mon, 12 Mar 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/resources/java-concurrency-collectionandfram.html</link>
+				<guid isPermaLink="true">http://localhost:4000/resources/java-concurrency-collectionandfram.html</guid>
 			</item>
 		
 			<item>
-				<title>搭建Scala项目——Slick篇</title>
+				<title>Java中的锁</title>
 				
 					<dc:creator>郝强</dc:creator>
 				
 				
-					<description>&lt;h2 id=&quot;关于slick&quot;&gt;关于Slick&lt;/h2&gt;
-
+					<description>
 </description>
 				
-				<pubDate>Wed, 24 Jan 2018 00:00:00 +0800</pubDate>
-				<link>http://localhost:4000/documentation/scala-project-slick.html</link>
-				<guid isPermaLink="true">http://localhost:4000/documentation/scala-project-slick.html</guid>
+				<pubDate>Sun, 11 Mar 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/resources/java-concurrency-lock.html</link>
+				<guid isPermaLink="true">http://localhost:4000/resources/java-concurrency-lock.html</guid>
 			</item>
 		
 			<item>
-				<title>搭建Scala项目——SBT篇</title>
+				<title>Java并发编程基础</title>
 				
 					<dc:creator>郝强</dc:creator>
 				
 				
-					<description>&lt;h2 id=&quot;关于sbt&quot;&gt;关于SBT&lt;/h2&gt;
+					<description>&lt;h2 id=&quot;java内存模型的基础&quot;&gt;Java内存模型的基础&lt;/h2&gt;
 
 </description>
 				
-				<pubDate>Sat, 20 Jan 2018 00:00:00 +0800</pubDate>
-				<link>http://localhost:4000/documentation/scala-project-sbt.html</link>
-				<guid isPermaLink="true">http://localhost:4000/documentation/scala-project-sbt.html</guid>
+				<pubDate>Sat, 10 Mar 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/resources/java-concurrency-basic.html</link>
+				<guid isPermaLink="true">http://localhost:4000/resources/java-concurrency-basic.html</guid>
 			</item>
 		
 			<item>
-				<title>搭建Scala项目——序</title>
+				<title>Java内存模型</title>
 				
 					<dc:creator>郝强</dc:creator>
 				
 				
-					<description>&lt;p&gt;从2016年开始接触Scala这门语言，便喜欢上了这门OO+FP混合的语言。当时公司环境也比较open，有机会用Scala开发了一些后台系统。
-这些系统有些已经在生产环境跑到了现在。不过现在都在统一技术栈，很快将会变为Spring Boot的项目。并且很将会对接Spring Cloud。
-这两年时间其实已经积攒了很多这方面的经验，当然期间也用Java写过一些其他的项目。临近过年，想借此机会将之前的一些经验总结一下。
-不想将这些经验就流失掉了。&lt;/p&gt;
+					<description>&lt;h2 id=&quot;java内存模型的基础&quot;&gt;Java内存模型的基础&lt;/h2&gt;
 
 </description>
 				
-				<pubDate>Tue, 16 Jan 2018 00:00:00 +0800</pubDate>
-				<link>http://localhost:4000/documentation/scala-project-preface.html</link>
-				<guid isPermaLink="true">http://localhost:4000/documentation/scala-project-preface.html</guid>
+				<pubDate>Fri, 09 Mar 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/resources/java-concurrency-space.html</link>
+				<guid isPermaLink="true">http://localhost:4000/resources/java-concurrency-space.html</guid>
 			</item>
 		
 			<item>
-				<title>搭建属于自己的博客——Markdown篇</title>
+				<title>Spring事务</title>
 				
 					<dc:creator>郝强</dc:creator>
 				
 				
-					<description>&lt;p&gt;这次我们依旧先review一下我们搭建自己的个人博客要做的三件事。&lt;/p&gt;
+					<description>&lt;h2 id=&quot;事务传播行为&quot;&gt;事务传播行为&lt;/h2&gt;
 
 </description>
 				
-				<pubDate>Fri, 12 Jan 2018 00:00:00 +0800</pubDate>
-				<link>http://localhost:4000/documentation/build-blog-markdown.html</link>
-				<guid isPermaLink="true">http://localhost:4000/documentation/build-blog-markdown.html</guid>
+				<pubDate>Thu, 08 Mar 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/resources/spring-transaction.html</link>
+				<guid isPermaLink="true">http://localhost:4000/resources/spring-transaction.html</guid>
 			</item>
 		
 			<item>
-				<title>搭建属于自己的博客——Jekyll篇</title>
+				<title>数据库事务</title>
 				
 					<dc:creator>郝强</dc:creator>
 				
 				
-					<description>&lt;p&gt;我们在上一篇「&lt;a href=&quot;http://localhost:4000/documentation/build-blog-pages.html&quot;&gt;搭建属于自己的博客——GitHub Pages篇&lt;/a&gt;」中
-已经在GitHub Pages上创建了属于自己主页，当然了内容非常简单，只有一个简单的”Hello World”。
-接下来我们打算用10分钟的时间将这个简单的”Hello World”页面快速的搭建好一套可以用来发布博文的博客空间。&lt;/p&gt;
+					<description>&lt;h2 id=&quot;数据库四大特性&quot;&gt;数据库四大特性&lt;/h2&gt;
 
 </description>
 				
-				<pubDate>Mon, 08 Jan 2018 00:00:00 +0800</pubDate>
-				<link>http://localhost:4000/documentation/build-blog-jekyll.html</link>
-				<guid isPermaLink="true">http://localhost:4000/documentation/build-blog-jekyll.html</guid>
+				<pubDate>Wed, 07 Mar 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/resources/db-transaction.html</link>
+				<guid isPermaLink="true">http://localhost:4000/resources/db-transaction.html</guid>
 			</item>
 		
 			<item>
-				<title>搭建属于自己的博客——GitHub Pages篇</title>
+				<title>Java并发机制的底层实现原理</title>
 				
 					<dc:creator>郝强</dc:creator>
 				
 				
-					<description>&lt;p&gt;作为第一篇分享的技术类文章，打算从如何搭建这个个人博客说起。想必每一名程序员都想拥有自己的博客，大致上无外乎以下三种：&lt;/p&gt;
+					<description>&lt;p&gt;Java代码在编译后会变成Java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在CPU上执行，Java中所使用的并发机制依赖于JVM的实现和CPU的指令。
+&lt;img src=&quot;../assets/img/java-concurrency-principle-1.png&quot; alt=&quot;java-concurrency-principle-1&quot; /&gt;&lt;/p&gt;
 
 </description>
 				
-				<pubDate>Thu, 04 Jan 2018 00:00:00 +0800</pubDate>
-				<link>http://localhost:4000/documentation/build-blog-pages.html</link>
-				<guid isPermaLink="true">http://localhost:4000/documentation/build-blog-pages.html</guid>
+				<pubDate>Tue, 06 Mar 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/resources/java-concurrency-principle.html</link>
+				<guid isPermaLink="true">http://localhost:4000/resources/java-concurrency-principle.html</guid>
 			</item>
 		
 	</channel>

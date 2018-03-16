@@ -3,7 +3,7 @@ layout: post
 title: "虚拟机类加载机制"
 author: "郝强"
 categories: resources
-tags: [resources,java based]
+tags: [resources,jvm]
 image: jvm-classload-0.jpeg
 ---
 
