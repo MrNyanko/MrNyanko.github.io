@@ -6,35 +6,55 @@ categories: resources
 tags: [resources,concurrency]
 image: java-concurrency-executor-0.jpeg
 ---
-## Java内存模型的基础
 
-- 【**Java内存模型的抽象结构**】：
+## Executor框架简介
 
-![java-concurrency-space-1](../assets/img/java-concurrency-space-1.png)
+1. Execute框架的两级调度模型
 
-- 【**从源代码到指令序列的重排序**】：在执行程序时，为了提高性能，编译器和处理器常常会对指令做重排序。重排序分为三种类型：
+   在HotSpot VM的线程模型中，Java线程（java.lang.Tread）被一对一映射为本地操作系统线程。Java线程启动时会创建一个本地操作系统线程；当该Java线程终止时，这个操作系统线程也会被回收。操作系统会调度所有线程并将它们分配给可用的CPU。
 
-  1. 编译器优化的重排序。编译器在不改变单线程程序语义的前提下，可以重新安排语句的执行顺序。
-  2. 指令集并行的重排序。现代冲利器采用了指令级并行技术来将多条指令重叠执行。如果不存在数据依赖性，处理器可以改变语句对应机器指令的执行顺序。
-  3. 内存系统的重排序。由于处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是乱序执行
+2. Executor框架的结构与成员
 
-## 重排序
+   1. Executor框架的结构
 
-重排序是指编译器和处理器为了优化程序性能而对指令序列进行重新排序的一种手段。
+      - 任务。包括执行任务需要实现的接口：Runnable接口或Callable接口。
 
-## 顺序一致性
+      - 任务的执行。包括执行机制的核心接口Executor，以及继承自Executor的ExecutorService接口。Executor框架有两个关键类实现了ExecutorService接口（TreadPoolExecutor和ScheduledThreadExecutor）。
 
-顺序一致性内存模型是一个理论参考模型，在设计的时候，处理器的内存模型和编程语言的内存模型都会以顺序一致性内存模型作为参考。
+      - 异步计算的结果。包括接口Future和实现Future接口的FutureTask类。
 
-## volatile的内存语义
+        下面是这些接口的简介：
 
-## 锁的内存语义
+      - Executor是一个接口，他是Executor的框架基础，它将任务的提交与任务的执行分离开来。
 
-## final域的内存语义
+      - ThreadPoolExecutor是线程池的核心实现类，用来执行被提交的任务。
 
-## happens-before
+      - ScheduledTreadPoolExecutor是一个实现类，可以在给定的延迟后运行命令，或者定期执行命令。ScheduledTreadPoolExecutor比Timer更灵活，功能更强大。
 
-## 双重检查锁与延迟初始化
+      - Future接口和实现Future接口的FutureTask类，代表异步计算的结果。
 
-## Java内存模型综述
+      - Runnable接口和Callable接口的实现类，都可以被ThreadPoolExecutor或者ScheduledThreadPoolExecutor执行。
+
+   2. Executor框架的成员
+
+      1. ThreadPoolExecutor
+
+        ThreadPoolExecutor通常使用工厂类Executor来创建。Executors可以创建3中类型的ThreadPoolExecutor：SingleThreadExecutor、FixedThreadExecutor和CachedThreadPool。
+
+        - FixedThreadPool。适用于为了满足资源管理需求，而需要限制当前线程数量的应用场景，它适用于负载比较重的服务器。
+        - SingleThreadExecutor。适用于需要保证顺序地执行各个任务；并且在任意时间点，不会有多个线程是活动的应用场景。
+        - CachedThreadPool。是大小无界的线程池，适用于执行很多的短期异步任务的小程序，或者是负载比较轻的服务器。
+
+      2. ScheduledThreadPoolExecutor
+
+         - ScheduledThreadPoolExecutor。适用于需要多个后台线程执行周期任务，同时为了满足资源管理的需求而需要限制后台线程的数量的应用场景。
+         - SingleThreadScheduledExecutor。适用于需要单个后台线程执行周期任务，同时需要保证顺序地执行各个任务的应用场景。
+
+      3. Future接口
+
+         Future接口和实现Future接口的FutureTask类用来表示异步的计算的结果。
+
+      4. Runnable接口和Callable接口
+
+         Runnable接口和Callable接口的实现类，都可以被ThreadPoolExecutor或ScheduledThreadPoolExecutor执行。他们之间的区别是Runnable不会返回结果，而Callable可以返回结果。
 

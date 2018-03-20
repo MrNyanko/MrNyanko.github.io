@@ -7,6 +7,21 @@
 		<atom:link href="/rss-feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Java中的并发工具类</title>
+				
+					<dc:creator>郝强</dc:creator>
+				
+				
+					<description>&lt;h2 id=&quot;等待多线程完成的countdownlatch&quot;&gt;等待多线程完成的CountDownLatch&lt;/h2&gt;
+
+</description>
+				
+				<pubDate>Fri, 16 Mar 2018 00:00:00 +0800</pubDate>
+				<link>http://localhost:4000/resources/java-concurrency-util.html</link>
+				<guid isPermaLink="true">http://localhost:4000/resources/java-concurrency-util.html</guid>
+			</item>
+		
+			<item>
 				<title>Spring在web容器中的启动过程</title>
 				
 					<dc:creator>郝强</dc:creator>
@@ -43,7 +58,8 @@
 					<dc:creator>郝强</dc:creator>
 				
 				
-					<description>
+					<description>&lt;p&gt;Java中的线程池是运用场景最多的并发框架，几乎所有需要一步或并发执行任务的程序都可以使用线程池。在开发过程中，合理使用线程池能够带来3个好处。&lt;/p&gt;
+
 </description>
 				
 				<pubDate>Tue, 13 Mar 2018 00:00:00 +0800</pubDate>
@@ -72,7 +88,8 @@
 					<dc:creator>郝强</dc:creator>
 				
 				
-					<description>
+					<description>&lt;h2 id=&quot;lock接口&quot;&gt;Lock接口&lt;/h2&gt;
+
 </description>
 				
 				<pubDate>Sun, 11 Mar 2018 00:00:00 +0800</pubDate>
@@ -138,22 +155,6 @@
 				<pubDate>Wed, 07 Mar 2018 00:00:00 +0800</pubDate>
 				<link>http://localhost:4000/resources/db-transaction.html</link>
 				<guid isPermaLink="true">http://localhost:4000/resources/db-transaction.html</guid>
-			</item>
-		
-			<item>
-				<title>Java并发机制的底层实现原理</title>
-				
-					<dc:creator>郝强</dc:creator>
-				
-				
-					<description>&lt;p&gt;Java代码在编译后会变成Java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在CPU上执行，Java中所使用的并发机制依赖于JVM的实现和CPU的指令。
-&lt;img src=&quot;../assets/img/java-concurrency-principle-1.png&quot; alt=&quot;java-concurrency-principle-1&quot; /&gt;&lt;/p&gt;
-
-</description>
-				
-				<pubDate>Tue, 06 Mar 2018 00:00:00 +0800</pubDate>
-				<link>http://localhost:4000/resources/java-concurrency-principle.html</link>
-				<guid isPermaLink="true">http://localhost:4000/resources/java-concurrency-principle.html</guid>
 			</item>
 		
 	</channel>

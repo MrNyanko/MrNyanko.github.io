@@ -1,4 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-03-16T19:06:58+08:00</updated><id>http://localhost:4000/</id><title type="html">Mr.Nyanko</title><subtitle>Hao Qiang's Bolg</subtitle><author><name>Hao Qiang</name></author><entry><title type="html">Spring在web容器中的启动过程</title><link href="http://localhost:4000/resources/spring-run.html" rel="alternate" type="text/html" title="Spring在web容器中的启动过程" /><published>2018-03-15T00:00:00+08:00</published><updated>2018-03-15T00:00:00+08:00</updated><id>http://localhost:4000/resources/spring-run</id><content type="html" xml:base="http://localhost:4000/resources/spring-run.html">&lt;h2 id=&quot;spring容器的启动过程是什么&quot;&gt;Spring容器的启动过程是什么？&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-03-20T17:27:20+08:00</updated><id>http://localhost:4000/</id><title type="html">Mr.Nyanko</title><subtitle>Hao Qiang's Bolg</subtitle><author><name>Hao Qiang</name></author><entry><title type="html">Java中的并发工具类</title><link href="http://localhost:4000/resources/java-concurrency-util.html" rel="alternate" type="text/html" title="Java中的并发工具类" /><published>2018-03-16T00:00:00+08:00</published><updated>2018-03-16T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-util</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-util.html">&lt;h2 id=&quot;等待多线程完成的countdownlatch&quot;&gt;等待多线程完成的CountDownLatch&lt;/h2&gt;
+
+&lt;p&gt;CountDownLatch允许一个或多个线程等待其他线程完成操作。&lt;/p&gt;
+
+&lt;p&gt;CountDownLatch的构造函数一个int类型的参数作为计数器，如果你想等待N个点完成，这里就传入N。&lt;/p&gt;
+
+&lt;h2 id=&quot;同步屏障cyclicbarrier&quot;&gt;同步屏障CyclicBarrier&lt;/h2&gt;
+
+&lt;p&gt;CyclicBarrier的字面意思是可循环使用（Cyclic）的屏障（Barrier）。它要做的事情是，让一组线程达到一个屏障（也可以叫同步点）时被阻塞，直到最后一个线程到达屏障时，屏障才会开门，所有被屏障拦截的线程才会继续运行。&lt;/p&gt;
+
+&lt;h2 id=&quot;cyclicbarrier和countdownlatch的区别&quot;&gt;CyclicBarrier和CountDownLatch的区别&lt;/h2&gt;
+
+&lt;p&gt;CountDownLatch的计数器只能使用一次，而CyclicBarrier的计数器可以使用reset()方法重制。所以CyclicBarrier能处理更为复杂的业务场景。例如，如果计算发生错误，可以重置计数器，并让线程重新执行一次。&lt;/p&gt;
+
+&lt;p&gt;CyclicBarrier还提供了其他有用的方法，比如getNumberWaiting方法可以获得CyclicBarrier阻塞的线程数量。isBroken()方法用来了解阻塞线程是否被中断。&lt;/p&gt;
+
+&lt;h2 id=&quot;控制并发线程数的semaphore&quot;&gt;控制并发线程数的Semaphore&lt;/h2&gt;
+
+&lt;h2 id=&quot;线程间交换数据的exchanger&quot;&gt;线程间交换数据的Exchanger&lt;/h2&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html">等待多线程完成的CountDownLatch</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-util-0.jpeg" /></entry><entry><title type="html">Spring在web容器中的启动过程</title><link href="http://localhost:4000/resources/spring-run.html" rel="alternate" type="text/html" title="Spring在web容器中的启动过程" /><published>2018-03-15T00:00:00+08:00</published><updated>2018-03-15T00:00:00+08:00</updated><id>http://localhost:4000/resources/spring-run</id><content type="html" xml:base="http://localhost:4000/resources/spring-run.html">&lt;h2 id=&quot;spring容器的启动过程是什么&quot;&gt;Spring容器的启动过程是什么？&lt;/h2&gt;
 &lt;p&gt;Spring在web容器中，启动过程是Servlet容器对Spring环境的构造，初始化，装配的过程。&lt;/p&gt;
 
 &lt;h2 id=&quot;spring的启动过程&quot;&gt;Spring的启动过程&lt;/h2&gt;
@@ -185,7 +203,90 @@
 
 &lt;h2 id=&quot;双重检查锁与延迟初始化&quot;&gt;双重检查锁与延迟初始化&lt;/h2&gt;
 
-&lt;h2 id=&quot;java内存模型综述&quot;&gt;Java内存模型综述&lt;/h2&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html">Java内存模型的基础</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-executor-0.jpeg" /></entry><entry><title type="html">Java中的线程池</title><link href="http://localhost:4000/resources/java-concurrency-threadpool.html" rel="alternate" type="text/html" title="Java中的线程池" /><published>2018-03-13T00:00:00+08:00</published><updated>2018-03-13T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-threadpool</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-threadpool.html"></content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html"></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-threadpool-0.jpeg" /></entry><entry><title type="html">Java并发容器和框架</title><link href="http://localhost:4000/resources/java-concurrency-collectionandfram.html" rel="alternate" type="text/html" title="Java并发容器和框架" /><published>2018-03-12T00:00:00+08:00</published><updated>2018-03-12T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-collectionandfram</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-collectionandfram.html">&lt;h2 id=&quot;concurrenthashmap的实现原理与使用&quot;&gt;ConcurrentHashMap的实现原理与使用&lt;/h2&gt;
+&lt;h2 id=&quot;java内存模型综述&quot;&gt;Java内存模型综述&lt;/h2&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html">Java内存模型的基础</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-executor-0.jpeg" /></entry><entry><title type="html">Java中的线程池</title><link href="http://localhost:4000/resources/java-concurrency-threadpool.html" rel="alternate" type="text/html" title="Java中的线程池" /><published>2018-03-13T00:00:00+08:00</published><updated>2018-03-13T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-threadpool</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-threadpool.html">&lt;p&gt;Java中的线程池是运用场景最多的并发框架，几乎所有需要一步或并发执行任务的程序都可以使用线程池。在开发过程中，合理使用线程池能够带来3个好处。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;降低资源消耗&lt;/strong&gt;。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;提高响应速度&lt;/strong&gt;。当任务到达时，任务可以不需要等到线程创建就能立即执行。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;提高线程的可管理性&lt;/strong&gt;。线程是稀缺资源，如果无限制地创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一分配、调优和监控。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;线程池的实现原理&quot;&gt;线程池的实现原理&lt;/h2&gt;
+&lt;p&gt;从图中可以看出，当提交一个新任务到线程池时，线程池的处理流程如下。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;线程池判断核心线程池里的线程是否都在执行任务。如果不是，则创建一个新的工作线程来执行任务。如果线程池里的线程都在执行任务，则进入下一流程。&lt;/li&gt;
+  &lt;li&gt;线程池判断工作队列是否已经满。如果工作队列没有满，则将新提交的任务存储在这个工作队列里。如果工作队列满了，则进入下一流程。&lt;/li&gt;
+  &lt;li&gt;线程池判断线程池的线程是否都处于工作状态。如果没有，则创建一个新的工作线程来执行任务。如果已经满了，则交给饱和策略来处理这个任务。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;../assets/img/java-concurrency-threadpool-1.png&quot; alt=&quot;java-concurrency-threadpool-1&quot; /&gt;TreadPoolExecutor执行execute方法分下面4种情况：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;如果当前运行的线程少于corePoolSize，则创建新线程来执行（&lt;em&gt;ps：这一步需要获取全局锁&lt;/em&gt;）。&lt;/li&gt;
+  &lt;li&gt;如果运行的线程等于或者多于corePoolSize，则将任务加入BlockingQueue。&lt;/li&gt;
+  &lt;li&gt;如果无法将任务加入BlockingQueue（队列已满），则创建新的线程来处理任务（&lt;em&gt;ps：执行这一步需要获取全局锁&lt;/em&gt;）。&lt;/li&gt;
+  &lt;li&gt;如果创建新线程将使当前运行的线程超过maximumPoolSize，任务将被拒绝，并调用RejectedExecutionHandler.rejectExecution()方法。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;线程池的使用&quot;&gt;线程池的使用&lt;/h2&gt;
+
+&lt;p&gt;通过TreadPoolExecutor来创建线程池。&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TreadPoolExecutor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;corePoolSize&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;maximumPool&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;keepAliveTime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;milliseconds&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;runnableTaskQueue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;handler&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;创建线程池时需要输入几个参数，如下：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;corePoolSize（线程池的基本大小）&lt;/strong&gt;：当提交一个任务到线程池时，线程池会创建一个线程来执行任务，即使其他空闲的基本线程能够执行新任务也会创建线程，等到需要执行的任务数大于线程池基本大小时就不再创建。如果调用了线程池的prestartAllCoreThreads()方法，线程池会提前创建并启动所有基本线程。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;runnableTaskQueue（任务队列）&lt;/strong&gt;：用于保存等待执行的任务的阻塞队列。可以选择以下几个阻塞队列：
+    &lt;ul&gt;
+      &lt;li&gt;ArrayBlockingQueue：是一个基于数组结构的有界阻塞队列，此队列按FIFO原则对元素进行排序。&lt;/li&gt;
+      &lt;li&gt;LinkedBlockingQueue：一个基于链表结构的阻塞队列。此队列按FIFO排序元素，吞吐量通常高于ArrayBlockingQueue。静态工厂方法Executors.newFixedTreadPool()使用了这个队列。&lt;/li&gt;
+      &lt;li&gt;SynchronousQueue：一个不存储元素的阻塞队列。每个插入操作必须等到另一个线程调用移除操作，否则插入操作一只处于阻塞状态，吞吐量通常高于LinkedBlockingQueue，静态工厂方法Executors.newCachedTreadPool使用了这个队列。&lt;/li&gt;
+      &lt;li&gt;PriorityBlockingQueue：一个具有优先级的无限阻塞队列。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;maximumPoolSize（线程池最大数量）&lt;/strong&gt;：线程池允许创建的最大线程数。如果队列满了，并且已创建的线程数小于最大线程数，则线程池会再创建新的线程执行任务。值得注意的是，如果使用了无界的任务队列这个参数就没什么效果了。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;TreadFactory（线程工厂）&lt;/strong&gt;：用于设置创建线程的工厂，可以通过线程工厂给每个创建出来的线程设置更有意义的名字。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;RejectExecutionHandler（饱和策略）&lt;/strong&gt;：当队列和线程池都满了，说明线程池处于饱和状态，那么必须采取一种策略处理提交的新任务。这个策略默认情况下是AbortPolicy，表示无法处理新的任务时抛出异常。&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;AbortPolicy：直接抛出异常。&lt;/li&gt;
+      &lt;li&gt;CallerRunsPolicy：只用调用者所用的线程来运行任务。&lt;/li&gt;
+      &lt;li&gt;DiscardOldestPolicy：丢弃队列里最近的一个任务，并执行当前任务。&lt;/li&gt;
+      &lt;li&gt;DiscardPolicy：不处理，丢弃掉。&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;当然也可以根据业务场景来实现RejectExecutionHandler接口自定义策略。如记录日志或持久化存储不能处理的任务。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;keepAliveTime（线程活动保持时间）&lt;/strong&gt;：线程池的工作线程空闲后，保持存活的时间。所以如果任务很多，并且每个任务执行的时间比较短，可以调大时间，提高线程的利用率。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;TimeUnit（线程活动保持时间的单位）&lt;/strong&gt;：可选的单位有（DAYS）、小时（HOURS）、分钟（MINUTES）、毫秒（MILLISECONDS）、微秒（MRCROSECONDS）和纳秒（NANOSECONDS）。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;向线程池提交任务&quot;&gt;向线程池提交任务&lt;/h2&gt;
+
+&lt;p&gt;可以使用两个方法向线程池提交任务，分别为execute()和submit()方法。&lt;/p&gt;
+
+&lt;p&gt;execute()方法用于提交一个不需要返回值的任务，所以无法判断任务是否被线程池执行成功。&lt;/p&gt;
+
+&lt;p&gt;submit()方法用于提交需要返回值的任务。线程池会返回一个future类型的对象，通过这个future对象可以判断任务是否执行成功，并且可以通过future的get()方法来获取返回值。&lt;/p&gt;
+
+&lt;h2 id=&quot;关闭线程池&quot;&gt;关闭线程池&lt;/h2&gt;
+
+&lt;p&gt;可以通过dialing线程池的shutdown或shutdownNow来关闭线程池。它们的原理是便利线程池中的工作线程，然后逐个调用线程的interrupt方法来中断线程，所以无法响应中断的任务可能永远无法终止。但是他们存在一定的区别，shutdownNow首先将线程池的状态设置为STOP，然后尝试停止所有的正在执行或暂停任务的线程，并返回等待执行任务的列表，而shutdown只是将线程池的状态设置成SHUTDOWN状态，然后中断所有没有正在执行任务的线程。&lt;/p&gt;
+
+&lt;p&gt;通常调用shutdown方法来关闭线程池，如果任务不一定要执行完，可以调用shutdownNow方法。&lt;/p&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html">Java中的线程池是运用场景最多的并发框架，几乎所有需要一步或并发执行任务的程序都可以使用线程池。在开发过程中，合理使用线程池能够带来3个好处。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-threadpool-0.jpeg" /></entry><entry><title type="html">Java并发容器和框架</title><link href="http://localhost:4000/resources/java-concurrency-collectionandfram.html" rel="alternate" type="text/html" title="Java并发容器和框架" /><published>2018-03-12T00:00:00+08:00</published><updated>2018-03-12T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-collectionandfram</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-collectionandfram.html">&lt;h2 id=&quot;concurrenthashmap的实现原理与使用&quot;&gt;ConcurrentHashMap的实现原理与使用&lt;/h2&gt;
 
 &lt;p&gt;ConcurrentHashMap是线程安全且高效的HashMap。&lt;/p&gt;
 
@@ -392,7 +493,7 @@ ConcurrentLinkedQueue由head节点和tail节点组成，每个节点（Node）�
       &lt;li&gt;
         &lt;p&gt;&lt;strong&gt;LinkedBlockingDeque&lt;/strong&gt;&lt;/p&gt;
 
-        &lt;p&gt;LinkedBlockingDque是一个由链表结构组成的双向阻塞队列。所谓双向队列指的是可以从队列的两端插入和移出元素。双向队列因为多了一个操作队列的入口，在多线程同时入队时，也就减少了一半的竞争。相比其他阻塞队列，LinkedBlockingDeque多了addFirst、addLast、offerFirst、offerLast、peekFirst和peekLast等方法。以First结尾的方法，表示插入、获取（peek）或移除双端队列的第一个元素。以Last单词结尾的方法，表示插入、获取或移除双端队列的最后一个元素。另外，插入方法add等同于addList，移除方法remove等效于removeFirst。但是take方法却等同于takeFirst。在初始化LinkedBlockingDeque时可以设置容量防止其过度膨胀。另外，双向阻塞队列可以运用在”工作窃取”模式中。&lt;/p&gt;
+        &lt;p&gt;LinkedBlockingDeque是一个由链表结构组成的双向阻塞队列。所谓双向队列指的是可以从队列的两端插入和移出元素。双向队列因为多了一个操作队列的入口，在多线程同时入队时，也就减少了一半的竞争。相比其他阻塞队列，LinkedBlockingDeque多了addFirst、addLast、offerFirst、offerLast、peekFirst和peekLast等方法。以First结尾的方法，表示插入、获取（peek）或移除双端队列的第一个元素。以Last单词结尾的方法，表示插入、获取或移除双端队列的最后一个元素。另外，插入方法add等同于addList，移除方法remove等效于removeFirst。但是take方法却等同于takeFirst。在初始化LinkedBlockingDeque时可以设置容量防止其过度膨胀。另外，双向阻塞队列可以运用在”工作窃取”模式中。&lt;/p&gt;
       &lt;/li&gt;
     &lt;/ol&gt;
   &lt;/li&gt;
@@ -451,7 +552,116 @@ ConcurrentLinkedQueue由head节点和tail节点组成，每个节点（Node）�
       &lt;/li&gt;
     &lt;/ol&gt;
   &lt;/li&gt;
-&lt;/ol&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html">ConcurrentHashMap的实现原理与使用</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-collectionandfram-0.jpeg" /></entry><entry><title type="html">Java中的锁</title><link href="http://localhost:4000/resources/java-concurrency-lock.html" rel="alternate" type="text/html" title="Java中的锁" /><published>2018-03-11T00:00:00+08:00</published><updated>2018-03-11T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-lock</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-lock.html"></content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html"></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-lock-0.jpeg" /></entry><entry><title type="html">Java并发编程基础</title><link href="http://localhost:4000/resources/java-concurrency-basic.html" rel="alternate" type="text/html" title="Java并发编程基础" /><published>2018-03-10T00:00:00+08:00</published><updated>2018-03-10T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-basic</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-basic.html">&lt;h2 id=&quot;java内存模型的基础&quot;&gt;Java内存模型的基础&lt;/h2&gt;
+&lt;/ol&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html">ConcurrentHashMap的实现原理与使用</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-collectionandfram-0.jpeg" /></entry><entry><title type="html">Java中的锁</title><link href="http://localhost:4000/resources/java-concurrency-lock.html" rel="alternate" type="text/html" title="Java中的锁" /><published>2018-03-11T00:00:00+08:00</published><updated>2018-03-11T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-lock</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-lock.html">&lt;h2 id=&quot;lock接口&quot;&gt;Lock接口&lt;/h2&gt;
+
+&lt;p&gt;锁是用来控制多个线程访问共享资源的方式，一般来说，一个锁能够防止多个线程同时访问共享资源（但是有些锁是可以允许多个线程并发的访问共享资源，比如读写锁）。在Lock接口出现之前，Java程序是靠synchronized关键字实现锁功能的，而Java SE 5之后，并发包中新增了Lock接口（以及相关实现类）用来实现锁功能，它提供了与synchronized关键字类似的同步功能，只是在使用时需要显式地获取和释放锁。&lt;/p&gt;
+
+&lt;p&gt;Lock接口提供的synchronized关键字不具备的主要特性&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;特性&lt;/th&gt;
+      &lt;th&gt;描述&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;尝试非阻塞的获取锁&lt;/td&gt;
+      &lt;td&gt;当前线程会尝试获取锁，如果这一时刻锁没有被其他线程获取到，则成功获取并持有锁&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;能被中断地获取锁&lt;/td&gt;
+      &lt;td&gt;与synchronized不同，获取到锁的线程能够响应中断，当获取到锁的线程被中断时，中断异常将会被抛出，同时锁会被释放&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;超时获取锁&lt;/td&gt;
+      &lt;td&gt;在指定的截止时间之前获取锁，如果截止时间到了仍旧无法获取锁，则返回&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Lock是一个接口，它定义了锁获取和释放的基本操作&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;方法名称&lt;/th&gt;
+      &lt;th&gt;描述&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;void lock()&lt;/td&gt;
+      &lt;td&gt;获取锁，调用该方法当前的线程将会获取锁，当锁获取后，从该方法返回&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;void lockInterruptibly() throws InterruptedException&lt;/td&gt;
+      &lt;td&gt;可中断地获取锁，和lock()方法的不同之处在于该方法会响应中断，即在锁的获取中可以中断当前线程&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;boolean tryLock()&lt;/td&gt;
+      &lt;td&gt;尝试非阻塞地获取锁，调用该方法后立刻返回，如果能够返回则返回true，否则返回false&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;boolean tryLock(long time, TimeUnit unit) throws InterrupedException&lt;/td&gt;
+      &lt;td&gt;超时的获取锁，当前线程在一下3种情况下会返回：1.当前线程在超时时间内获取了锁；2.当前线程在超时时间内被中断；3.超时时间结束，返回false&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;void unlock()&lt;/td&gt;
+      &lt;td&gt;释放锁&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Condition newCondition()&lt;/td&gt;
+      &lt;td&gt;获取等待通知组件，该组件和当前的锁绑定，当前线程只有获得了锁，才能调用该组件的wait()方法，而调用后，当前线程将释放锁&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;队列同步器&quot;&gt;队列同步器&lt;/h2&gt;
+
+&lt;p&gt;队列同步器AbstractQueuedSynchronizer（以下简称同步器），是用来构建锁或者其他同步组件的基础框架，它使用了一个int成员变量表示同步状态，通过内置的FIFO队列来完成资源获取线程的排队工作。&lt;/p&gt;
+
+&lt;h2 id=&quot;重入锁&quot;&gt;重入锁&lt;/h2&gt;
+
+&lt;p&gt;重入锁ReentrantLock，顾名思义，就是支持重新进入的锁，他表示该锁能够支持一个线程对资源的重复加锁。除此之外，该锁还支持获取锁时的公平和非公平性选择。&lt;/p&gt;
+
+&lt;p&gt;ReentrantLock虽然没能像synchronized关键字一样支持隐式的重进入，但是在调用lock()方法时，已经获取到的锁的线程，能够再次调用lock()方法获取锁而不被阻塞。&lt;/p&gt;
+
+&lt;p&gt;ReentrantLock提供了一个构造函数，能够控制锁是否公平。&lt;/p&gt;
+
+&lt;h2 id=&quot;读写锁&quot;&gt;读写锁&lt;/h2&gt;
+
+&lt;p&gt;之前提到的锁基本都是排它锁，这些锁在同一时刻只允许一个线程进行访问，而读写锁在同一时刻可以允许多个读线程访问，但是在写线程访问的同时，所有的读线程和其他写线程均被阻塞。读写锁维护了一对锁，一个读锁和一个写锁，通过分离读锁和写锁，使得并发性比一般的排它锁有了很大的提升。&lt;/p&gt;
+
+&lt;p&gt;ReentranReadWriteLock的特性&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;特性&lt;/th&gt;
+      &lt;th&gt;说明&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;公平性选择&lt;/td&gt;
+      &lt;td&gt;支持非公平（默认）和公平的锁获取方式，吞吐量还是非公平优于公平&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;重进入&lt;/td&gt;
+      &lt;td&gt;该锁支持重进入，以读写线程为例：读线程在获取了读锁之后，能够再次获取读锁。而写线程在获取了写锁之后能够再次获取写锁，同时也可以获取读锁&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;锁降级&lt;/td&gt;
+      &lt;td&gt;遵循获取写锁，获取读锁在释放写锁的次序，写锁能够降级成为读锁&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&quot;condition接口&quot;&gt;Condition接口&lt;/h2&gt;
+
+&lt;p&gt;任意一个Java对象，都有一组监视器方法，主要包括wait()、wait(long timeout)、notify()以及notifyAll()方法，这些方法与synchronized同步关键字配合，可以实现等待/通知模式。Condition接口也提供了类似Object的监视器方法，与Lock配合可以实现等待/通知模式，但是这两者在使用方式以及功能特性上还是有差别的。&lt;/p&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html">Lock接口</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-lock-0.jpeg" /></entry><entry><title type="html">Java并发编程基础</title><link href="http://localhost:4000/resources/java-concurrency-basic.html" rel="alternate" type="text/html" title="Java并发编程基础" /><published>2018-03-10T00:00:00+08:00</published><updated>2018-03-10T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-basic</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-basic.html">&lt;h2 id=&quot;java内存模型的基础&quot;&gt;Java内存模型的基础&lt;/h2&gt;
 
 &lt;ul&gt;
   &lt;li&gt;【&lt;strong&gt;Java内存模型的抽象结构&lt;/strong&gt;】：&lt;/li&gt;
@@ -535,7 +745,7 @@ ConcurrentLinkedQueue由head节点和tail节点组成，每个节点（Node）�
 
 &lt;ol&gt;
   &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;PROPAGATION_REQUIRED&lt;/strong&gt;：需要事务处理。有则使用，无则新建。这时Spring默认的事务传播行为。该级别的特征是，如果Context中已经存在事务，那么就将当前需要使用事务的代码加入到Context的事务中去执行，如果当前Context中不存在事务，则新建一个事物执行代码。这个级别通常能满足大多数的业务场景。&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;PROPAGATION_REQUIRED&lt;/strong&gt;：需要事务处理。有则使用，无则新建。这是Spring默认的事务传播行为。该级别的特征是，如果Context中已经存在事务，那么就将当前需要使用事务的代码加入到Context的事务中去执行，如果当前Context中不存在事务，则新建一个事物执行代码。这个级别通常能满足大多数的业务场景。&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;&lt;strong&gt;PROPAGATION_SUPPORTS&lt;/strong&gt;：支持事务处理。该级别的特性是，如果Context存在事务，则将代码加入到Context的事务中执行，如果Context中没有事务，则使用非事务的方式执行。&lt;/p&gt;
@@ -544,7 +754,7 @@ ConcurrentLinkedQueue由head节点和tail节点组成，每个节点（Node）�
     &lt;p&gt;&lt;strong&gt;PROPAGATION_MANDATORY&lt;/strong&gt;：强制要求事务。该级别的特性是，当要以事务的方式执行代码时，要求Context中必须已经存在事务，否则就会抛出异常！使用MANDATORY强制事务，可以有效地控制“必须以事务执行的代码，却忘记给它加上事务控制”这种情况发生。举个简单的例子：有一个方法，对这个方法的要求时一旦被调用，该方法就必须包含在事务中才能正常执行，那么这个方法就适合设置为PROPAGATION_MANDATORY强制事务传播行为，从而在代码层面加以控制。&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;&lt;strong&gt;PROPAGATION_REQUIRES_NEW&lt;/strong&gt;：每次都新建一个事务。该级别的特点是，当执行到一段需要事务的代码时，先判断Context中是否已经有事务存在，如果不存在，就去新建一个事物；如果已经存在，就suspend挂起当前事务，然后穿件一个新事务去执行，直到新事务执行完毕，才会恢复先前挂起的Context事务。&lt;/p&gt;
+    &lt;p&gt;&lt;strong&gt;PROPAGATION_REQUIRES_NEW&lt;/strong&gt;：每次都新建一个事务。该级别的特点是，当执行到一段需要事务的代码时，先判断Context中是否已经有事务存在，如果不存在，就去新建一个事物；如果已经存在，就suspend挂起当前事务，然后创建一个新事务去执行，直到新事务执行完毕，才会恢复先前挂起的Context事务。&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;&lt;strong&gt;PROPAGATION_NOT_SUPPORTED&lt;/strong&gt;：不支持事务。该级别的特点是，如果发现当Context中有事务存在，则挂起该事务，然后执行逻辑代码，执行完毕后，恢复先前挂起的Context事务。这个传播行为的事务，可以缩小事务处理过程的范围。举个简单的例子，在一个事物中要调用一段非核心业务的逻辑操作1000次，如果这段逻辑放在事务中，会导致该事务的范围变大，生命周期变长，为了避免因事物范围扩大、周期变长而引发一些的实现没有考虑到的异常情况发生，可以将这段逻辑设置为NOT_SUPPORTED不支持事务传播行为。&lt;/p&gt;
@@ -592,7 +802,7 @@ ConcurrentLinkedQueue由head节点和tail节点组成，每个节点（Node）�
 
 &lt;ol&gt;
   &lt;li&gt;【&lt;strong&gt;Read Uncommitted（读取未提交内容）&lt;/strong&gt;】：在该隔离级别中，所有事务可以看到其他未提交事务的执行结果。本级别隔离很少用于实际应用，比其他隔离级别性能也好不了多少。&lt;em&gt;读取未提交的数据称为“脏读（Dirty Read）”&lt;/em&gt;。&lt;/li&gt;
-  &lt;li&gt;【&lt;strong&gt;Read Committed（读取提交内容）&lt;/strong&gt;】：这是大多数数据库默认的隔离级别，但是，不是MySQL的默认隔离级别。他满足了隔离简单的定义：一个事务只能看到已提交事务所做的改变。这种隔离会出现“不可重复读”的现象（Nonrepeatable Read），因为同一事务的其他实例在该实例处理期间可能会有新的commit（包括update和delete），导致目标数据被修改，所以同一select可能返回不同结果。&lt;/li&gt;
+  &lt;li&gt;【&lt;strong&gt;Read Committed（读取提交内容）&lt;/strong&gt;】：这是大多数数据库默认的隔离级别，但是，不是MySQL的默认隔离级别。他满足了隔离简单的定义：一个事务只能看到已提交事务所做的改变。这种隔离会出现“不可重复读”的现象（Non-repeatable Read），因为同一事务的其他实例在该实例处理期间可能会有新的commit（包括update和delete），导致目标数据被修改，所以同一select可能返回不同结果。&lt;/li&gt;
   &lt;li&gt;【&lt;strong&gt;Repeatable Read（可重读）&lt;/strong&gt;】：这是MySQL默认的隔离级别，它确保同一事务的多个实例在并发读取数据时，会看到同样的数据行（目标数据行不会被修改）。不过，会出现“幻读”的现象。幻读是由insert引起的，简单来说，幻读指当用户读取某一范围的数据行时，另一个事务又在该范围内插入了新行，当用户再读取该范围的数据行时，会发现有新的“幻影”行。innoDB和Falcon存储引擎通过多版本并发控制（MVCC，Multiversion Concurrency Control）机制解决了该问题。&lt;/li&gt;
   &lt;li&gt;【&lt;strong&gt;Serializable（可串行化&lt;/strong&gt;】：这是最高的事务隔离级别，它通过强制事务排序，使之不可能相互冲突，从而解决幻读问题。简而言之，他是每个读的数据行上，加了共享锁，在这个级别，可能导致大量的超时现象和锁竞争。&lt;/li&gt;
 &lt;/ol&gt;
@@ -681,19 +891,4 @@ ConcurrentLinkedQueue由head节点和tail节点组成，每个节点（Node）�
       &lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ol&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="db" /><summary type="html">数据库四大特性</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/db-transaction-0.jpeg" /></entry><entry><title type="html">Java并发机制的底层实现原理</title><link href="http://localhost:4000/resources/java-concurrency-principle.html" rel="alternate" type="text/html" title="Java并发机制的底层实现原理" /><published>2018-03-06T00:00:00+08:00</published><updated>2018-03-06T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-principle</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-principle.html">&lt;p&gt;Java代码在编译后会变成Java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在CPU上执行，Java中所使用的并发机制依赖于JVM的实现和CPU的指令。
-&lt;img src=&quot;../assets/img/java-concurrency-principle-1.png&quot; alt=&quot;java-concurrency-principle-1&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;volatile&quot;&gt;volatile&lt;/h2&gt;
-
-&lt;p&gt;在多线程并发编程中synchronized和volatile都扮演着重要角色，volatile是轻量级的synchronized，它在多处理器开发中保证了共享变量的“可见性”。可见性的意思是当一个线程修改一个共享变量时，另外一个线程能读到这个修改的值。如果volatile变量修饰符使用恰当的话，它比synchronized的使用和执行成本更低，因为它不会引起线程上下文的切换和调度。&lt;/p&gt;
-
-&lt;h2 id=&quot;synchronized&quot;&gt;synchronized&lt;/h2&gt;
-
-&lt;p&gt;在多线程并发编程中synchronized一直是元老级角色，很多人都会称呼它为重量级锁。Java中每一个对象都可以作为锁。具体表现为以下三种形式。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;对于普通的同步方法，锁的是当前实例的对象。&lt;/li&gt;
-  &lt;li&gt;对于静态同步方法，锁的是当前类的Class对象。&lt;/li&gt;
-  &lt;li&gt;对于同步方法块，锁的是synchronized括号里配置的对象。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html">Java代码在编译后会变成Java字节码，字节码被类加载器加载到JVM里，JVM执行字节码，最终需要转化为汇编指令在CPU上执行，Java中所使用的并发机制依赖于JVM的实现和CPU的指令。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-principle-0.jpeg" /></entry></feed>
+&lt;/ol&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="db" /><summary type="html">数据库四大特性</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/db-transaction-0.jpeg" /></entry></feed>
