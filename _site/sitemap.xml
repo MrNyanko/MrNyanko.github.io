@@ -101,6 +101,10 @@
 <lastmod>2018-03-16T00:00:00+08:00</lastmod>
 </url>
 <url>
+<loc>http://localhost:4000/resources/gof.html</loc>
+<lastmod>2018-03-27T00:00:00+08:00</lastmod>
+</url>
+<url>
 <loc>http://localhost:4000/pages/about.html</loc>
 </url>
 <url>
@@ -132,5 +136,8 @@
 </url>
 <url>
 <loc>http://localhost:4000/page5/</loc>
+</url>
+<url>
+<loc>http://localhost:4000/page6/</loc>
 </url>
 </urlset>

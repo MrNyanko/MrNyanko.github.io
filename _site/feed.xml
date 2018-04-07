@@ -1,4 +1,331 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-03-20T17:27:20+08:00</updated><id>http://localhost:4000/</id><title type="html">Mr.Nyanko</title><subtitle>Hao Qiang's Bolg</subtitle><author><name>Hao Qiang</name></author><entry><title type="html">Java中的并发工具类</title><link href="http://localhost:4000/resources/java-concurrency-util.html" rel="alternate" type="text/html" title="Java中的并发工具类" /><published>2018-03-16T00:00:00+08:00</published><updated>2018-03-16T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-util</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-util.html">&lt;h2 id=&quot;等待多线程完成的countdownlatch&quot;&gt;等待多线程完成的CountDownLatch&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-04-04T16:03:43+08:00</updated><id>http://localhost:4000/</id><title type="html">Mr.Nyanko</title><subtitle>Hao Qiang's Bolg</subtitle><author><name>Hao Qiang</name></author><entry><title type="html">设计模式</title><link href="http://localhost:4000/resources/gof.html" rel="alternate" type="text/html" title="设计模式" /><published>2018-03-27T00:00:00+08:00</published><updated>2018-03-27T00:00:00+08:00</updated><id>http://localhost:4000/resources/gof</id><content type="html" xml:base="http://localhost:4000/resources/gof.html">&lt;p&gt;由浅入深的介绍一下Gof的23种设计模式&lt;/p&gt;
+
+&lt;h2 id=&quot;iterator模式&quot;&gt;Iterator模式&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Iterator模式（迭代器模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-iterator-0.png&quot; alt=&quot;gof-iterator-0&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;「Iterator模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Iterator（迭代器）：&lt;/strong&gt;该角色负责定义按顺序逐个遍历元素的接口（API）。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteIterator（具体的迭代器）&lt;/strong&gt;：该角色负责实现Iterator角色所定义的接口（API）。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Aggregate（集合）：&lt;/strong&gt;该角色负责定义创建Iterator角色的接口（API）。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteAggregate（具体的集合）：&lt;/strong&gt;该角色负责实现Aggregate角色所定义的接口（API）。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;adapter模式&quot;&gt;Adapter模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Adapter模式（适配器模式）：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;类适配器模式（使用继承的适配器）
+&lt;img src=&quot;../assets/img/gof-adapter-0.png&quot; alt=&quot;gof-adapter-0&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;对象适配器模式（使用委托的适配器）
+&lt;img src=&quot;../assets/img/gof-adapter-1.png&quot; alt=&quot;gof-adapter-1&quot; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;「Adapter模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Target（对象）：&lt;/strong&gt;该角色负责定义所需的方法。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Client（请求者）：&lt;/strong&gt;该角色负责使用Target角色所定义的方法进行具体处理。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Adaptee（被适配）：&lt;/strong&gt;注意不是Adapt-er（适配）角色，而是Adapt-ee（被适配）角色。Adaptee是一个持有既定方法的角色。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Adapter（适配）：&lt;/strong&gt;Adapter模式的主人公。使用Adaptee角色的方法来满足Target角色的需求，这是Adapter模式的目的，也是Adapter的作用。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;template-method模式&quot;&gt;Template Method模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Template Method模式（模版方法模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-template_method-0.png&quot; alt=&quot;gof-template_method-0&quot; /&gt;
+&lt;strong&gt;「Template Method模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;AbstractClass（抽象类）：&lt;/strong&gt;AbstractClass角色不仅负责实现模版方法，还负责声明在模版方法中所使用到的抽象方法。这些抽象方法由子类ConcreteClass角色负责实现。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteClass（具体类）：&lt;/strong&gt;该角色负责具体实现AbstractClass角色中定义的抽象方法。这里实现的方法将会在AbstractClass角色的模版方法中被调用。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;factory-method模式&quot;&gt;Factory Method模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Factory Method模式（工厂方法模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-factory_method-0.png&quot; alt=&quot;gof-factory_method-0&quot; /&gt;
+&lt;strong&gt;「Factory Method模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Product（产品）：&lt;/strong&gt;Product角色属于框架这一方，是一个抽象类。它定义了在Factory Method模式中生成的那些实例所持有的接口（API），但具体的处理则由子类ConcreteProduct角色决定。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Creator（创建者）：&lt;/strong&gt;Creator角色属于框架这一方，它是负责生成Product角色的抽象类，但具体的处理则由子类ConcreteCreator角色决定。&lt;/p&gt;
+
+    &lt;p&gt;不用&lt;code class=&quot;highlighter-rouge&quot;&gt;new&lt;/code&gt;关键字来生成实例，而是调用生成实例的专用方法来生成实例，这样就可以防止父类与其他具体类的耦合。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;ConcreteProduct（具体的产品）：&lt;/strong&gt;ConcreteProduct角色属于具体加工这一方，它决定了具体的产品。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;ConcreteCreator（具体的创建者）：&lt;/strong&gt;ConcreteCreator角色属于具体加工这一方，它负责生成具体的产品。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;singleton模式&quot;&gt;Singleton模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Singleton模式（单例模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-singleton-0.png&quot; alt=&quot;gof-singleton-0&quot; /&gt;
+&lt;strong&gt;「Singleton模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Singleton（单例）：&lt;/strong&gt;在Singleton模式中，只有Singleton这一个角色。Singleton角色中有一个返回唯一实例的static方法。该方法总是会返回同一个实例。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;prototype模式&quot;&gt;Prototype模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Prototype模式（原型模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-prototype-0.png&quot; alt=&quot;gof-prototype-0&quot; /&gt;
+&lt;strong&gt;「Prototype模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Prototype（原型）：&lt;/strong&gt;Prototype角色负责定义用于复制现有实例来生成新实例的方法。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcretePrototype（具体的原型）：&lt;/strong&gt;角色负责实现复制现有实例并生成新实例的方法。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Client（使用者）：&lt;/strong&gt;Client角色负责使用复制实例的方法生成新的实例。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;builder模式&quot;&gt;Builder模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Builder模式（建造者模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-builder-0.png&quot; alt=&quot;gof-builder-0&quot; /&gt;
+&lt;strong&gt;「Builder模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Builder（建造者）：&lt;/strong&gt;Builder角色负责定义用于生成实例的接口（API）。Builder角色中准备了用于生成实例的方法。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteBuilder（具体的建造者）：&lt;/strong&gt;ConcreteBuilder角色是负责实现Builder角色的接口的类（API）。这里定义了在生成实例时实际被调用的方法。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Director（监工）：&lt;/strong&gt;Director角色负责使用Builder角色的接口（API）来生成实例。它并不依赖于ConcreteBuilder角色。为了确保不论ConcreteBuilder角色是如何被定义的，Director角色都能正常工作，它只调用在Builder角色中被定义的方法。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Client（使用者）：&lt;/strong&gt;该角色使用了Builder模式。（模式中不包含此角色）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;abstract-factory模式&quot;&gt;Abstract Factory模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Abstract Factory模式（抽象工厂模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-abstract_factory-0.png&quot; alt=&quot;gof-abstract_factory-0&quot; /&gt;
+&lt;strong&gt;「Abstract Factor模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;AbstractProduct（抽象产品）：&lt;/strong&gt;AbstractProduct角色负责定义AbstractFactory角色所生成的抽象零件和产品的接口（API）。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;AbstractFactory（抽象工厂）：&lt;/strong&gt;AbstractFactory角色负责定义用于生成抽象产品的接口（API）。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Client（委托者）：&lt;/strong&gt;Client角色仅会调用AbstractFactory角色和AbstractProduct角色的接口（API）来进行工作，对于具体零件、产品和工厂一无所知。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteProduct（具体产品）：&lt;/strong&gt;ConcreteProduct角色负责实现AbstractProduct角色的接口（API）。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteFactory（具体工厂）：&lt;/strong&gt;ConcreteFactory角色负责实现AbstractFactory角色的接口（API）。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;bridge模式&quot;&gt;Bridge模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Bridge模式（桥接模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-bridge-0.png&quot; alt=&quot;gof-bridge-0&quot; /&gt;
+&lt;strong&gt;「Bridge模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Abstraction（抽象化）：&lt;/strong&gt;该角色位于“类的功能层次结构“的最上层。它使用Implementor角色的方法定义了基本的功能。该角色中保存了Implementor角色的实例。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;RefinedAbstraction（改善后的抽象化）：&lt;/strong&gt;在Abstraction角色的基础上增加了新功能的角色。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Implementor（实现者）：&lt;/strong&gt;该角色位于”类的实现层次结构“的最上层。它定义了用于实现Abstraction角色的接口（API）的方法。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteImplementor（具体实现者）：&lt;/strong&gt;该角色负责实现在Implementor角色中定义的接口（API）。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;strategy模式&quot;&gt;Strategy模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Strategy模式（策略模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-strategy-0.png&quot; alt=&quot;gof-strategy-0&quot; /&gt;
+&lt;strong&gt;「Strategy模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Strategy（策略）：&lt;/strong&gt;Strategy角色负责实现策略所必需的接口（API）。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteStrategy（具体的策略）：&lt;/strong&gt;ConcreteStrategy角色负责实现Strategy角色的接口（API）。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Context（上下文）：&lt;/strong&gt;负责使用Strategy角色。Context角色保存了ConcreteStrategy角色的实例，并使用ConcreteStrategy角色去实现需求（总之，还是要调用Strategy角色的接口（API）。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;composite模式&quot;&gt;Composite模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Composite模式（组合模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-composite-0.png&quot; alt=&quot;gof-composite-0&quot; /&gt;
+&lt;strong&gt;「Composite模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Leaf（树叶）：&lt;/strong&gt;表示“内容”的角色。在该角色中不能放入其他对象。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Composite（复合物）：&lt;/strong&gt;表示容器的角色。可以在其中放入Leaf角色和Composite角色。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Component（组件）：&lt;/strong&gt;是Leaf角色和Composite角色具有一致性的角色。Component角色是Leaf角色和Composite角色的父类。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Client（使用者）：&lt;/strong&gt;使用Composite模式的角色。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;decorator模式&quot;&gt;Decorator模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Decorator模式（装饰器模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-decorator-0.png&quot; alt=&quot;gof-decorator-0&quot; /&gt;
+&lt;strong&gt;「Decorator模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Component（组件）：&lt;/strong&gt;增加功能的核心角色。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteComponent（具体组件）：&lt;/strong&gt;该角色是实现了Component角色所定义的接口（API）的具体实现。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Decorator（装饰物）：&lt;/strong&gt;该角色具有与Component角色相同的接口（API）。在它内部保存了被装饰对象——Component橘色。Decorator角色知道自己要装饰的对象。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteDecorator（具体的装饰物）：&lt;/strong&gt;该角色是具体Decorator角色。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;visitor模式&quot;&gt;Visitor模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Visitor模式（访问者模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-visitor-0.png&quot; alt=&quot;gof-visitor-0&quot; /&gt;
+&lt;strong&gt;「Visitor模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Visitor（访问者）：&lt;/strong&gt;Visitor角色负责对数据结构中每个具体的元素（ConcreteElement角色）声明一个用于访问XXXX的visit（XXXX）方法。visit（XXXX）适用于处理XXXX的方法。负责实现该方法的是ConcreteVisitor角色。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteVisitor（具体的访问者）：&lt;/strong&gt;ConcreteVisitor角色负责实现Visitor角色所定义的接口（API）。它要实现所有的visit（XXXX）方法，即实现如何处理每个ConcreteElement角色。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Element（元素）：&lt;/strong&gt;Element角色表示Visitor角色的访问对象。它声明了接受访问者的accept方法。accept方法解搜到的参数是Visitor角色。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteElement（具体的元素）：&lt;/strong&gt;ConcreteElement角色负责实现Element角色所定义的接口（API）。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ObjectStructure（对象结构）：&lt;/strong&gt;ObjectStructure角色负责处理Element角色的集合。ConcreteVisitor橘色为每个Element角色都准备了处理方法。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;chain-of-responsibility模式&quot;&gt;Chain of Responsibility模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Chain of Responsibility模式（责任链模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-chain_of_responsibility-0.png&quot; alt=&quot;gof-chain_of_responsibility-0&quot; /&gt;
+&lt;strong&gt;「Chain of Responsibility模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Handler（处理者）：&lt;/strong&gt;Handler角色定义了处理请求的接口（API）。Handler角色知道“下一个处理者”是谁。如果自己无法处理，它会将请求转给“下一个处理者”。当然，“下一个处理者”也是Handler角色。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteHandler（具体的处理者）：&lt;/strong&gt;ConcreteHandler角色是处理请求的具体角色。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Client（请求者）：&lt;/strong&gt;Client角色是向第一个ConcreteHandler角色发送请求的角色。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;facade模式&quot;&gt;Facade模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Facade模式（窗口模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-facade-0.png&quot; alt=&quot;gof-facade-0&quot; /&gt;
+&lt;strong&gt;「Facade模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Facade（窗口）：&lt;/strong&gt;Facade角色是代表构成系统的许多其他角色的“简单窗口”。Facade角色向系统外部提供高层（API）。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;构成系统的其他角色：&lt;/strong&gt;这些角色各自完成自己的工作，他们并不知道Facade角色。Facade角色调用其他角色进行工作，但是其他角色不会调用Facade角色。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Client（请求者）：&lt;/strong&gt;Client角色负责调用Facade角色（Client角色并不包含在Facade模式中）。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;mediator模式&quot;&gt;Mediator模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Mediator模式（仲裁者模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-mediator-0.png&quot; alt=&quot;gof-mediator-0&quot; /&gt;
+&lt;strong&gt;「Mediator模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Mediator（仲裁者、中介者）：&lt;/strong&gt;Mediator角色负责定义与Colleague角色进行通信和做出决定的接口（API）。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteMediator（具体的仲裁者、中介者）：&lt;/strong&gt;ConcreteMediator角色负责实现Mediator角色的接口（API），负责实际做出决定。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Colleague（同事）：&lt;/strong&gt;Colleague角色负责定义与Mediator角色进行通信的接口（API）。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteColleague（具体的同事）：&lt;/strong&gt;ConcreteColleague角色负责实现Colleague角色的接口（API）。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;observer模式&quot;&gt;Observer模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Observer模式（观察者模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-observer-0.png&quot; alt=&quot;gof-observer-0&quot; /&gt;
+&lt;strong&gt;「Observer模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Subject（观察对象）：&lt;/strong&gt;Subject角色表示观察对象。Subject角色定义了注册观察者和删除观察者的方法。此外，它还声明了“获取现在的状态”的方法。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteSubject（具体的观察对象）：&lt;/strong&gt;ConcreteSubject角色表示具体的被观察对象。当自身状态发生变化后，它会通知所有已经注册的Observer角色。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Observer（观察者）：&lt;/strong&gt;Observer角色负责接收来自Subject角色的状态变化的通知。为此，他声明了update方法。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteObserver（具体的观察者）：&lt;/strong&gt;ConcreteObserver角色表示具体的Observer。当它的update方法被调用后，会去获取需要观察的对象的最新状态。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;memento模式&quot;&gt;Memento模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Memento模式（备忘录）模式：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-memento-0.png&quot; alt=&quot;gof-memento-0&quot; /&gt;
+&lt;strong&gt;「Memento模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Originator（生成者）：&lt;/strong&gt;Originator角色会在保存自己的最新状态时生成Memento角色。当把以前保存的Memento橘色传递给Originator角色时，它会将自己恢复至生成该Memento角色时的状态。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Memento（备忘录）：&lt;/strong&gt;Memento角色会将Originator角色的内部信息整合在一起。在Memento角色中虽然保存了Originator角色的信息，但它不会向外部公开这些信息。&lt;/p&gt;
+
+    &lt;p&gt;Memento角色有以下两种接口（API）&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;wide interface——宽接口（API）：Memento角色提供的“宽接口（API）”是指所有用于获取恢复对象状态的方法的集合。由于宽接口（API）会暴露所有Memento角色的内部信息，因此能够使用宽接口（API）的只有Originator角色。&lt;/li&gt;
+      &lt;li&gt;narrow interface——窄接口（API）：Memento角色为外部的Caretaker角色提供了“窄接口（API）”。可以通过窄接口（API）获取的Memento角色的内部信息非常有限，因此可以有效地防止信息泄漏。&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;通过对外提供以上两种接口（API），可以有效地防止对象的封装性被破坏。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Caretaker（负责人）：&lt;/strong&gt;当Caretaker角色想要保存当前的Originator角色的状态时，会通知Originator角色。Originator角色在接收到通知后会生成Memento角色的实例并将其返回给Caretaker角色。由于以后可能会用Memento实例来将Originator恢复至原来的状态，因此Caretaker角色会一直保存Memento实例。&lt;/p&gt;
+
+    &lt;p&gt;不过Caretaker角色只能使用Memento角色两种接口（API）中的窄接口（API），也就是说它无法访问Memento角色内部的所有信息。它只是将Originator角色生成的Memento角色当作一个黑盒子保存起来。&lt;/p&gt;
+
+    &lt;p&gt;虽然Originator角色和Memento角色之间时强关联关系，但Caretaker角色和Memento角色之间时弱关联关系。Memento角色对Caretaker角色隐藏了自身的内部信息。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;state模式&quot;&gt;State模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;State模式（状态模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-state-0.png&quot; alt=&quot;gof-state-0&quot; /&gt;
+&lt;strong&gt;「State模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;State（状态）：&lt;/strong&gt;State角色表示状态，定义了根据不同状态进行不同处理的接口（API）。该接口（API）是哪些处理内容依赖于状态的方法集合。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteState（具体状态）：&lt;/strong&gt;ConcreteState角色表示各个具体的状态，它实现了State接口。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Context（状况、前后关系、上下文）：&lt;/strong&gt;Context角色持有表示当前状态的ConcreteState角色。此外，他还定义了供外部调用者使用State模式的接口（API）。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;flyweight模式&quot;&gt;Flyweight模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Flyweight模式（享元模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-flyweight-0.png&quot; alt=&quot;gof-flyweight-0&quot; /&gt;
+&lt;strong&gt;「Flyweight模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Flyweight（轻量级）：&lt;/strong&gt;按照通常方式编写程序会导致程序变重，所以如果能够共享实例会比较好，而Flyweight角色表示的就是那些实例会被共享的类。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;FlyweightFactory（轻量级工厂）：&lt;/strong&gt;FlyweightFactory角色时生成Flyweight角色的工厂。在工厂中生成Flyweight角色可以实现共享实例。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Client（请求者）：&lt;/strong&gt;Client角色使用FlyweightFactory角色来生成Flyweight角色。（与Gof的定义有差异）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;proxy模式&quot;&gt;Proxy模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Proxy模式（代理模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-proxy-0.png&quot; alt=&quot;gof-proxy-0&quot; /&gt;
+&lt;strong&gt;「Proxy模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Subject（主体）：&lt;/strong&gt;Subject角色定义了使Proxy角色和RealSubject角色之间具有一致性的接口。由于存在Subject角色，所以Client角色不必在意它所使用的究竟是Proxy角色还是RealSubject角色。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Proxy（代理人）：&lt;/strong&gt;Proxy角色会尽量处理来自Client角色的请求。只有当自己不能处理时，它才会将工作交给RealSubject角色。Proxy角色只有在必要时才会生成RealSubject角色。Proxy角色实现了在Subject角色中定义的接口（API）。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;RealSubject（实际的主体）：&lt;/strong&gt;“本人”RealSubject角色会在“代理人”角色无法胜任工作时出场。它与Proxy角色一样，也实现了在Subject角色中定义的接口（API）。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Client（请求者）：&lt;/strong&gt;使用Proxy模式的角色。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;command模式&quot;&gt;Command模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Command模式（命令模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-command-0.png&quot; alt=&quot;gof-command-0&quot; /&gt;
+&lt;strong&gt;「Command模式」中登场的角色：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Command（命令）：&lt;/strong&gt;Command角色负责定义命令的接口（API）。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;ConcreteCommand（具体的命令）：&lt;/strong&gt;ConcreteCommand角色负责实现在Command角色中定义的接口（API）。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Receiver（接收者）：&lt;/strong&gt;Receiver角色是Command角色执行命令时的对象，也可以称其为命令接收者。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Client（请求者）：&lt;/strong&gt;Client角色负责生成ConcreteCommand角色并分配Receiver角色。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Invoker（发动者）：&lt;/strong&gt;Invoker角色时开始执行命令的角色，它会调用在Command角色中定义的接口（API）。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;interpreter模式&quot;&gt;Interpreter模式&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Interpreter模式（解释器模式）：&lt;/strong&gt;
+&lt;img src=&quot;../assets/img/gof-interpreter-0.png&quot; alt=&quot;gof-interpreter-0&quot; /&gt;
+&lt;strong&gt;「interpreter模式」&lt;/strong&gt;中登场的角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;AbstractExpression（抽象表达式）：&lt;/strong&gt;AbstractExpression角色定义了语法树节点的共同接口（API）。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;TerminalExpression（终结符表达式）：&lt;/strong&gt;TerminalExpression角色对应BNF中的终结符表达式。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;NonTerminalExpression（非终结符表达式）：&lt;/strong&gt;NonTerminalExpression角色对应BNF中的非终结符表达式。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Context（文脉，上下文）：&lt;/strong&gt;Context角色为解释器进行语法解析提供了必要的信息。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Client（请求者）：&lt;/strong&gt;为了推导语法树，Client角色会调用TerminalExpression角色和NonterminalExpression角色。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="gof" /><summary type="html">由浅入深的介绍一下Gof的23种设计模式</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/gof-0.jpeg" /></entry><entry><title type="html">Java中的并发工具类</title><link href="http://localhost:4000/resources/java-concurrency-util.html" rel="alternate" type="text/html" title="Java中的并发工具类" /><published>2018-03-16T00:00:00+08:00</published><updated>2018-03-16T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-util</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-util.html">&lt;h2 id=&quot;等待多线程完成的countdownlatch&quot;&gt;等待多线程完成的CountDownLatch&lt;/h2&gt;
 
 &lt;p&gt;CountDownLatch允许一个或多个线程等待其他线程完成操作。&lt;/p&gt;
 
@@ -165,45 +492,89 @@
   &lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;&lt;img src=&quot;../assets/img/spring-run-2.png&quot; alt=&quot;spring-run-2&quot; /&gt;&lt;/p&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="spring" /><summary type="html">Spring容器的启动过程是什么？ Spring在web容器中，启动过程是Servlet容器对Spring环境的构造，初始化，装配的过程。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/spring-run-0.jpeg" /></entry><entry><title type="html">Executor框架</title><link href="http://localhost:4000/resources/java-concurrency-executor.html" rel="alternate" type="text/html" title="Executor框架" /><published>2018-03-14T00:00:00+08:00</published><updated>2018-03-14T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-executor</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-executor.html">&lt;h2 id=&quot;java内存模型的基础&quot;&gt;Java内存模型的基础&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;../assets/img/spring-run-2.png&quot; alt=&quot;spring-run-2&quot; /&gt;&lt;/p&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="spring" /><summary type="html">Spring容器的启动过程是什么？ Spring在web容器中，启动过程是Servlet容器对Spring环境的构造，初始化，装配的过程。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/spring-run-0.jpeg" /></entry><entry><title type="html">Executor框架</title><link href="http://localhost:4000/resources/java-concurrency-executor.html" rel="alternate" type="text/html" title="Executor框架" /><published>2018-03-14T00:00:00+08:00</published><updated>2018-03-14T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-executor</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-executor.html">&lt;h2 id=&quot;executor框架简介&quot;&gt;Executor框架简介&lt;/h2&gt;
 
-&lt;ul&gt;
-  &lt;li&gt;【&lt;strong&gt;Java内存模型的抽象结构&lt;/strong&gt;】：&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;../assets/img/java-concurrency-space-1.png&quot; alt=&quot;java-concurrency-space-1&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
+&lt;ol&gt;
   &lt;li&gt;
-    &lt;p&gt;【&lt;strong&gt;从源代码到指令序列的重排序&lt;/strong&gt;】：在执行程序时，为了提高性能，编译器和处理器常常会对指令做重排序。重排序分为三种类型：&lt;/p&gt;
+    &lt;p&gt;Execute框架的两级调度模型&lt;/p&gt;
+
+    &lt;p&gt;在HotSpot VM的线程模型中，Java线程（java.lang.Tread）被一对一映射为本地操作系统线程。Java线程启动时会创建一个本地操作系统线程；当该Java线程终止时，这个操作系统线程也会被回收。操作系统会调度所有线程并将它们分配给可用的CPU。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Executor框架的结构与成员&lt;/p&gt;
 
     &lt;ol&gt;
-      &lt;li&gt;编译器优化的重排序。编译器在不改变单线程程序语义的前提下，可以重新安排语句的执行顺序。&lt;/li&gt;
-      &lt;li&gt;指令集并行的重排序。现代冲利器采用了指令级并行技术来将多条指令重叠执行。如果不存在数据依赖性，处理器可以改变语句对应机器指令的执行顺序。&lt;/li&gt;
-      &lt;li&gt;内存系统的重排序。由于处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是乱序执行&lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;Executor框架的结构&lt;/p&gt;
+
+        &lt;ul&gt;
+          &lt;li&gt;
+            &lt;p&gt;任务。包括执行任务需要实现的接口：Runnable接口或Callable接口。&lt;/p&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;p&gt;任务的执行。包括执行机制的核心接口Executor，以及继承自Executor的ExecutorService接口。Executor框架有两个关键类实现了ExecutorService接口（TreadPoolExecutor和ScheduledThreadExecutor）。&lt;/p&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;p&gt;异步计算的结果。包括接口Future和实现Future接口的FutureTask类。&lt;/p&gt;
+
+            &lt;p&gt;下面是这些接口的简介：&lt;/p&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;p&gt;Executor是一个接口，他是Executor的框架基础，它将任务的提交与任务的执行分离开来。&lt;/p&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;p&gt;ThreadPoolExecutor是线程池的核心实现类，用来执行被提交的任务。&lt;/p&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;p&gt;ScheduledTreadPoolExecutor是一个实现类，可以在给定的延迟后运行命令，或者定期执行命令。ScheduledTreadPoolExecutor比Timer更灵活，功能更强大。&lt;/p&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;p&gt;Future接口和实现Future接口的FutureTask类，代表异步计算的结果。&lt;/p&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;p&gt;Runnable接口和Callable接口的实现类，都可以被ThreadPoolExecutor或者ScheduledThreadPoolExecutor执行。&lt;/p&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;Executor框架的成员&lt;/p&gt;
+
+        &lt;ol&gt;
+          &lt;li&gt;ThreadPoolExecutor&lt;/li&gt;
+        &lt;/ol&gt;
+
+        &lt;p&gt;ThreadPoolExecutor通常使用工厂类Executor来创建。Executors可以创建3中类型的ThreadPoolExecutor：SingleThreadExecutor、FixedThreadExecutor和CachedThreadPool。&lt;/p&gt;
+
+        &lt;ul&gt;
+          &lt;li&gt;FixedThreadPool。适用于为了满足资源管理需求，而需要限制当前线程数量的应用场景，它适用于负载比较重的服务器。&lt;/li&gt;
+          &lt;li&gt;SingleThreadExecutor。适用于需要保证顺序地执行各个任务；并且在任意时间点，不会有多个线程是活动的应用场景。&lt;/li&gt;
+          &lt;li&gt;CachedThreadPool。是大小无界的线程池，适用于执行很多的短期异步任务的小程序，或者是负载比较轻的服务器。&lt;/li&gt;
+        &lt;/ul&gt;
+
+        &lt;ol&gt;
+          &lt;li&gt;
+            &lt;p&gt;ScheduledThreadPoolExecutor&lt;/p&gt;
+
+            &lt;ul&gt;
+              &lt;li&gt;ScheduledThreadPoolExecutor。适用于需要多个后台线程执行周期任务，同时为了满足资源管理的需求而需要限制后台线程的数量的应用场景。&lt;/li&gt;
+              &lt;li&gt;SingleThreadScheduledExecutor。适用于需要单个后台线程执行周期任务，同时需要保证顺序地执行各个任务的应用场景。&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;p&gt;Future接口&lt;/p&gt;
+
+            &lt;p&gt;Future接口和实现Future接口的FutureTask类用来表示异步的计算的结果。&lt;/p&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;p&gt;Runnable接口和Callable接口&lt;/p&gt;
+
+            &lt;p&gt;Runnable接口和Callable接口的实现类，都可以被ThreadPoolExecutor或ScheduledThreadPoolExecutor执行。他们之间的区别是Runnable不会返回结果，而Callable可以返回结果。&lt;/p&gt;
+          &lt;/li&gt;
+        &lt;/ol&gt;
+      &lt;/li&gt;
     &lt;/ol&gt;
   &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;重排序&quot;&gt;重排序&lt;/h2&gt;
-
-&lt;p&gt;重排序是指编译器和处理器为了优化程序性能而对指令序列进行重新排序的一种手段。&lt;/p&gt;
-
-&lt;h2 id=&quot;顺序一致性&quot;&gt;顺序一致性&lt;/h2&gt;
-
-&lt;p&gt;顺序一致性内存模型是一个理论参考模型，在设计的时候，处理器的内存模型和编程语言的内存模型都会以顺序一致性内存模型作为参考。&lt;/p&gt;
-
-&lt;h2 id=&quot;volatile的内存语义&quot;&gt;volatile的内存语义&lt;/h2&gt;
-
-&lt;h2 id=&quot;锁的内存语义&quot;&gt;锁的内存语义&lt;/h2&gt;
-
-&lt;h2 id=&quot;final域的内存语义&quot;&gt;final域的内存语义&lt;/h2&gt;
-
-&lt;h2 id=&quot;happens-before&quot;&gt;happens-before&lt;/h2&gt;
-
-&lt;h2 id=&quot;双重检查锁与延迟初始化&quot;&gt;双重检查锁与延迟初始化&lt;/h2&gt;
-
-&lt;h2 id=&quot;java内存模型综述&quot;&gt;Java内存模型综述&lt;/h2&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html">Java内存模型的基础</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-executor-0.jpeg" /></entry><entry><title type="html">Java中的线程池</title><link href="http://localhost:4000/resources/java-concurrency-threadpool.html" rel="alternate" type="text/html" title="Java中的线程池" /><published>2018-03-13T00:00:00+08:00</published><updated>2018-03-13T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-threadpool</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-threadpool.html">&lt;p&gt;Java中的线程池是运用场景最多的并发框架，几乎所有需要一步或并发执行任务的程序都可以使用线程池。在开发过程中，合理使用线程池能够带来3个好处。&lt;/p&gt;
+&lt;/ol&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="concurrency" /><summary type="html">Executor框架简介</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/java-concurrency-executor-0.jpeg" /></entry><entry><title type="html">Java中的线程池</title><link href="http://localhost:4000/resources/java-concurrency-threadpool.html" rel="alternate" type="text/html" title="Java中的线程池" /><published>2018-03-13T00:00:00+08:00</published><updated>2018-03-13T00:00:00+08:00</updated><id>http://localhost:4000/resources/java-concurrency-threadpool</id><content type="html" xml:base="http://localhost:4000/resources/java-concurrency-threadpool.html">&lt;p&gt;Java中的线程池是运用场景最多的并发框架，几乎所有需要一步或并发执行任务的程序都可以使用线程池。在开发过程中，合理使用线程池能够带来3个好处。&lt;/p&gt;
 
 &lt;ol&gt;
   &lt;li&gt;&lt;strong&gt;降低资源消耗&lt;/strong&gt;。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。&lt;/li&gt;
@@ -773,122 +1144,4 @@ ConcurrentLinkedQueue由head节点和tail节点组成，每个节点（Node）�
       &lt;li&gt;父事务commit之前，必须先commit子事务。&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ol&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="spring" /><summary type="html">事务传播行为</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/spring-transaction-0.jpeg" /></entry><entry><title type="html">数据库事务</title><link href="http://localhost:4000/resources/db-transaction.html" rel="alternate" type="text/html" title="数据库事务" /><published>2018-03-07T00:00:00+08:00</published><updated>2018-03-07T00:00:00+08:00</updated><id>http://localhost:4000/resources/db-transaction</id><content type="html" xml:base="http://localhost:4000/resources/db-transaction.html">&lt;h2 id=&quot;数据库四大特性&quot;&gt;数据库四大特性&lt;/h2&gt;
-
-&lt;p&gt;数据库的四大特性简称ACID：Atomicity（原子性）、Consistency（一致性）、Isolation（隔离性）和Durability（持久性）。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;【原子性（Atomicity）】：原子性是指事物包含的操作要么全部成功，要么全部失败回滚。也就是说事务的操作如果成功就必须完全应用到数据库，如果操作失败则不能对数据库有任何影响。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;【一致性（Consistency）】：一致性是指事物必须使数据库从一个一致性状态变换到另一个一致性状态，也就是说一个事物执行之前和执行之后都必须处于一执行状态。&lt;/p&gt;
-
-    &lt;p&gt;比如说转账，假设用户A和用户B两者的钱加起来一共是50000，那么不管A和B之间如何转账，转账几次，事物结束后两个用户的钱相加起来应该还是50000，这就是事物一致性。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;【隔离性（Isolation）】：隔离性是当多个用户并发访问数据库时，比如操作同一张表时，数据库为每一个用户开启的事物，不能被其他事物的操作所干扰，多个并发事物之间要互相隔离。&lt;/p&gt;
-
-    &lt;p&gt;也就是说，对于任意两个并发事务T1和T2，在事务T1看来，T2要么在T1开始之前就已经结束，要么在T1结束之后才开始，这样每个事物都感觉不到其他事务的并发执行。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;【持久性（Durability）】：持久性是指一个事物一旦被提交了，那么对数据库中的改变就是永久性的，即便是在数据库系统遇到故障的情况下也不会丢失提交事务的操作。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;数据库四种事务隔离级别&quot;&gt;数据库四种事务隔离级别&lt;/h2&gt;
-
-&lt;p&gt;SQL标准定义了4类隔离级别，包括了一些具体规则，采用限定事务内外的哪些改变是可见的，哪些是不可见的。低级别的隔离级一般支持高并发处理，并拥有更低的系统开销。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;【&lt;strong&gt;Read Uncommitted（读取未提交内容）&lt;/strong&gt;】：在该隔离级别中，所有事务可以看到其他未提交事务的执行结果。本级别隔离很少用于实际应用，比其他隔离级别性能也好不了多少。&lt;em&gt;读取未提交的数据称为“脏读（Dirty Read）”&lt;/em&gt;。&lt;/li&gt;
-  &lt;li&gt;【&lt;strong&gt;Read Committed（读取提交内容）&lt;/strong&gt;】：这是大多数数据库默认的隔离级别，但是，不是MySQL的默认隔离级别。他满足了隔离简单的定义：一个事务只能看到已提交事务所做的改变。这种隔离会出现“不可重复读”的现象（Non-repeatable Read），因为同一事务的其他实例在该实例处理期间可能会有新的commit（包括update和delete），导致目标数据被修改，所以同一select可能返回不同结果。&lt;/li&gt;
-  &lt;li&gt;【&lt;strong&gt;Repeatable Read（可重读）&lt;/strong&gt;】：这是MySQL默认的隔离级别，它确保同一事务的多个实例在并发读取数据时，会看到同样的数据行（目标数据行不会被修改）。不过，会出现“幻读”的现象。幻读是由insert引起的，简单来说，幻读指当用户读取某一范围的数据行时，另一个事务又在该范围内插入了新行，当用户再读取该范围的数据行时，会发现有新的“幻影”行。innoDB和Falcon存储引擎通过多版本并发控制（MVCC，Multiversion Concurrency Control）机制解决了该问题。&lt;/li&gt;
-  &lt;li&gt;【&lt;strong&gt;Serializable（可串行化&lt;/strong&gt;】：这是最高的事务隔离级别，它通过强制事务排序，使之不可能相互冲突，从而解决幻读问题。简而言之，他是每个读的数据行上，加了共享锁，在这个级别，可能导致大量的超时现象和锁竞争。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;&lt;em&gt;脏读（Dirty Read）&lt;/em&gt;&lt;/strong&gt;：某个事务已经更新一份数据，另一个事务在此时读取了同一份数据，由于某些原因，前一个事务RollBack了操作，则后一个事物所读取的数据就会是不正确的。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;&lt;em&gt;不可重复读（Non-repeatable Read）&lt;/em&gt;&lt;/strong&gt;：在一个事务内，多次读取同一数据。在这个事务还没有结束时，另外一个事务也访问该同一数据。那么，在第一个事务中的两次读数据之间，由于第二个事务的修改，那么第一个事务两次读到的数可能是不一样的。这样就发生了在一个事务内两次读到的数据不一样的，因此称为时不可重复读。（update和delete引起）&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;&lt;em&gt;幻读（Phantom Read）&lt;/em&gt;&lt;/strong&gt;：在一个事务的两次查询中数据笔数不一致，例如有一个事物查询了几列（Row）数据，而另一个事务却在时插入了新的几列数据，西芹钱的事务在接下来的查询中，就会发现有几列数据是它先前所没有的。（由insert引起）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;隔离级别&lt;/th&gt;
-      &lt;th&gt;脏读&lt;/th&gt;
-      &lt;th&gt;不可重复读&lt;/th&gt;
-      &lt;th&gt;幻读&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;读未提交（Read Uncommitted）&lt;/td&gt;
-      &lt;td&gt;✔&lt;/td&gt;
-      &lt;td&gt;✔&lt;/td&gt;
-      &lt;td&gt;✔&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;读已提交（Read committed）&lt;/td&gt;
-      &lt;td&gt;✖&lt;/td&gt;
-      &lt;td&gt;✔&lt;/td&gt;
-      &lt;td&gt;✔&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;可重复读（Repeatable Read）&lt;/td&gt;
-      &lt;td&gt;✖&lt;/td&gt;
-      &lt;td&gt;✖&lt;/td&gt;
-      &lt;td&gt;✔&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;可串行化（Serializable）&lt;/td&gt;
-      &lt;td&gt;✖&lt;/td&gt;
-      &lt;td&gt;✖&lt;/td&gt;
-      &lt;td&gt;✖&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&quot;锁机制&quot;&gt;锁机制&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;共享锁和排它锁&lt;/p&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;共享锁：由读表操作加上的锁，加锁后其他用户只能获取该表或行的共享锁，不能获取排它锁，也就是说只能读不能写。&lt;/li&gt;
-      &lt;li&gt;排它锁：由写表操作加上的锁，加锁后其他用户不能获取该表或行的任何锁，典型是MySQL事务中的&lt;code class=&quot;highlighter-rouge&quot;&gt;for update&lt;/code&gt;。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;行锁和表锁&lt;/p&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;行锁：对某行记录加上锁&lt;/li&gt;
-      &lt;li&gt;表锁：对整个表加上锁&lt;/li&gt;
-    &lt;/ul&gt;
-
-    &lt;p&gt;这样组合起来有：行级共享锁，表级共享锁，行级排它锁，表级排它锁。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;乐观锁、悲观锁&lt;/p&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;
-        &lt;p&gt;悲观锁（Pessimistic Lock）&lt;/p&gt;
-
-        &lt;p&gt;顾名思义，就是很悲观，每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人拿这个数据就会block直到它拿到锁。&lt;/p&gt;
-
-        &lt;p&gt;传统的关系型数据库里边就用到了很多这种锁机制，比如行锁，表锁，读锁，写锁等，都是在做操作之前先上锁。&lt;/p&gt;
-      &lt;/li&gt;
-      &lt;li&gt;
-        &lt;p&gt;乐观锁（Optimistic Lock）&lt;/p&gt;
-
-        &lt;p&gt;顾名思义，就是很乐观，每次去拿数据的时候都认为别人不会修改，所以不会上锁。但是在更新数据的时候会判断一下在此期间别人有没有去更新这个数据，如果期间被修改，则给用户做出提示。可以使用版本号机制记录状态。&lt;/p&gt;
-
-        &lt;p&gt;乐观锁适用于多读的应用类型，这样可以提高吞吐量，想数据库如果提供类似于write_condition机制的其实都是提供的乐观锁。&lt;/p&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="db" /><summary type="html">数据库四大特性</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/db-transaction-0.jpeg" /></entry></feed>
+&lt;/ol&gt;</content><author><name>郝强</name></author><category term="resources" /><category term="spring" /><summary type="html">事务传播行为</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/spring-transaction-0.jpeg" /></entry></feed>
